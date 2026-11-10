@@ -1,0 +1,139 @@
+here<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>تسجيل الدخول - أوكس</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Cairo', sans-serif; }
+        body {
+            background: #0f0a1e; color: #fff; display: flex; justify-content: center; align-items: center; min-height: 100vh; padding: 20px;
+            background-image: radial-gradient(circle at 20% 20%, rgba(139, 92, 246, 0.15), transparent 40%), radial-gradient(circle at 80% 80%, rgba(245, 158, 11, 0.1), transparent 40%);
+        }
+        .box { background: #1e1638; padding: 40px 30px; border-radius: 20px; width: 100%; max-width: 400px; border: 1px solid rgba(139, 92, 246, 0.3); }
+        .logo { text-align: center; font-size: 28px; font-weight: 900; color: #f59e0b; margin-bottom: 25px; }
+        h2 { text-align: center; margin-bottom: 20px; font-size: 22px; }
+        input { width: 100%; padding: 12px; margin-bottom: 15px; border-radius: 8px; border: 1px solid #444; background: #0f0a1e; color: #fff; font-family: inherit; font-size: 15px; }
+        input:focus { outline: none; border-color: #6d28d9; }
+        button { width: 100%; padding: 13px; background: linear-gradient(135deg, #6d28d9, #8b5cf6); color: #fff; border: none; border-radius: 8px; font-weight: bold; font-size: 16px; cursor: pointer; font-family: inherit; margin-top: 10px; transition: 0.3s; }
+        button:hover { transform: translateY(-2px); box-shadow: 0 5px 15px rgba(109, 40, 217, 0.4); }
+        .toggle-link { text-align: center; margin-top: 20px; font-size: 14px; color: #a89fc4; }
+        .toggle-link a { color: #f59e0b; text-decoration: none; font-weight: bold; cursor: pointer; }
+        .error-msg { background: rgba(239, 68, 68, 0.1); color: #ef4444; padding: 10px; border-radius: 8px; margin-bottom: 15px; text-align: center; font-size: 14px; display: none; }
+        .success-msg { background: rgba(16, 185, 129, 0.1); color: #10b981; padding: 10px; border-radius: 8px; margin-bottom: 15px; text-align: center; font-size: 14px; display: none; }
+        #register-form { display: none; }
+    </style>
+</head>
+<body>
+
+<div class="box">
+    <div class="logo">OUX - أوكس</div>
+    <div id="error-msg" class="error-msg"></div>
+    <div id="success-msg" class="success-msg"></div>
+
+    <!-- نموذج تسجيل الدخول -->
+    <form id="login-form">
+        <h2>تسجيل الدخول</h2>
+        <input type="email" id="login-email" placeholder="البريد الإلكتروني" required>
+        <input type="password" id="login-password" placeholder="كلمة المرور" required>
+        <button type="submit" id="login-btn">دخول</button>
+        <div class="toggle-link">
+            ليس لديك حساب؟ <a onclick="toggleForms()">إنشاء حساب جديد</a>
+        </div>
+    </form>
+
+    <!-- نموذج إنشاء حساب -->
+    <form id="register-form">
+        <h2>إنشاء حساب جديد</h2>
+        <input type="email" id="register-email" placeholder="البريد الإلكتروني" required>
+        <input type="password" id="register-password" placeholder="كلمة المرور (6 أحرف على الأقل)" required>
+        <button type="submit" id="register-btn">تسجيل</button>
+        <div class="toggle-link">
+            لديك حساب بالفعل؟ <a onclick="toggleForms()">تسجيل الدخول</a>
+        </div>
+    </form>
+</div>
+
+<!-- ربط مكتبات Firebase -->
+<script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+    import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+
+    const firebaseConfig = {
+        apiKey: "AIzaSyCdV3qgXHHxz4e8mf1c-2TrZujXqY-LuQc",
+        authDomain: "black-9deb2.firebaseapp.com",
+        projectId: "black-9deb2",
+        storageBucket: "black-9deb2.firebasestorage.app",
+        messagingSenderId: "725901940218",
+        appId: "1:725901940218:web:bc10585da68be02dc14043"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+
+    const loginForm = document.getElementById('login-form');
+    const registerForm = document.getElementById('register-form');
+    const errorMsg = document.getElementById('error-msg');
+    const successMsg = document.getElementById('success-msg');
+
+    window.toggleForms = function() {
+        if(loginForm.style.display === 'none') {
+            loginForm.style.display = 'block'; registerForm.style.display = 'none';
+        } else {
+            loginForm.style.display = 'none'; registerForm.style.display = 'block';
+        }
+        errorMsg.style.display = 'none'; successMsg.style.display = 'none';
+    }
+
+    function showError(msg) { errorMsg.textContent = msg; errorMsg.style.display = 'block'; successMsg.style.display = 'none'; }
+
+    // تسجيل الدخول
+    loginForm.addEventListener('submit', (e) => {
+        e.preventDefault();
+        const email = document.getElementById('login-email').value;
+        const password = document.getElementById('login-password').value;
+        const btn = document.getElementById('login-btn');
+        btn.textContent = 'جاري الدخول...';
+        
+        signInWithEmailAndPassword(auth, email, password)
+            .then(() => { window.location.href = 'dashboard.html'; })
+            .catch((error) => {
+                btn.textContent = 'دخول';
+                if(error.code === 'auth/user-not-found' || error.code === 'auth/wrong-password' || error.code === 'auth/invalid-credential') {
+                    showError('البريد الإلكتروني أو كلمة المرور غير صحيحة');
+                } else {
+                    showError('حدث خطأ: ' + error.message);
+                }
+            });
+    });
+
+    // إنشاء حساب
+    registerForm.addEventListener('submit', (e) => {
+        e.preventDefault();
+        const email = document.getElementById('register-email').value;
+        const password = document.getElementById('register-password').value;
+        const btn = document.getElementById('register-btn');
+        
+        if(password.length < 6) { showError('كلمة المرور يجب أن تكون 6 أحرف على الأقل'); return; }
+        btn.textContent = 'جاري التسجيل...';
+
+        createUserWithEmailAndPassword(auth, email, password)
+            .then(() => {
+                btn.textContent = 'تسجيل';
+                successMsg.textContent = 'تم إنشاء الحساب بنجاح! يمكنك الآن تسجيل الدخول.';
+                successMsg.style.display = 'block'; errorMsg.style.display = 'none';
+                toggleForms();
+            })
+            .catch((error) => {
+                btn.textContent = 'تسجيل';
+                if(error.code === 'auth/email-already-in-use') showError('هذا البريد الإلكتروني مسجل بالفعل');
+                else if (error.code === 'auth/weak-password') showError('كلمة المرور ضعيفة جداً');
+                else showError('حدث خطأ: ' + error.message);
+            });
+    });
+
+    onAuthStateChanged(auth, (user) => { if (user) window.location.href = 'dashboard.html'; });
+</script>
+</body>
+</html>
