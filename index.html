@@ -279,6 +279,7 @@
 
         let currentUser = null;
         let currentPage = 'login';
+        let currentCalcRound = 'standard';
         const appDiv = document.getElementById('app');
 
         function showToast(msg, bg = '#4CAF50') {
@@ -298,8 +299,9 @@
             return `${d.getDate()} ${months[d.getMonth()]} ${d.getFullYear()} - ${String(d.getHours()).padStart(2, '0')}:${String(d.getMinutes()).padStart(2, '0')}`;
         }
 
-        function navigate(page) {
+        function navigate(page, round = 'standard') {
             currentPage = page;
+            currentCalcRound = round;
             render();
         }
 
@@ -389,6 +391,44 @@
             }
         }
 
+        // ---------------- طلب استثمار ----------------
+        async function submitInvestment(round, amount) {
+            try {
+                if (!currentUser) throw new Error("انتهت الجلسة");
+                const principal = parseFloat(amount);
+                const bonus = round === 'silver' ? 10000 : 5000;
+
+                if (currentUser.balance < principal) throw new Error("رصيدك غير كافٍ");
+
+                // 1. خصم المبلغ من المستخدم
+                const userRef = doc(db, "users", currentUser.id);
+                const newBalance = currentUser.balance - principal;
+                await updateDoc(userRef, { balance: newBalance });
+                currentUser.balance = newBalance;
+
+                // 2. إضافة الاستثمار
+                const startDate = new Date();
+                const endDate = new Date(startDate.getTime() + 24 * 60 * 60 * 1000); // 24 ساعة
+
+                const invData = {
+                    user_id: currentUser.id,
+                    round_type: round,
+                    principal: principal,
+                    bonus: bonus,
+                    total_return: principal + bonus,
+                    start_date: startDate,
+                    end_date: endDate,
+                    status: 'active'
+                };
+                await addDoc(collection(db, "investments"), invData);
+
+                showToast("✅ تم الاشتراك بنجاح!");
+                setTimeout(() => navigate('invest'), 2000);
+            } catch (error) {
+                throw error;
+            }
+        }
+
         // ---------------- جلب المعاملات ----------------
         async function fetchTransactions() {
             if (!currentUser) return [];
@@ -420,7 +460,7 @@
                 case 'transactions': renderTransactions(); break;
                 case 'recharge': renderRecharge(); break;
                 case 'invest': renderInvest(); break;
-                case 'calculator': renderCalculator(); break;
+                case 'calculator': renderCalculator(currentCalcRound); break;
             }
         }
 
@@ -897,7 +937,7 @@
                                     <div class="invest-pill">حماية كاملة لرأس المال</div>
                                 </div>
                             </div>
-                            <button class="invest-btn" onclick="window.location.href='?page=calculator&round=standard'">احسب عائدك واشترك <i class="fa-solid fa-calculator"></i></button>
+                            <button class="invest-btn" id="btn-standard">احسب عائدك واشترك <i class="fa-solid fa-calculator"></i></button>
                         </div>
                     </div>
                     <div class="invest-card">
@@ -916,7 +956,7 @@
                                     <div class="invest-pill">تغطية سيولة عبر وكيل معتمد</div>
                                 </div>
                             </div>
-                            <button class="invest-btn" onclick="window.location.href='?page=calculator&round=silver'">احسب عائدك واشترك <i class="fa-solid fa-calculator"></i></button>
+                            <button class="invest-btn" id="btn-silver">احسب عائدك واشترك <i class="fa-solid fa-calculator"></i></button>
                         </div>
                     </div>
                 </div>
@@ -932,6 +972,10 @@
             document.getElementById('backToDash').addEventListener('click', (e) => { e.preventDefault(); navigate('dashboard'); });
             document.getElementById('navHome').addEventListener('click', (e) => { e.preventDefault(); navigate('dashboard'); });
             document.getElementById('navTx').addEventListener('click', (e) => { e.preventDefault(); navigate('transactions'); });
+            
+            // ربط أزرار الاستثمار
+            document.getElementById('btn-standard').addEventListener('click', () => navigate('calculator', 'standard'));
+            document.getElementById('btn-silver').addEventListener('click', () => navigate('calculator', 'silver'));
         }
 
         // ---------- صفحة الحاسبة ----------
@@ -991,7 +1035,7 @@
                     this.disabled = true;
                     this.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> جاري المعالجة...';
                     try {
-                        await subscribeInvestment(cfg.round, p, 24);
+                        await submitInvestment(cfg.round, p);
                     } catch (err) {
                         document.getElementById('calc-error').innerText = err.message;
                         document.getElementById('calc-error').classList.remove('hidden');
