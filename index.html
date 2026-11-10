@@ -1,145 +1,199 @@
-<!DOCTYPE html>
-<html lang="ar" dir="rtl">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>تسجيل الدخول - أوكس</title>
-    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap" rel="stylesheet">
-    <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Cairo', sans-serif; }
-        body {
-            background: #0f0a1e; color: #fff; display: flex; justify-content: center; align-items: center; min-height: 100vh; padding: 20px;
-            background-image: radial-gradient(circle at 20% 20%, rgba(139, 92, 246, 0.15), transparent 40%), radial-gradient(circle at 80% 80%, rgba(245, 158, 11, 0.1), transparent 40%);
-        }
-        .box { background: #1e1638; padding: 40px 30px; border-radius: 20px; width: 100%; max-width: 400px; border: 1px solid rgba(139, 92, 246, 0.3); box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
-        .logo { text-align: center; font-size: 28px; font-weight: 900; color: #f59e0b; margin-bottom: 25px; }
-        h2 { text-align: center; margin-bottom: 20px; font-size: 22px; }
-        input { width: 100%; padding: 13px; margin-bottom: 15px; border-radius: 8px; border: 1px solid #444; background: #0f0a1e; color: #fff; font-family: inherit; font-size: 15px; }
-        input:focus { outline: none; border-color: #6d28d9; }
-        button { width: 100%; padding: 13px; background: linear-gradient(135deg, #6d28d9, #8b5cf6); color: #fff; border: none; border-radius: 8px; font-weight: bold; font-size: 16px; cursor: pointer; font-family: inherit; margin-top: 10px; transition: 0.3s; }
-        button:hover { transform: translateY(-2px); box-shadow: 0 5px 15px rgba(109, 40, 217, 0.4); }
-        .toggle-link { text-align: center; margin-top: 20px; font-size: 14px; color: #a89fc4; }
-        .toggle-link a { color: #f59e0b; text-decoration: none; font-weight: bold; cursor: pointer; }
-        .error-msg { background: rgba(239, 68, 68, 0.1); color: #ef4444; padding: 10px; border-radius: 8px; margin-bottom: 15px; text-align: center; font-size: 14px; display: none; }
-        .success-msg { background: rgba(16, 185, 129, 0.1); color: #10b981; padding: 10px; border-radius: 8px; margin-bottom: 15px; text-align: center; font-size: 14px; display: none; }
-        #register-form { display: none; }
-    </style>
-</head>
-<body>
+<?php
+// ================================================================
+// login2.php - API تسجيل الدخول (يعيد JSON)
+// متصل بقاعدة البيانات: 4777865_home
+// ================================================================
 
-<div class="box">
-    <div class="logo">OUX - أوكس</div>
-    <div id="error-msg" class="error-msg"></div>
-    <div id="success-msg" class="success-msg"></div>
+header("Content-Type: application/json; charset=utf-8");
+header("Access-Control-Allow-Origin: *");
+header("Access-Control-Allow-Methods: POST, GET, OPTIONS");
+header("Access-Control-Allow-Headers: Content-Type, Authorization, X-Requested-With");
 
-    <!-- نموذج تسجيل الدخول -->
-    <form id="login-form">
-        <h2>تسجيل الدخول</h2>
-        <input type="email" id="login-email" placeholder="البريد الإلكتروني" required>
-        <input type="password" id="login-password" placeholder="كلمة المرور" required>
-        <button type="submit" id="login-btn">دخول</button>
-        <div class="toggle-link">
-            ليس لديك حساب؟ <a onclick="toggleForms()">إنشاء حساب جديد</a>
-        </div>
-    </form>
+if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
+    http_response_code(200);
+    exit();
+}
 
-    <!-- نموذج إنشاء حساب -->
-    <form id="register-form">
-        <h2>إنشاء حساب جديد</h2>
-        <input type="email" id="register-email" placeholder="البريد الإلكتروني" required>
-        <input type="password" id="register-password" placeholder="كلمة المرور (6 أحرف على الأقل)" required>
-        <button type="submit" id="register-btn">تسجيل</button>
-        <div class="toggle-link">
-            لديك حساب بالفعل؟ <a onclick="toggleForms()">تسجيل الدخول</a>
-        </div>
-    </form>
-</div>
+error_reporting(0);
+ini_set('display_errors', 0);
 
-<!-- ربط مكتبات Firebase -->
-<script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-    import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+// ========== إعدادات قاعدة البيانات (تم التعديل هنا) ==========
+$host = "fdb1030.awardspace.net";
+$dbuser = "4777865_home";
+$dbpass = "Aa12345678##";
+$dbname = "4777865_home";
 
-    const firebaseConfig = {
-        apiKey: "AIzaSyCdV3qgXHHxz4e8mf1c-2TrZujXqY-LuQc",
-        authDomain: "black-9deb2.firebaseapp.com",
-        projectId: "black-9deb2",
-        storageBucket: "black-9deb2.firebasestorage.app",
-        messagingSenderId: "725901940218",
-        appId: "1:725901940218:web:bc10585da68be02dc14043"
-    };
+// ========== الاتصال بقاعدة البيانات ==========
+$conn = new mysqli($host, $dbuser, $dbpass, $dbname);
 
-    const app = initializeApp(firebaseConfig);
-    const auth = getAuth(app);
+if ($conn->connect_error) {
+    echo json_encode([
+        "status" => "failed",
+        "success" => false,
+        "message" => "خطأ في الاتصال بقاعدة البيانات: " . $conn->connect_error
+    ], JSON_UNESCAPED_UNICODE);
+    exit;
+}
 
-    const loginForm = document.getElementById('login-form');
-    const registerForm = document.getElementById('register-form');
-    const errorMsg = document.getElementById('error-msg');
-    const successMsg = document.getElementById('success-msg');
+$conn->set_charset("utf8mb4");
 
-    window.toggleForms = function() {
-        if(loginForm.style.display === 'none') {
-            loginForm.style.display = 'block'; registerForm.style.display = 'none';
-        } else {
-            loginForm.style.display = 'none'; registerForm.style.display = 'block';
-        }
-        errorMsg.style.display = 'none'; successMsg.style.display = 'none';
-    }
+// ========== إنشاء جدول المستخدمين ==========
+$conn->query("CREATE TABLE IF NOT EXISTS users (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    account_number VARCHAR(20) UNIQUE NOT NULL,
+    username VARCHAR(100) NOT NULL,
+    full_name VARCHAR(255) NOT NULL,
+    password VARCHAR(255) NOT NULL,
+    email VARCHAR(100) DEFAULT NULL,
+    phone VARCHAR(20) DEFAULT NULL,
+    balance DECIMAL(15,2) DEFAULT 0,
+    account_balance DECIMAL(15,2) DEFAULT 0,
+    status ENUM('active', 'banned', 'pending', 'disabled') DEFAULT 'active',
+    device_id VARCHAR(255) DEFAULT NULL,
+    is_verified TINYINT(1) DEFAULT 1,
+    is_admin TINYINT(1) DEFAULT 0,
+    reference_number VARCHAR(50) DEFAULT NULL,
+    full_account_number VARCHAR(100) DEFAULT NULL,
+    account_type ENUM('savings', 'current', 'premium') DEFAULT 'savings',
+    branch VARCHAR(100) DEFAULT 'الفرع الرئيسي',
+    role VARCHAR(50) DEFAULT 'user',
+    last_login TIMESTAMP NULL DEFAULT NULL,
+    login_attempts INT DEFAULT 0,
+    locked_until TIMESTAMP NULL DEFAULT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    INDEX idx_account_number (account_number),
+    INDEX idx_username (username),
+    INDEX idx_status (status)
+)");
 
-    function showError(msg) { errorMsg.textContent = msg; errorMsg.style.display = 'block'; successMsg.style.display = 'none'; }
+// ========== إضافة مستخدمين تجريبيين ==========
+$conn->query("INSERT IGNORE INTO users (account_number, username, full_name, password, balance, status, full_account_number) VALUES 
+    ('2125759', 'user', 'مستخدم تجريبي', MD5('bdbsvg'), 5000, 'active', '21257590001'),
+    ('1000001', 'admin', 'مدير النظام', MD5('admin123'), 5000, 'active', '10000010001'),
+    ('1000002', 'user1', 'مستخدم تجريبي 1', MD5('123456'), 3000, 'active', '10000020001'),
+    ('1000003', 'user2', 'مستخدم تجريبي 2', MD5('123456'), 2000, 'active', '10000030001')
+");
 
-    // تسجيل الدخول
-    loginForm.addEventListener('submit', (e) => {
-        e.preventDefault();
-        const email = document.getElementById('login-email').value;
-        const password = document.getElementById('login-password').value;
-        const btn = document.getElementById('login-btn');
-        btn.textContent = 'جاري الدخول...';
-        
-        signInWithEmailAndPassword(auth, email, password)
-            .then(() => { 
-                // بما إننا في صفحة واحدة (SPA)، هنعرض رسالة نجاح أو نوجهه لصفحة تانية لو موجودة
-                // هنا بنعرض رسالة نجاح مبدئية عشان مفيش صفحة تانية
-                showSuccess('تم تسجيل الدخول بنجاح! أهلاً بك في أوكس.'); 
-            })
-            .catch((error) => {
-                btn.textContent = 'دخول';
-                if(error.code === 'auth/user-not-found' || error.code === 'auth/wrong-password' || error.code === 'auth/invalid-credential') {
-                    showError('البريد الإلكتروني أو كلمة المرور غير صحيحة');
-                } else {
-                    showError('حدث خطأ: ' + error.message);
-                }
-            });
-    });
+// ================================================================
+// قراءة البيانات الواردة
+// ================================================================
+$account = $_POST['account_number'] ?? $_GET['account_number'] ?? '';
+$password = md5($_POST['password'] ?? $_GET['password'] ?? '');
+$device_id = $_POST['device_id'] ?? $_GET['device_id'] ?? '';
 
-    // إنشاء حساب
-    registerForm.addEventListener('submit', (e) => {
-        e.preventDefault();
-        const email = document.getElementById('register-email').value;
-        const password = document.getElementById('register-password').value;
-        const btn = document.getElementById('register-btn');
-        
-        if(password.length < 6) { showError('كلمة المرور يجب أن تكون 6 أحرف على الأقل'); return; }
-        btn.textContent = 'جاري التسجيل...';
+// تنظيف رقم الحساب
+$account = ltrim($account, '0');
 
-        createUserWithEmailAndPassword(auth, email, password)
-            .then(() => {
-                btn.textContent = 'تسجيل';
-                successMsg.textContent = 'تم إنشاء الحساب بنجاح! يمكنك الآن تسجيل الدخول.';
-                successMsg.style.display = 'block'; errorMsg.style.display = 'none';
-                toggleForms();
-            })
-            .catch((error) => {
-                btn.textContent = 'تسجيل';
-                if(error.code === 'auth/email-already-in-use') showError('هذا البريد الإلكتروني مسجل بالفعل');
-                else if (error.code === 'auth/weak-password') showError('كلمة المرور ضعيفة جداً');
-                else showError('حدث خطأ: ' + error.message);
-            });
-    });
+// ================================================================
+// 1. التحقق من وجود رقم الحساب
+// ================================================================
+if (empty($account)) {
+    echo json_encode([
+        "status" => "failed",
+        "success" => false,
+        "message" => "❌ رقم الحساب مطلوب"
+    ], JSON_UNESCAPED_UNICODE);
+    $conn->close();
+    exit;
+}
 
-    function showSuccess(msg) {
-        successMsg.textContent = msg; successMsg.style.display = 'block'; errorMsg.style.display = 'none';
-    }
-</script>
-</body>
-</html>
+// ================================================================
+// 2. البحث عن الحساب
+// ================================================================
+$stmt = $conn->prepare("SELECT * FROM users WHERE account_number = ? OR full_account_number = ?");
+$stmt->bind_param("ss", $account, $account);
+$stmt->execute();
+$result = $stmt->get_result();
+
+if (!$result || $result->num_rows == 0) {
+    echo json_encode([
+        "status" => "failed",
+        "success" => false,
+        "message" => "❌ الحساب غير موجود"
+    ], JSON_UNESCAPED_UNICODE);
+    $stmt->close();
+    $conn->close();
+    exit;
+}
+
+$user = $result->fetch_assoc();
+$stmt->close();
+
+// ================================================================
+// 3. التحقق من حالة الحساب (محظور)
+// ================================================================
+if (isset($user['status']) && ($user['status'] == 'banned' || $user['status'] == 'disabled')) {
+    echo json_encode([
+        "status" => "failed",
+        "success" => false,
+        "message" => "⚠️التطبيق في وضع الصيانه يرجى المحاوله لاحقا"
+    ], JSON_UNESCAPED_UNICODE);
+    $conn->close();
+    exit;
+}
+
+// ================================================================
+// 4. التحقق من كلمة المرور
+// ================================================================
+if ($user['password'] != $password) {
+    echo json_encode([
+        "status" => "failed",
+        "success" => false,
+        "message" => "❌ كلمة المرور غير صحيحة"
+    ], JSON_UNESCAPED_UNICODE);
+    $conn->close();
+    exit;
+}
+
+// ================================================================
+// 5. التحقق من الجهاز (اختياري)
+// ================================================================
+if (!empty($user['device_id']) && !empty($device_id) && $user['device_id'] != $device_id) {
+    echo json_encode([
+        "status" => "failed",
+        "success" => false,
+        "message" => "⚠️ الحساب مرتبط بجهاز آخر"
+    ], JSON_UNESCAPED_UNICODE);
+    $conn->close();
+    exit;
+}
+
+// ================================================================
+// 6. ربط الجهاز إذا كان جديداً
+// ================================================================
+if (empty($user['device_id']) && !empty($device_id)) {
+    $updateStmt = $conn->prepare("UPDATE users SET device_id = ? WHERE account_number = ?");
+    $updateStmt->bind_param("ss", $device_id, $user['account_number']);
+    $updateStmt->execute();
+    $updateStmt->close();
+}
+
+// ================================================================
+// 7. تحديث آخر تسجيل دخول
+// ================================================================
+$updateLoginStmt = $conn->prepare("UPDATE users SET last_login = NOW() WHERE account_number = ?");
+$updateLoginStmt->bind_param("s", $user['account_number']);
+$updateLoginStmt->execute();
+$updateLoginStmt->close();
+
+// ================================================================
+// 8. نجاح تسجيل الدخول - إرجاع JSON
+// ================================================================
+echo json_encode([
+    "status" => "success",
+    "success" => true,
+    "message" => "✅ تم تسجيل الدخول بنجاح",
+    "account_number" => $user['account_number'],
+    "username" => $user['username'],
+    "full_name" => $user['full_name'] ?? $user['username'],
+    "balance" => $user['balance'] ?? 0,
+    "account_balance" => $user['account_balance'] ?? 0,
+    "account_type" => $user['account_type'] ?? 'savings',
+    "branch" => $user['branch'] ?? 'الفرع الرئيسي',
+    "role" => $user['role'] ?? 'user',
+    "status" => $user['status'] ?? 'active'
+], JSON_UNESCAPED_UNICODE);
+
+$conn->close();
+?>
