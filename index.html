@@ -29,6 +29,8 @@
         }
         @keyframes shake { 0%,100%{transform:translateX(0)} 25%{transform:translateX(-6px)} 75%{transform:translateX(6px)} }
         .animate-shake { animation: shake .4s; }
+        .loader { border: 3px solid #f3f3f3; border-top: 3px solid #b3262b; border-radius: 50%; width: 20px; height: 20px; animation: spin 1s linear infinite; }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
     </style>
 </head>
 <body class="flex justify-center min-h-screen">
@@ -38,7 +40,7 @@
     <!-- Firebase SDK -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-        import { getFirestore, doc, getDoc, collection, addDoc, query, where, getDocs } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+        import { getFirestore, collection, addDoc, query, where, getDocs } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyCdV3qgXHHxz4e8mf1c-2TrZujXqY-LuQc",
@@ -49,51 +51,67 @@
             appId: "1:725901940218:web:bc10585da68be02dc14043"
         };
 
-        const app = initializeApp(firebaseConfig);
-        const db = getFirestore(app);
+        let db;
+        try {
+            const app = initializeApp(firebaseConfig);
+            db = getFirestore(app);
+        } catch (e) {
+            console.error("Firebase Init Error:", e);
+        }
 
         let currentPage = 'register';
         const appDiv = document.getElementById('app');
 
-        // ---------------- دالة إنشاء الحساب المعدلة ----------------
+        // دالة إنشاء الحساب
         async function register(username, password) {
-            try {
-                const usersRef = collection(db, "users");
-                
-                // 1. التحقق من تكرار اسم المستخدم (مرة واحدة فقط)
-                const qUser = query(usersRef, where("username", "==", username));
-                const userSnap = await getDocs(qUser);
-                if (!userSnap.empty) throw new Error("اسم المستخدم مسجل بالفعل، جرب اسماً آخر");
+            return new Promise(async (resolve, reject) => {
+                // مؤقت 10 ثواني لقطع الاتصال إذا كان هناك خطأ في القواعد
+                const timer = setTimeout(() => {
+                    reject(new Error('انتهت المهلة: قاعدة البيانات ترفض الاتصال. تأكد من تفعيل قاعدة البيانات ووضع القواعد (Rules) على allow read, write: if true;'));
+                }, 10000);
 
-                // 2. توليد رقم حساب عشوائي (بدون البحث في الداتابيز لتجنب التعليق)
-                // نعتمد على الوقت الحالي + رقم عشوائي لضمان عدم التكرار تقريباً
-                const randomPart = Math.floor(100 + Math.random() * 900); // 3 أرقام عشوائية
-                const timePart = Math.floor(Date.now() / 1000).toString().slice(-4); // آخر 4 أرقام من الوقت
-                const accountNumber = timePart + randomPart; // ينتج 7 أرقام
+                try {
+                    const usersRef = collection(db, "users");
+                    
+                    // 1. التحقق من اسم المستخدم
+                    const qUser = query(usersRef, where("username", "==", username));
+                    const userSnap = await getDocs(qUser);
+                    
+                    if (!userSnap.empty) {
+                        clearTimeout(timer);
+                        reject(new Error("اسم المستخدم مسجل بالفعل، جرب اسماً آخر"));
+                        return;
+                    }
 
-                // 3. حفظ البيانات في Firebase
-                const newUser = {
-                    account_number: accountNumber,
-                    username: username,
-                    password: password,
-                    balance: 0,
-                    status: 'active',
-                    role: 'user',
-                    created_at: new Date()
-                };
+                    // 2. توليد رقم الحساب
+                    const randomPart = Math.floor(100 + Math.random() * 900); 
+                    const timePart = Math.floor(Date.now() / 1000).toString().slice(-4); 
+                    const accountNumber = timePart + randomPart; 
 
-                await addDoc(usersRef, newUser);
-                
-                // 4. الانتقال لصفحة النجاح
-                sessionStorage.setItem('new_account_number', accountNumber);
-                currentPage = 'success';
-                render();
-            } catch (error) {
-                throw error;
-            }
+                    // 3. حفظ البيانات
+                    const newUser = {
+                        account_number: accountNumber,
+                        username: username,
+                        password: password,
+                        balance: 0,
+                        status: 'active',
+                        role: 'user',
+                        created_at: new Date()
+                    };
+
+                    await addDoc(usersRef, newUser);
+                    
+                    clearTimeout(timer);
+                    sessionStorage.setItem('new_account_number', accountNumber);
+                    resolve();
+                } catch (error) {
+                    clearTimeout(timer);
+                    reject(error);
+                }
+            });
         }
 
-        // ---------------- واجهة إنشاء الحساب ----------------
+        // واجهة إنشاء الحساب
         function renderRegister() {
             appDiv.innerHTML = `
             <div class="flex flex-col h-full bg-white">
@@ -109,21 +127,14 @@
                     <div id="register-error" class="hidden bg-red-50 border border-red-300 text-red-700 text-sm font-medium rounded-xl p-3 mb-4 animate-shake"></div>
                     
                     <form id="registerForm" class="flex flex-col">
-                        
-                        <!-- حقل اسم المستخدم -->
                         <div class="input-group">
                             <input type="text" name="username" id="username" placeholder=" " required>
                             <label for="username">اسم المستخدم</label>
                         </div>
-
-                        <!-- حقل كلمة المرور (4 أرقام) -->
                         <div class="input-group">
-                            <input type="password" name="password" id="password" placeholder=" " required 
-                                   inputmode="numeric" pattern="[0-9]{4}" 
-                                   title="يجب إدخال 4 أرقام فقط" maxlength="4">
+                            <input type="password" name="password" id="password" placeholder=" " required inputmode="numeric" pattern="[0-9]{4}" maxlength="4">
                             <label for="password">كلمة المرور (4 أرقام)</label>
                         </div>
-
                         <button type="submit" id="submitBtn" class="btn-color text-white font-bold text-lg py-3.5 rounded-xl mt-4 hover:opacity-90 transition flex justify-center items-center gap-2">
                             <span>إنشاء حساب</span>
                         </button>
@@ -139,32 +150,30 @@
                 const errorDiv = document.getElementById('register-error');
                 const submitBtn = document.getElementById('submitBtn');
 
-                // التحقق من أن كلمة المرور 4 أرقام فقط
                 if (!/^\d{4}$/.test(password)) {
                     errorDiv.textContent = '⚠️ يرجى إدخال كلمة مرور مكونة من 4 أرقام فقط';
                     errorDiv.classList.remove('hidden');
                     return;
                 }
 
-                // تعطيل الزر وإظهار التحميل لمنع الضغط المتكرر
                 submitBtn.disabled = true;
-                submitBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> <span>جاري الإنشاء...</span>';
+                submitBtn.innerHTML = '<div class="loader"></div> <span>جاري الإنشاء...</span>';
                 errorDiv.classList.add('hidden');
 
                 try {
                     await register(username, password);
+                    currentPage = 'success';
+                    render();
                 } catch (err) {
                     errorDiv.textContent = '⚠️ ' + err.message;
                     errorDiv.classList.remove('hidden');
-                    
-                    // إعادة تفعيل الزر في حالة حدوث خطأ
                     submitBtn.disabled = false;
-                    submitBtn.innerHTML = '<span>إنشاء حساب</span>';
+                    submitBtn.innerHTML = '<span>إعادة المحاولة</span>';
                 }
             });
         }
 
-        // ---------------- واجهة نجاح الحساب ----------------
+        // واجهة النجاح
         function renderSuccess() {
             const accountNumber = sessionStorage.getItem('new_account_number');
             if (!accountNumber) { currentPage = 'register'; render(); return; }
@@ -185,7 +194,7 @@
                     <div class="bg-red-50 border-2 border-red-200 rounded-2xl p-6 shadow-sm">
                         <div class="flex items-center justify-center gap-2 mb-4"><div class="w-9 h-9 bg-[#b3262b] rounded-lg flex items-center justify-center"><i class="fa-solid fa-hashtag text-white text-sm"></i></div><div class="text-sm font-bold text-[#b3262b]">رقم الحساب الخاص بك</div></div>
                         <div class="text-4xl font-extrabold text-[#b3262b] tracking-widest font-mono text-center py-3" style="direction:ltr">${accountNumber}</div>
-                        <button type="button" id="copyBtn" class="w-full mt-4 py-3 bg-[#b3262b] text-white rounded-xl font-bold flex items-center justify-center gap-2 shadow-lg"><i class="fa-regular fa-copy"></i> نسخ رقم الحساب</button>
+                        <button type="button" id="copyBtn" class="w-full mt-4 py-3 bg-[#b3262b] text-white rounded-xl font-bold flex justify-center items-center gap-2 shadow-lg"><i class="fa-regular fa-copy"></i> نسخ رقم الحساب</button>
                     </div>
                 </div>
             </div>`;
@@ -195,7 +204,6 @@
             });
         }
 
-        // ---------------- التوجيه ----------------
         function render() {
             switch (currentPage) {
                 case 'register': renderRegister(); break;
@@ -204,7 +212,6 @@
             }
         }
 
-        // تشغيل الصفحة
         render();
     </script>
 </body>
