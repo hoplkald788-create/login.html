@@ -1,0 +1,725 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>بلدنا - المحفظة</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&family=Tajawal:wght@400;500;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body{font-family:'Tajawal',sans-serif;background:#f9f9f9}
+        .header-bg{background:#a82525}.btn-color{background:#b3262b}
+        .input-group { position: relative; margin-bottom: 20px; }
+        .input-group input { 
+            width: 100%; padding: 16px; border: 1px solid #d1d5db; 
+            border-radius: 12px; font-size: 15px; background: transparent; 
+            color: #111; outline: none; transition: 0.2s;
+        }
+        .input-group input:focus { border-color: #b3262b; box-shadow: 0 0 0 3px rgba(179,38,43,.1); }
+        .input-group label { 
+            position: absolute; right: 16px; top: 50%; transform: translateY(-50%); 
+            color: #9ca3af; font-size: 15px; pointer-events: none; 
+            transition: 0.2s ease all; background: #fff; padding: 0 4px;
+        }
+        .input-group input:focus ~ label,
+        .input-group input:not(:placeholder-shown) ~ label {
+            top: 0; font-size: 11px; color: #b3262b; font-weight: 700;
+        }
+        @keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-6px)}75%{transform:translateX(6px)}}.animate-shake{animation:shake .4s}
+        .success-toast{position:fixed;top:-100px;left:50%;transform:translateX(-50%);background:#4CAF50;color:#fff;padding:12px 20px;border-radius:10px;font-size:13px;font-weight:700;display:flex;align-items:center;gap:8px;z-index:1000;transition:top .4s;width:90%;max-width:350px;justify-content:center}
+        .success-toast.show{top:20px}
+    </style>
+</head>
+<body class="flex justify-center min-h-screen">
+
+    <div id="app" class="w-full max-w-md bg-white min-h-screen shadow-lg relative overflow-hidden flex flex-col"></div>
+
+    <!-- Firebase SDK -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getFirestore, doc, getDoc, setDoc, collection, addDoc, query, where, getDocs, updateDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyCdV3qgXHHxz4e8mf1c-2TrZujXqY-LuQc",
+            authDomain: "black-9deb2.firebaseapp.com",
+            projectId: "black-9deb2",
+            storageBucket: "black-9deb2.firebasestorage.app",
+            messagingSenderId: "725901940218",
+            appId: "1:725901940218:web:bc10585da68be02dc14043"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
+        // متغيرات الحالة
+        let currentUser = null;
+        let currentPage = 'login';
+        let userTransactions = [];
+
+        const appDiv = document.getElementById('app');
+
+        // ---------------- دوال مساعدة ----------------
+        function showToast(msg, bg='#4CAF50') {
+            let toast = document.createElement('div');
+            toast.className = 'success-toast';
+            toast.innerHTML = `<i class="fa-solid fa-circle-check"></i> <span>${msg}</span>`;
+            toast.style.backgroundColor = bg;
+            document.body.appendChild(toast);
+            setTimeout(() => toast.classList.add('show'), 10);
+            setTimeout(() => { toast.classList.remove('show'); setTimeout(()=>toast.remove(), 400); }, 4000);
+        }
+
+        function formatDate(dateStr) {
+            if(!dateStr) return '—';
+            const d = dateStr.toDate ? dateStr.toDate() : new Date(dateStr);
+            const months = ['يناير','فبراير','مارس','أبريل','مايو','يونيو','يوليو','أغسطس','سبتمبر','أكتوبر','نوفمبر','ديسمبر'];
+            return `${d.getDate()} ${months[d.getMonth()]} ${d.getFullYear()} - ${String(d.getHours()).padStart(2,'0')}:${String(d.getMinutes()).padStart(2,'0')}`;
+        }
+
+        // ---------------- التنقل ----------------
+        function navigate(page) {
+            currentPage = page;
+            render();
+        }
+
+        // ---------------- تسجيل الدخول ----------------
+        async function login(identifier, password) {
+            try {
+                // البحث برقم الحساب أو اسم المستخدم
+                const usersRef = collection(db, "users");
+                const q1 = query(usersRef, where("account_number", "==", identifier));
+                const q2 = query(usersRef, where("username", "==", identifier));
+                
+                let snapshot = await getDocs(q1);
+                if (snapshot.empty) snapshot = await getDocs(q2);
+
+                if (snapshot.empty) throw new Error("الحساب غير موجود");
+
+                const userDoc = snapshot.docs[0];
+                const userData = userDoc.data();
+
+                // التحقق من كلمة المرور (يمكنك استخدام التشفير هنا، لكن للتبسيط نقارن مباشرة)
+                if (userData.password !== password) throw new Error("كلمة المرور خاطئة");
+                if (userData.status === 'banned') throw new Error("حسابك محظور");
+
+                currentUser = { id: userDoc.id, ...userData };
+                localStorage.setItem('bld_user_id', userDoc.id); // حفظ الجلسة
+                showToast("تم تسجيل الدخول بنجاح");
+                navigate('dashboard');
+            } catch (error) {
+                throw error;
+            }
+        }
+
+        // ---------------- إنشاء حساب ----------------
+        async function register(data) {
+            try {
+                const usersRef = collection(db, "users");
+                // التحقق من تكرار الموبايل
+                const qPhone = query(usersRef, where("phone", "==", data.phone_mobile));
+                const phoneSnap = await getDocs(qPhone);
+                if (!phoneSnap.empty) throw new Error("رقم الموبايل مسجل بالفعل");
+
+                // توليد رقم حساب عشوائي
+                let accountNumber;
+                let isUnique = false;
+                while (!isUnique) {
+                    accountNumber = Math.floor(1000000 + Math.random() * 9000000).toString();
+                    const qAcc = query(usersRef, where("account_number", "==", accountNumber));
+                    const accSnap = await getDocs(qAcc);
+                    if (accSnap.empty) isUnique = true;
+                }
+
+                const newUser = {
+                    account_number: accountNumber,
+                    username: data.full_name_en.toLowerCase().replace(/\s+/g, '_') + '_' + accountNumber.slice(-4),
+                    full_name: data.full_name_ar,
+                    full_name_en: data.full_name_en,
+                    phone: data.phone_mobile,
+                    phone_alt: data.phone_alt,
+                    password: data.password, // يفضل استخدام تشفير، لكن للتبسيط
+                    balance: 0,
+                    status: 'active',
+                    created_at: new Date()
+                };
+
+                const docRef = await addDoc(usersRef, newUser);
+                
+                // الانتقال لصفحة النجاح
+                sessionStorage.setItem('new_account_number', accountNumber);
+                navigate('success');
+            } catch (error) {
+                throw error;
+            }
+        }
+
+        // ---------------- طلب شحن ----------------
+        async function submitRecharge(amount, method, senderName, senderAccount, receiptBase64) {
+            try {
+                if (!currentUser) throw new Error("انتهت الجلسة");
+                
+                const txData = {
+                    user_id: currentUser.id,
+                    type: 'deposit',
+                    amount: parseFloat(amount),
+                    status: 'pending',
+                    method: method,
+                    sender_name: senderName,
+                    sender_account: senderAccount,
+                    receipt_url: receiptBase64 || null, // سيتم حفظ الصورة كـ Base64
+                    created_at: new Date()
+                };
+
+                await addDoc(collection(db, "transactions"), txData);
+                showToast("✅ تم إرسال طلبك! سيصلك الرصيد بعد الموافقة");
+                setTimeout(() => navigate('transactions'), 2000);
+            } catch (error) {
+                throw error;
+            }
+        }
+
+        // ---------------- جلب المعاملات ----------------
+        async function fetchTransactions() {
+            if (!currentUser) return [];
+            try {
+                const txRef = collection(db, "transactions");
+                const q = query(txRef, where("user_id", "==", currentUser.id));
+                const snapshot = await getDocs(q);
+                let txs = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+                // ترتيب يدوي (لأن Firebase لا يدعم ترتيب النتائج في الاستعلام المركب بدون فهرس)
+                txs.sort((a, b) => (b.created_at?.toDate?.() || new Date(b.created_at)) - (a.created_at?.toDate?.() || new Date(a.created_at)));
+                return txs;
+            } catch (error) {
+                console.error("Error fetching transactions:", error);
+                return [];
+            }
+        }
+
+        // ---------------- واجهات المستخدم (Render) ----------------
+
+        function render() {
+            if (currentUser) {
+                if (currentPage === 'login' || currentPage === 'register' || currentPage === 'success') {
+                    currentPage = 'dashboard';
+                }
+            } else {
+                if (currentPage !== 'login' && currentPage !== 'register' && currentPage !== 'success') {
+                    currentPage = 'login';
+                }
+            }
+
+            switch (currentPage) {
+                case 'login': renderLogin(); break;
+                case 'register': renderRegister(); break;
+                case 'success': renderSuccess(); break;
+                case 'dashboard': renderDashboard(); break;
+                case 'transactions': renderTransactions(); break;
+                case 'recharge': renderRecharge(); break;
+            }
+        }
+
+        // ---------- صفحة تسجيل الدخول ----------
+        function renderLogin() {
+            appDiv.innerHTML = `
+            <div class="flex flex-col h-full bg-white">
+                <div class="header-bg text-white pt-10 pb-8 px-6 relative rounded-b-[20px] text-center">
+                    <div class="flex flex-col items-center mt-2">
+                        <img src="https://i.ibb.co/8gSqTySf/256398-removebg-preview.png" class="h-16 object-contain mb-3">
+                        <p class="text-sm font-medium mb-4">بلدنا للمدفوعات الرقمية</p>
+                        
+                        <div class="flex items-center justify-center gap-2 text-xs text-white/90 bg-black/20 px-4 py-1.5 rounded-full mb-6">
+                            <i class="fa-solid fa-shield-halved text-[#4CAF50]"></i> 
+                            اتصال مشفّر وبيانات محمية
+                        </div>
+
+                        <h1 class="text-2xl font-bold mb-1">مرحباً بعودتك</h1>
+                        <p class="text-sm font-medium opacity-90">سجّل الدخول لإدارة محفظتك</p>
+                    </div>
+                    <div class="absolute bottom-0 left-0 w-0 h-0 border-l-[50px] border-l-transparent border-b-[40px] border-b-[#2e7d32]"></div>
+                </div>
+
+                <div class="px-6 py-8 flex-1 flex flex-col">
+                    <div id="login-error" class="hidden bg-red-50 border border-red-300 text-red-700 text-sm font-medium rounded-xl p-3 mb-4 animate-shake"></div>
+                    
+                    <form id="loginForm" class="flex flex-col">
+                        <div class="input-group">
+                            <input type="text" name="identifier" id="identifier" placeholder=" " required>
+                            <label for="identifier">رقم الحساب أو اسم المستخدم</label>
+                        </div>
+
+                        <div class="input-group">
+                            <input type="password" name="password" id="password" placeholder=" " required>
+                            <label for="password">كلمة المرور</label>
+                        </div>
+
+                        <div class="flex items-center justify-between mb-6 mt-2">
+                            <label class="flex items-center gap-2 cursor-pointer">
+                                <input type="checkbox" id="rememberMe" class="w-4 h-4 text-[#b3262b] rounded border-gray-300 focus:ring-[#b3262b]">
+                                <span class="text-sm text-gray-600 font-medium">تذكر بيانات الدخول</span>
+                            </label>
+                            <a href="#" class="text-sm text-[#b3262b] font-bold hover:underline">نسيت كلمة المرور؟</a>
+                        </div>
+
+                        <button type="submit" class="btn-color text-white font-bold text-lg py-3.5 rounded-xl transition hover:opacity-90">تسجيل الدخول</button>
+                    </form>
+                    
+                    <div class="text-center mt-6 text-sm text-gray-600">ليس لديك حساب؟ <a href="#" id="goToRegister" class="text-[#b3262b] font-bold">أنشئ حساباً</a></div>
+                </div>
+            </div>`;
+
+            // حفظ رقم الحساب تلقائياً
+            const identifierInput = document.getElementById('identifier');
+            const rememberCheckbox = document.getElementById('rememberMe');
+            const savedIdentifier = localStorage.getItem('bld_saved_account');
+            if (savedIdentifier) {
+                identifierInput.value = savedIdentifier;
+                rememberCheckbox.checked = true;
+            }
+
+            document.getElementById('goToRegister').addEventListener('click', (e) => { e.preventDefault(); navigate('register'); });
+
+            document.getElementById('loginForm').addEventListener('submit', async (e) => {
+                e.preventDefault();
+                const identifier = identifierInput.value.trim();
+                const password = document.getElementById('password').value.trim();
+                const errorDiv = document.getElementById('login-error');
+                
+                try {
+                    if (rememberCheckbox.checked) localStorage.setItem('bld_saved_account', identifier);
+                    else localStorage.removeItem('bld_saved_account');
+
+                    await login(identifier, password);
+                } catch (err) {
+                    errorDiv.textContent = '⚠️ ' + err.message;
+                    errorDiv.classList.remove('hidden');
+                }
+            });
+        }
+
+        // ---------- صفحة إنشاء حساب ----------
+        function renderRegister() {
+            appDiv.innerHTML = `
+            <div class="flex flex-col h-full bg-white">
+                <div class="header-bg text-white pt-10 pb-6 px-6 relative rounded-b-[20px]">
+                    <a href="#" id="backToLogin" class="absolute top-6 right-6 w-10 h-10 bg-white/20 rounded-full flex items-center justify-center"><i class="fa-solid fa-chevron-left"></i></a>
+                    <div class="flex flex-col items-center mt-2">
+                        <img src="https://i.ibb.co/8gSqTySf/256398-removebg-preview.png" class="h-16 object-contain mb-3">
+                        <p class="text-sm font-medium mb-5">بلدنا للمدفوعات الرقمية</p>
+                        <h1 class="text-2xl font-bold mb-2">إنشاء حساب</h1>
+                        <p class="text-sm font-medium">افتح محفظتك الآن</p>
+                    </div>
+                </div>
+                <div class="px-6 py-6 flex-1 flex flex-col overflow-y-auto">
+                    <div id="register-error" class="hidden bg-red-50 border border-red-300 text-red-700 text-sm font-medium rounded-xl p-3 mb-4 animate-shake"></div>
+                    <form id="registerForm" class="flex flex-col gap-4">
+                        <input type="text" name="full_name_ar" placeholder="الاسم الرباعي بالعربية" required class="border rounded-xl py-3 px-4 outline-none focus:border-[#b3262b]">
+                        <input type="tel" name="phone_mobile" placeholder="رقم الموبايل" required class="border rounded-xl py-3 px-4 outline-none focus:border-[#b3262b]">
+                        <input type="text" name="full_name_en" placeholder="Full Name in English" required class="border rounded-xl py-3 px-4 outline-none focus:border-[#b3262b]">
+                        <input type="tel" name="phone_alt" placeholder="رقم الهاتف" required class="border rounded-xl py-3 px-4 outline-none focus:border-[#b3262b]">
+                        <input type="password" name="password" placeholder="كلمة المرور" required minlength="4" class="border rounded-xl py-3 px-4 outline-none focus:border-[#b3262b]">
+                        <input type="password" name="confirm_password" placeholder="تأكيد كلمة المرور" required minlength="4" class="border rounded-xl py-3 px-4 outline-none focus:border-[#b3262b]">
+                        <div class="flex items-center gap-3"><input type="checkbox" name="terms" required class="w-5 h-5"><label class="text-sm text-gray-600">أوافق على الشروط والأحكام</label></div>
+                        <button type="submit" class="btn-color text-white font-bold text-lg py-3.5 rounded-xl mt-4">إنشاء الحساب</button>
+                    </form>
+                </div>
+            </div>`;
+
+            document.getElementById('backToLogin').addEventListener('click', (e) => { e.preventDefault(); navigate('login'); });
+
+            document.getElementById('registerForm').addEventListener('submit', async (e) => {
+                e.preventDefault();
+                const formData = new FormData(e.target);
+                const data = Object.fromEntries(formData.entries());
+                const errorDiv = document.getElementById('register-error');
+
+                if (data.password !== data.confirm_password) {
+                    errorDiv.textContent = '⚠️ كلمتا المرور غير متطابقتين';
+                    errorDiv.classList.remove('hidden');
+                    return;
+                }
+
+                try {
+                    await register(data);
+                } catch (err) {
+                    errorDiv.textContent = '⚠️ ' + err.message;
+                    errorDiv.classList.remove('hidden');
+                }
+            });
+        }
+
+        // ---------- صفحة النجاح ----------
+        function renderSuccess() {
+            const accountNumber = sessionStorage.getItem('new_account_number');
+            if (!accountNumber) { navigate('login'); return; }
+
+            appDiv.innerHTML = `
+            <div class="flex flex-col h-full bg-white">
+                <div class="header-bg text-white pt-12 pb-10 px-6 relative rounded-b-[20px] text-center animate-pop">
+                    <div class="flex flex-col items-center mt-2">
+                        <img src="https://i.ibb.co/8gSqTySf/256398-removebg-preview.png" class="h-20 object-contain mb-4">
+                        <p class="text-sm font-medium mb-6">بلدنا للمدفوعات الرقمية</p>
+                        <div class="w-24 h-24 bg-white/20 rounded-full flex items-center justify-center mb-6 animate-pulse-check"><i class="fa-solid fa-check text-5xl text-white"></i></div>
+                        <h1 class="text-2xl font-extrabold mb-3 text-center">مبروك! 🎉</h1>
+                        <p class="text-base font-medium text-center">أنت الآن جزء من منصة <span class="font-extrabold">بلدنا</span></p>
+                    </div>
+                    <div class="absolute bottom-0 left-0 w-0 h-0 border-l-[50px] border-l-transparent border-b-[40px] border-b-[#2e7d32]"></div>
+                </div>
+                <div class="px-6 py-8 flex-1 flex flex-col justify-center animate-pop">
+                    <div class="bg-red-50 border-2 border-red-200 rounded-2xl p-6 shadow-sm">
+                        <div class="flex items-center justify-center gap-2 mb-4"><div class="w-9 h-9 bg-[#b3262b] rounded-lg flex items-center justify-center"><i class="fa-solid fa-hashtag text-white text-sm"></i></div><div class="text-sm font-bold text-[#b3262b]">رقم الحساب</div></div>
+                        <div class="text-4xl font-extrabold text-[#b3262b] tracking-widest font-mono text-center py-3" style="direction:ltr">${accountNumber}</div>
+                        <button type="button" id="copyBtn" class="w-full mt-4 py-3 bg-[#b3262b] text-white rounded-xl font-bold flex items-center justify-center gap-2 shadow-lg"><i class="fa-regular fa-copy"></i> نسخ</button>
+                        <a href="#" id="goToLoginBtn" class="w-full mt-3 py-3 bg-white border-2 border-[#b3262b] text-[#b3262b] rounded-xl font-bold flex items-center justify-center gap-2"><i class="fa-solid fa-right-to-bracket"></i> تسجيل الدخول</a>
+                    </div>
+                </div>
+            </div>`;
+
+            document.getElementById('copyBtn').addEventListener('click', () => {
+                navigator.clipboard.writeText(accountNumber).then(()=>alert('تم النسخ'));
+            });
+
+            document.getElementById('goToLoginBtn').addEventListener('click', (e) => {
+                e.preventDefault();
+                sessionStorage.removeItem('new_account_number');
+                navigate('login');
+            });
+        }
+
+        // ---------- لوحة التحكم ----------
+        async function renderDashboard() {
+            if (!currentUser) return;
+            
+            const firstLetter = currentUser.full_name ? currentUser.full_name.charAt(0) : 'م';
+            const balance = currentUser.balance ? parseFloat(currentUser.balance).toLocaleString('en', {minimumFractionDigits: 2}) : '0.00';
+            
+            // جلب المعاملات
+            const txs = await fetchTransactions();
+            const pendingCount = txs.filter(t => t.status === 'pending').length;
+
+            appDiv.innerHTML = `
+            <div class="flex flex-col h-full bg-[#F5F6F9] pb-20">
+                <div class="header-bg p-5 pb-8 rounded-b-3xl text-white">
+                    <div class="flex justify-between items-center mt-2">
+                        <div class="flex items-center gap-3">
+                            <div class="text-right">
+                                <p class="text-xs opacity-80">طاب يومك</p>
+                                <h3 class="text-sm font-bold flex items-center gap-1">${currentUser.full_name || currentUser.username} <i class="fa-solid fa-circle-check text-yellow-400"></i></h3>
+                            </div>
+                            <div class="w-10 h-10 bg-yellow-400 rounded-full flex justify-center items-center text-black font-bold text-lg">${firstLetter}</div>
+                        </div>
+                        <a href="#" id="logoutBtn" class="w-10 h-10 border border-white/30 rounded-full flex justify-center items-center"><i class="fa-solid fa-right-from-bracket"></i></a>
+                    </div>
+                </div>
+                
+                <div class="px-5 -mt-6 relative z-10">
+                    <div class="bg-gradient-to-br from-[#B71C1C] to-[#8E0000] rounded-2xl p-4 text-white shadow-lg">
+                        <div class="flex justify-between items-center flex-row-reverse mb-4">
+                            <span class="text-xs bg-white/20 px-2 py-1 rounded">حساب برونزي</span>
+                            <span class="text-xs opacity-80"><i class="fa-regular fa-eye ml-1 cursor-pointer" id="toggleBalance"></i> الرصيد المتاح</span>
+                        </div>
+                        <div class="text-3xl font-extrabold mb-4" dir="ltr"><span class="text-sm text-yellow-400 mr-1">SDG</span> <span id="balanceAmount">${balance}</span></div>
+                        <div class="flex justify-between text-xs flex-row-reverse border-t border-white/20 pt-3">
+                            <span>BLD-${currentUser.account_number?.slice(0,4)}-${currentUser.account_number?.slice(4)}</span>
+                            <span class="flex items-center gap-1"><i class="fa-solid fa-circle-check text-yellow-400"></i> ${currentUser.full_name || currentUser.username}</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="p-5">
+                    <div class="bg-white rounded-2xl p-4 flex justify-between shadow-sm mb-4">
+                        <a href="#" id="goToRecharge" class="flex flex-col items-center gap-1 w-1/4">
+                            <div class="w-10 h-10 bg-green-100 text-green-600 rounded-xl flex justify-center items-center"><i class="fa-solid fa-download"></i></div>
+                            <span class="text-[10px] font-bold text-gray-700">شحن رصيد</span>
+                        </a>
+                        <div class="flex flex-col items-center gap-1 w-1/4 opacity-50">
+                            <div class="w-10 h-10 bg-red-100 text-red-600 rounded-xl flex justify-center items-center"><i class="fa-solid fa-upload"></i></div>
+                            <span class="text-[10px] font-bold text-gray-700">سحب</span>
+                        </div>
+                        <div class="flex flex-col items-center gap-1 w-1/4 opacity-50">
+                            <div class="w-10 h-10 bg-blue-100 text-blue-600 rounded-xl flex justify-center items-center"><i class="fa-solid fa-arrow-right-arrow-left"></i></div>
+                            <span class="text-[10px] font-bold text-gray-700">تحويل</span>
+                        </div>
+                        <div class="flex flex-col items-center gap-1 w-1/4 opacity-50">
+                            <div class="w-10 h-10 bg-orange-100 text-orange-600 rounded-xl flex justify-center items-center"><i class="fa-solid fa-file-invoice"></i></div>
+                            <span class="text-[10px] font-bold text-gray-700">سداد</span>
+                        </div>
+                    </div>
+                    
+                    <div class="grid grid-cols-3 gap-2 mb-4">
+                        <div class="bg-white rounded-xl p-2 text-center shadow-sm"><div class="text-red-500 text-lg mb-1"><i class="fa-solid fa-arrow-up"></i></div><p class="text-[9px] text-gray-500">المدفوعات</p><h4 class="text-sm font-bold">0</h4></div>
+                        <div class="bg-white rounded-xl p-2 text-center shadow-sm"><div class="text-orange-500 text-lg mb-1"><i class="fa-regular fa-clock"></i></div><p class="text-[9px] text-gray-500">معاملات معلقة</p><h4 class="text-sm font-bold">${pendingCount}</h4></div>
+                        <div class="bg-white rounded-xl p-2 text-center shadow-sm"><div class="text-yellow-600 text-lg mb-1"><i class="fa-solid fa-gift"></i></div><p class="text-[9px] text-gray-500">المكافآت</p><h4 class="text-sm font-bold">1.3K</h4></div>
+                    </div>
+
+                    <div class="bg-gradient-to-l from-[#B71C1C] to-[#8E0000] rounded-2xl p-4 flex justify-between items-center text-white shadow-lg">
+                        <div>
+                            <h3 class="text-sm font-bold mb-1">اشحن محفظتك في<br>دقائق</h3>
+                            <p class="text-[10px] opacity-80 mb-3">من بنكك أو فوري أو عبر وكيل<br>معتمد</p>
+                            <button id="bannerRechargeBtn" class="bg-white text-[#B71C1C] px-3 py-1 rounded-full text-[10px] font-bold">ابدأ الآن</button>
+                        </div>
+                        <div class="relative w-16 h-20 flex items-end justify-center">
+                            <i class="fa-solid fa-coins text-yellow-400 text-2xl absolute -left-2 bottom-0"></i>
+                            <div class="w-10 h-14 bg-white rounded border-2 border-black flex flex-col items-center pt-3 gap-1 z-10">
+                                <div class="w-6 h-1 bg-gray-200 rounded"></div>
+                                <div class="w-6 h-1 bg-gray-200 rounded"></div>
+                                <div class="w-5 h-2 bg-green-500 rounded mt-1"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="fixed bottom-0 w-full max-w-md bg-white border-t flex justify-around py-3 z-20">
+                    <a href="#" class="flex flex-col items-center text-[#B71C1C]"><i class="fa-solid fa-house text-lg mb-1"></i><span class="text-[10px]">الرئيسية</span></a>
+                    <a href="#" id="goToTransactions" class="flex flex-col items-center text-gray-400"><i class="fa-regular fa-file-lines text-lg mb-1"></i><span class="text-[10px]">المعاملات</span></a>
+                </div>
+            </div>`;
+
+            // أحداث
+            document.getElementById('logoutBtn').addEventListener('click', (e) => {
+                e.preventDefault();
+                if (confirm('تسجيل الخروج؟')) {
+                    localStorage.removeItem('bld_user_id');
+                    currentUser = null;
+                    navigate('login');
+                }
+            });
+
+            document.getElementById('toggleBalance').addEventListener('click', function() {
+                const b = document.getElementById('balanceAmount');
+                if (b.innerText === '*****') {
+                    b.innerText = balance;
+                    this.classList.remove('fa-eye-slash');
+                    this.classList.add('fa-eye');
+                } else {
+                    b.innerText = '*****';
+                    this.classList.remove('fa-eye');
+                    this.classList.add('fa-eye-slash');
+                }
+            });
+
+            const goRec = (e) => { e.preventDefault(); navigate('recharge'); };
+            document.getElementById('goToRecharge').addEventListener('click', goRec);
+            document.getElementById('bannerRechargeBtn').addEventListener('click', goRec);
+            
+            document.getElementById('goToTransactions').addEventListener('click', (e) => { e.preventDefault(); navigate('transactions'); });
+        }
+
+        // ---------- صفحة المعاملات ----------
+        async function renderTransactions() {
+            if (!currentUser) return;
+            const txs = await fetchTransactions();
+
+            let txHtml = '';
+            if (txs.length === 0) {
+                txHtml = `<p class="text-center text-gray-500 mt-10">لا توجد معاملات</p>`;
+            } else {
+                txs.forEach(tx => {
+                    const isPending = tx.status === 'pending';
+                    const isApproved = tx.status === 'approved';
+                    const statusColor = isPending ? 'bg-yellow-100 text-yellow-700' : (isApproved ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700');
+                    const statusText = isPending ? 'قيد الانتظار' : (isApproved ? 'مكتمل' : 'مرفوض');
+                    const dateStr = formatDate(tx.created_at);
+
+                    txHtml += `
+                    <div class="bg-white p-3 rounded-xl shadow-sm flex items-center gap-3 border border-gray-100">
+                        <div class="w-10 h-10 bg-green-100 text-green-600 rounded-lg flex justify-center items-center"><i class="fa-solid fa-arrow-down"></i></div>
+                        <div class="flex-1">
+                            <h4 class="font-bold text-sm">شحن رصيد</h4>
+                            <p class="text-xs text-gray-400">${dateStr}</p>
+                        </div>
+                        <div class="text-left">
+                            <div class="text-green-600 font-bold text-sm" dir="ltr">+ ${parseFloat(tx.amount).toLocaleString()}</div>
+                            <div class="text-[10px] px-2 py-0.5 rounded mt-1 ${statusColor}">${statusText}</div>
+                        </div>
+                    </div>`;
+                });
+            }
+
+            appDiv.innerHTML = `
+            <div class="flex flex-col h-full bg-[#F5F6F9] pb-20">
+                <div class="bg-[#B71C1C] text-white p-4 flex items-center justify-between">
+                    <a href="#" id="backToDash" class="w-8 h-8 bg-white/20 rounded-full flex justify-center items-center"><i class="fa-solid fa-chevron-right"></i></a>
+                    <h2 class="font-bold">المعاملات</h2>
+                    <div class="w-8"></div>
+                </div>
+                <div class="p-4 flex flex-col gap-3">
+                    ${txHtml}
+                </div>
+                <div class="fixed bottom-0 w-full max-w-md bg-white border-t flex justify-around py-3 z-20">
+                    <a href="#" id="navHome" class="flex flex-col items-center text-gray-400"><i class="fa-solid fa-house text-lg mb-1"></i><span class="text-[10px]">الرئيسية</span></a>
+                    <a href="#" class="flex flex-col items-center text-[#B71C1C]"><i class="fa-regular fa-file-lines text-lg mb-1"></i><span class="text-[10px]">المعاملات</span></a>
+                </div>
+            </div>`;
+
+            document.getElementById('backToDash').addEventListener('click', (e) => { e.preventDefault(); navigate('dashboard'); });
+            document.getElementById('navHome').addEventListener('click', (e) => { e.preventDefault(); navigate('dashboard'); });
+        }
+
+        // ---------- صفحة الشحن (4 خطوات) ----------
+        function renderRecharge() {
+            if (!currentUser) return;
+            let step = 1;
+            let selectedMethod = '';
+            let receiptFile = null;
+
+            const renderStep = () => {
+                let content = '';
+                if (step === 1) {
+                    content = `
+                    <h3 class="text-center font-bold mb-4">اختر وسيلة الشحن</h3>
+                    <div class="grid grid-cols-3 gap-2 mb-4">
+                        <div class="method-card bg-white p-3 rounded-xl text-center cursor-pointer border hover:border-[#B71C1C]" data-method="ماي كاشي">
+                            <i class="fa-solid fa-wallet text-purple-500 text-xl mb-1"></i><br><span class="text-xs font-bold">ماي كاشي</span>
+                        </div>
+                        <div class="method-card bg-white p-3 rounded-xl text-center cursor-pointer border hover:border-[#B71C1C]" data-method="بنكك">
+                            <i class="fa-solid fa-building-columns text-red-500 text-xl mb-1"></i><br><span class="text-xs font-bold">بنكك</span>
+                        </div>
+                        <div class="method-card bg-white p-3 rounded-xl text-center cursor-pointer border hover:border-[#B71C1C]" data-method="أوكاش">
+                            <i class="fa-solid fa-dollar-sign text-orange-500 text-xl mb-1"></i><br><span class="text-xs font-bold">أوكاش</span>
+                        </div>
+                    </div>
+                    <button id="nextBtn1" class="w-full py-3 rounded-xl bg-gray-300 text-white font-bold" disabled>متابعة</button>
+                    `;
+                } else if (step === 2) {
+                    content = `
+                    <h3 class="text-center font-bold mb-4">أدخل المبلغ</h3>
+                    <input type="number" id="amountInput" class="w-full text-center text-2xl font-bold p-3 bg-white border rounded-xl mb-4 outline-none focus:border-[#B71C1C]" placeholder="0">
+                    <button id="nextBtn2" class="w-full py-3 rounded-xl bg-[#B71C1C] text-white font-bold">متابعة</button>
+                    `;
+                } else if (step === 3) {
+                    content = `
+                    <h3 class="text-center font-bold mb-4">بيانات التحويل</h3>
+                    <div class="bg-white p-4 rounded-xl text-sm mb-4">
+                        <p class="flex justify-between mb-2"><span>اسم الحساب:</span> <b>علي</b></p>
+                        <p class="flex justify-between"><span>رقم الحساب:</span> <b>401108294</b></p>
+                    </div>
+                    <input type="text" id="senderName" placeholder="اسمك الكامل" class="w-full p-3 bg-white border rounded-xl mb-2">
+                    <input type="text" id="senderAcc" placeholder="رقم حسابك المرسل منه" class="w-full p-3 bg-white border rounded-xl mb-4">
+                    <button id="nextBtn3" class="w-full py-3 rounded-xl bg-[#B71C1C] text-white font-bold">متابعة</button>
+                    `;
+                } else if (step === 4) {
+                    content = `
+                    <h3 class="text-center font-bold mb-4">أرفق إشعار التحويل</h3>
+                    <input type="file" id="receiptFile" accept="image/*" class="hidden">
+                    <div id="uploadBox" class="border-2 border-dashed border-red-300 bg-white rounded-xl p-8 text-center cursor-pointer mb-4">
+                        <img id="previewImg" class="hidden max-h-32 mx-auto mb-2 rounded">
+                        <i class="fa-solid fa-upload text-red-500 text-2xl mb-2" id="uploadIcon"></i>
+                        <p class="text-sm text-gray-500">اضغط لاختيار صورة الإشعار</p>
+                    </div>
+                    <button id="submitBtn" class="w-full py-3 rounded-xl bg-[#B71C1C] text-white font-bold flex justify-center items-center gap-2"><i class="fa-solid fa-paper-plane"></i> إرسال الطلب للمدير</button>
+                    `;
+                }
+
+                appDiv.innerHTML = `
+                <div class="flex flex-col h-full bg-[#F5F6F9] p-5">
+                    <div class="flex items-center justify-between mb-4">
+                        <a href="#" id="backBtn" class="w-8 h-8 border border-gray-300 rounded-full flex justify-center items-center text-gray-700"><i class="fa-solid fa-chevron-right"></i></a>
+                        <h2 class="font-bold">شحن المحفظة</h2>
+                        <div class="w-8"></div>
+                    </div>
+                    ${content}
+                </div>`;
+
+                document.getElementById('backBtn').addEventListener('click', (e) => {
+                    e.preventDefault();
+                    if (step === 1) navigate('dashboard');
+                    else { step--; renderStep(); }
+                });
+
+                if (step === 1) {
+                    document.querySelectorAll('.method-card').forEach(card => {
+                        card.addEventListener('click', function() {
+                            document.querySelectorAll('.method-card').forEach(c => c.classList.remove('border-[#B71C1C]', 'bg-red-50'));
+                            this.classList.add('border-[#B71C1C]', 'bg-red-50');
+                            selectedMethod = this.dataset.method;
+                            const btn = document.getElementById('nextBtn1');
+                            btn.disabled = false;
+                            btn.classList.remove('bg-gray-300');
+                            btn.classList.add('bg-[#B71C1C]');
+                        });
+                    });
+                    document.getElementById('nextBtn1').addEventListener('click', () => { step++; renderStep(); });
+                } else if (step === 2) {
+                    document.getElementById('nextBtn2').addEventListener('click', () => {
+                        const amt = document.getElementById('amountInput').value;
+                        if (!amt || parseFloat(amt) < 1000) return alert('الحد الأدنى 1000 SDG');
+                        step++; renderStep();
+                    });
+                } else if (step === 3) {
+                    document.getElementById('nextBtn3').addEventListener('click', () => {
+                        if (!document.getElementById('senderName').value) return alert('أدخل اسمك');
+                        step++; renderStep();
+                    });
+                } else if (step === 4) {
+                    const fileInput = document.getElementById('receiptFile');
+                    const uploadBox = document.getElementById('uploadBox');
+                    const previewImg = document.getElementById('previewImg');
+                    const uploadIcon = document.getElementById('uploadIcon');
+
+                    uploadBox.addEventListener('click', () => fileInput.click());
+
+                    fileInput.addEventListener('change', (e) => {
+                        if (e.target.files && e.target.files[0]) {
+                            receiptFile = e.target.files[0];
+                            const reader = new FileReader();
+                            reader.onload = (ev) => {
+                                previewImg.src = ev.target.result;
+                                previewImg.classList.remove('hidden');
+                                uploadIcon.classList.add('hidden');
+                            };
+                            reader.readAsDataURL(receiptFile);
+                        }
+                    });
+
+                    document.getElementById('submitBtn').addEventListener('click', async function() {
+                        if (!receiptFile) return alert('أرفق الصورة أولاً');
+                        
+                        this.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> جاري الإرسال...';
+                        this.disabled = true;
+
+                        // تحويل الصورة إلى Base64
+                        const reader = new FileReader();
+                        reader.onload = async (ev) => {
+                            const base64Img = ev.target.result;
+                            try {
+                                await submitRecharge(
+                                    document.getElementById('amountInput')?.value || '0', // في حالة تغيير الخطوات
+                                    selectedMethod,
+                                    document.getElementById('senderName')?.value || '',
+                                    document.getElementById('senderAcc')?.value || '',
+                                    base64Img
+                                );
+                            } catch (err) {
+                                showToast(err.message, '#d32f2f');
+                                this.innerHTML = '<i class="fa-solid fa-paper-plane"></i> إعادة المحاولة';
+                                this.disabled = false;
+                            }
+                        };
+                        reader.readAsDataURL(receiptFile);
+                    });
+                }
+            };
+
+            renderStep();
+        }
+
+        // ---------------- التشغيل الأولي ----------------
+        async function init() {
+            const savedUserId = localStorage.getItem('bld_user_id');
+            if (savedUserId) {
+                try {
+                    const userDoc = await getDoc(doc(db, "users", savedUserId));
+                    if (userDoc.exists()) {
+                        currentUser = { id: userDoc.id, ...userDoc.data() };
+                        currentPage = 'dashboard';
+                    }
+                } catch(e) { console.error(e); }
+            }
+            render();
+        }
+
+        init();
+    </script>
+</body>
+</html>
