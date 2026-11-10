@@ -29,8 +29,6 @@
         }
         @keyframes shake { 0%,100%{transform:translateX(0)} 25%{transform:translateX(-6px)} 75%{transform:translateX(6px)} }
         .animate-shake { animation: shake .4s; }
-        .success-toast { position: fixed; top: -100px; left: 50%; transform: translateX(-50%); background: #4CAF50; color: #fff; padding: 12px 20px; border-radius: 10px; font-size: 13px; font-weight: 700; display: flex; align-items: center; gap: 8px; z-index: 1000; transition: top .4s; width: 90%; max-width: 350px; justify-content: center; }
-        .success-toast.show { top: 20px; }
     </style>
 </head>
 <body class="flex justify-center min-h-screen">
@@ -54,30 +52,26 @@
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
 
-        let currentPage = 'register'; // نبدأ مباشرة بصفحة إنشاء الحساب
+        let currentPage = 'register';
         const appDiv = document.getElementById('app');
 
-        // ---------------- دالة إنشاء الحساب ----------------
+        // ---------------- دالة إنشاء الحساب المعدلة ----------------
         async function register(username, password) {
             try {
                 const usersRef = collection(db, "users");
                 
-                // التحقق من تكرار اسم المستخدم
+                // 1. التحقق من تكرار اسم المستخدم (مرة واحدة فقط)
                 const qUser = query(usersRef, where("username", "==", username));
                 const userSnap = await getDocs(qUser);
                 if (!userSnap.empty) throw new Error("اسم المستخدم مسجل بالفعل، جرب اسماً آخر");
 
-                // توليد رقم حساب عشوائي
-                let accountNumber;
-                let isUnique = false;
-                while (!isUnique) {
-                    accountNumber = Math.floor(1000000 + Math.random() * 9000000).toString();
-                    const qAcc = query(usersRef, where("account_number", "==", accountNumber));
-                    const accSnap = await getDocs(qAcc);
-                    if (accSnap.empty) isUnique = true;
-                }
+                // 2. توليد رقم حساب عشوائي (بدون البحث في الداتابيز لتجنب التعليق)
+                // نعتمد على الوقت الحالي + رقم عشوائي لضمان عدم التكرار تقريباً
+                const randomPart = Math.floor(100 + Math.random() * 900); // 3 أرقام عشوائية
+                const timePart = Math.floor(Date.now() / 1000).toString().slice(-4); // آخر 4 أرقام من الوقت
+                const accountNumber = timePart + randomPart; // ينتج 7 أرقام
 
-                // حفظ البيانات في Firebase
+                // 3. حفظ البيانات في Firebase
                 const newUser = {
                     account_number: accountNumber,
                     username: username,
@@ -90,7 +84,7 @@
 
                 await addDoc(usersRef, newUser);
                 
-                // الانتقال لصفحة النجاح وعرض رقم الحساب
+                // 4. الانتقال لصفحة النجاح
                 sessionStorage.setItem('new_account_number', accountNumber);
                 currentPage = 'success';
                 render();
@@ -130,16 +124,20 @@
                             <label for="password">كلمة المرور (4 أرقام)</label>
                         </div>
 
-                        <button type="submit" class="btn-color text-white font-bold text-lg py-3.5 rounded-xl mt-4 hover:opacity-90 transition">إنشاء حساب</button>
+                        <button type="submit" id="submitBtn" class="btn-color text-white font-bold text-lg py-3.5 rounded-xl mt-4 hover:opacity-90 transition flex justify-center items-center gap-2">
+                            <span>إنشاء حساب</span>
+                        </button>
                     </form>
                 </div>
             </div>`;
 
             document.getElementById('registerForm').addEventListener('submit', async (e) => {
                 e.preventDefault();
+                
                 const username = document.getElementById('username').value.trim();
                 const password = document.getElementById('password').value.trim();
                 const errorDiv = document.getElementById('register-error');
+                const submitBtn = document.getElementById('submitBtn');
 
                 // التحقق من أن كلمة المرور 4 أرقام فقط
                 if (!/^\d{4}$/.test(password)) {
@@ -148,11 +146,20 @@
                     return;
                 }
 
+                // تعطيل الزر وإظهار التحميل لمنع الضغط المتكرر
+                submitBtn.disabled = true;
+                submitBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> <span>جاري الإنشاء...</span>';
+                errorDiv.classList.add('hidden');
+
                 try {
                     await register(username, password);
                 } catch (err) {
                     errorDiv.textContent = '⚠️ ' + err.message;
                     errorDiv.classList.remove('hidden');
+                    
+                    // إعادة تفعيل الزر في حالة حدوث خطأ
+                    submitBtn.disabled = false;
+                    submitBtn.innerHTML = '<span>إنشاء حساب</span>';
                 }
             });
         }
