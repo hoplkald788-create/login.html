@@ -3,15 +3,17 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>بلدنا - المحفظة الرقمية</title>
+    <title>بلدنا - المحفظة</title>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&family=Tajawal:wght@400;500;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        /* ================= تنسيقات لوحة التحكم (التصميم الأصلي) ================= */
+        /* ================= التصميم الأصلي 100% - بعرض الشاشة ================= */
         *{margin:0;padding:0;box-sizing:border-box;font-family:'Cairo',sans-serif}
         html,body{width:100%;max-width:100%;overflow-x:hidden;background:#F5F6F9;display:flex;justify-content:center}
         .app-container{width:100%;max-width:100%;min-height:100vh;background:#F5F6F9;position:relative;display:flex;flex-direction:column;overflow-x:hidden}
+        
+        /* الهيدر */
         .header-bg{background:linear-gradient(180deg,#B71C1C 0%,#E53935 100%);padding:20px 20px 25px 20px;border-bottom-left-radius:25px;border-bottom-right-radius:25px}
         .top-bar{display:flex;justify-content:space-between;align-items:flex-start;color:white;margin-top:10px}
         .top-actions{display:flex;gap:8px}
@@ -23,6 +25,7 @@
         .user-text h3 i{color:#FFCA28;font-size:13px}
         .avatar{width:42px;height:42px;background-color:#FFCA28;border-radius:50%;display:flex;justify-content:center;align-items:center;color:#000;font-weight:bold;font-size:18px}
         
+        /* البطاقة البنكية */
         .bank-card-wrapper{padding:0 20px;margin-top:-15px;z-index:10}
         .bank-card{background:linear-gradient(135deg,#B71C1C 0%,#8E0000 100%);border-radius:18px;padding:15px;color:white;box-shadow:0 8px 15px rgba(183,28,28,0.3);position:relative;overflow:hidden;display:flex;flex-direction:column;gap:15px}
         .bank-card::before{content:'';position:absolute;width:150px;height:150px;border-radius:50%;background:rgba(255,255,255,0.05);top:-40px;right:-40px}
@@ -41,6 +44,7 @@
         .card-name{display:flex;align-items:center;gap:4px}
         .card-name i{color:#FFCA28}
         
+        /* المحتوى الرئيسي */
         .main-content{padding:15px;flex:1;padding-bottom:90px;width:100%;overflow-x:hidden}
         .services-box{background:white;border-radius:18px;padding:12px 5px;display:flex;justify-content:space-between;box-shadow:0 4px 10px rgba(0,0,0,0.03);margin-bottom:15px;width:100%}
         .service-item{display:flex;flex-direction:column;align-items:center;gap:5px;cursor:pointer;flex:1;text-decoration:none;color:inherit}
@@ -48,12 +52,14 @@
         .service-item span{font-size:10px;font-weight:700;color:#333}
         .bg-green{background:#E8F5E9;color:#4CAF50}.bg-red{background:#FFEBEE;color:#F44336}.bg-blue{background:#E3F2FD;color:#2196F3}.bg-orange{background:#FFF8E1;color:#FF9800}
         
+        /* الإحصائيات */
         .stats-row{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:15px;width:100%}
         .stat-card{background:white;border-radius:14px;padding:10px 5px;display:flex;flex-direction:column;align-items:center;box-shadow:0 4px 10px rgba(0,0,0,0.03)}
         .stat-icon{width:30px;height:30px;border-radius:50%;display:flex;justify-content:center;align-items:center;font-size:13px;margin-bottom:6px}
         .stat-card p{font-size:9px;color:#777;margin-bottom:2px;text-align:center}
         .stat-card h4{font-size:14px;color:#000;font-weight:800}
         
+        /* البانر الإعلاني */
         .promo-banner{background:linear-gradient(to left,#B71C1C,#8E0000);border-radius:16px;padding:15px;display:flex;justify-content:space-between;align-items:center;position:relative;overflow:hidden;margin-bottom:15px;width:100%}
         .promo-text{color:white;z-index:1}
         .promo-text h3{font-size:15px;margin-bottom:3px}
@@ -65,12 +71,13 @@
         .phone-shape .btn{width:60%;height:8px;background:#4CAF50;border-radius:3px;margin-top:5px}
         .coins{position:absolute;left:-5px;bottom:0;color:#FFCA28;font-size:22px;z-index:1}
         
+        /* شريط التنقل السفلي */
         .bottom-nav{position:fixed;bottom:0;left:0;width:100%;background:white;display:flex;justify-content:space-around;padding:8px 0;box-shadow:0 -4px 10px rgba(0,0,0,0.05);border-top:1px solid #eee;z-index:20}
         .nav-item{display:flex;flex-direction:column;align-items:center;gap:3px;color:#999;text-decoration:none;font-size:9px;cursor:pointer}
         .nav-item i{font-size:16px}
         .nav-item.active{color:#B71C1C;background:#FFEBEE;padding:4px 10px;border-radius:12px}
 
-        /* ================= تنسيقات الاستثمار ================= */
+        /* ================= باقي الصفحات ================= */
         .invest-header{position:sticky;top:0;z-index:30;background:linear-gradient(180deg,#B71C1C 0%,#E53935 100%);padding:15px 20px;display:flex;align-items:center;justify-content:space-between;color:white;border-bottom-left-radius:20px;border-bottom-right-radius:20px;box-shadow:0 4px 15px rgba(183,28,28,0.25);width:100%}
         .invest-brand{display:flex;align-items:center;gap:10px}
         .invest-brand-logo{width:40px;height:40px;background:white;border-radius:10px;display:flex;align-items:center;justify-content:center;color:#B71C1C;font-size:18px;font-weight:800;box-shadow:0 4px 10px rgba(0,0,0,0.15)}
@@ -101,7 +108,7 @@
         .invest-features-right .invest-pill{width:fit-content}
         .invest-btn{width:100%;background-color:#fff;color:#8c1d1f;border:none;border-radius:25px;padding:13px;font-size:15px;font-weight:800;font-family:'Cairo',sans-serif;display:flex;justify-content:center;align-items:center;gap:10px;cursor:pointer;transition:transform 0.2s ease}
         
-        /* ================= تنسيقات الحاسبة ================= */
+        /* الحاسبة */
         .calc-page-wrapper{padding:20px 15px 30px;display:flex;justify-content:center;flex:1;background:#f4f4f4;width:100%}
         .calc-page-card{background-color:#ffffff;width:100%;border-radius:24px;padding:16px 14px;box-shadow:0 10px 25px rgba(0,0,0,0.08);position:relative}
         .calc-page-card .top-handle{width:36px;height:4px;background-color:#5A5A5A;border-radius:10px;margin:0 auto 12px auto}
@@ -128,7 +135,7 @@
         .calc-page-card .text-dark{color:#1E1E1E}
         .calc-page-card .btn-subscribe{background-color:#A32829;color:white;border:none;border-radius:10px;padding:12px;font-size:16px;font-weight:700;font-family:inherit;cursor:pointer;width:100%;margin-top:16px;transition:background-color 0.3s ease}
         
-        /* ================= تنسيقات شحن الرصيد ================= */
+        /* الشحن */
         .recharge-page{padding:10px 15px 30px;width:100%}
         .recharge-page .screen{display:none;flex-direction:column;flex:1}
         .recharge-page .screen.active{display:flex}
@@ -225,7 +232,7 @@
         .summary-value{font-size:13px;font-weight:700;color:#111}
         .summary-value.amount{font-size:14px;font-weight:800;color:#B71C1C}
 
-        /* ================= تنسيقات الدخول والتسجيل ================= */
+        /* الشاشات الأخرى */
         .input-group { position: relative; margin-bottom: 20px; width:100%; }
         .input-group input { 
             width: 100%; padding: 16px; border: 1px solid #d1d5db; 
@@ -575,7 +582,7 @@
             document.getElementById('goToLoginBtn').addEventListener('click', () => { sessionStorage.removeItem('new_account_number'); navigate('login'); });
         }
 
-        // ---------- لوحة التحكم (نفس التصميم الأصلي) ----------
+        // ---------- لوحة التحكم (نفس التصميم الأصلي 100%) ----------
         async function renderDashboard() {
             if (!currentUser) return;
             const firstLetter = currentUser.username ? currentUser.username.charAt(0) : 'م';
@@ -585,54 +592,64 @@
 
             appDiv.innerHTML = `
             <div class="flex flex-col h-full bg-[#F5F6F9] pb-20 w-full">
-                <div class="header-bg p-5 pb-8 rounded-b-3xl text-white w-full">
-                    <div class="flex justify-between items-center mt-2 w-full">
-                        <div class="flex items-center gap-3">
-                            <div class="text-right">
-                                <p class="text-xs opacity-80">طاب يومك</p>
-                                <h3 class="text-sm font-bold flex items-center gap-1">${currentUser.username} <i class="fa-solid fa-circle-check text-yellow-400"></i></h3>
-                            </div>
-                            <div class="w-10 h-10 bg-yellow-400 rounded-full flex justify-center items-center text-black font-bold text-lg">${firstLetter}</div>
+                <div class="header-bg">
+                    <div class="top-bar">
+                        <div class="user-info">
+                            <div class="user-text"><p>طاب يومك</p><h3>${currentUser.username} <i class="fa-solid fa-circle-check"></i></h3></div>
+                            <div class="avatar">${firstLetter}</div>
                         </div>
-                        <a href="#" id="logoutBtn" class="w-10 h-10 border border-white/30 rounded-full flex justify-center items-center"><i class="fa-solid fa-right-from-bracket"></i></a>
-                    </div>
-                </div>
-                <div class="px-5 -mt-6 relative z-10 w-full">
-                    <div class="bg-gradient-to-br from-[#B71C1C] to-[#8E0000] rounded-2xl p-4 text-white shadow-lg w-full">
-                        <div class="flex justify-between items-center flex-row-reverse mb-4">
-                            <span class="text-xs bg-white/20 px-2 py-1 rounded">حساب برونزي</span>
-                            <span class="text-xs opacity-80"><i class="fa-regular fa-eye ml-1 cursor-pointer" id="toggleBalance"></i> الرصيد المتاح</span>
-                        </div>
-                        <div class="text-3xl font-extrabold mb-4" dir="ltr"><span class="text-sm text-yellow-400 mr-1">SDG</span> <span id="balanceAmount">${balance}</span></div>
-                        <div class="flex justify-between text-xs flex-row-reverse border-t border-white/20 pt-3">
-                            <span>BLD-${currentUser.account_number?.slice(0,4)}-${currentUser.account_number?.slice(4)}</span>
-                            <span class="flex items-center gap-1"><i class="fa-solid fa-circle-check text-yellow-400"></i> ${currentUser.username}</span>
+                        <div class="top-actions">
+                            <a href="#" id="logoutBtn" class="notification-icon"><i class="fa-solid fa-right-from-bracket"></i></a>
+                            <div class="notification-icon"><i class="fa-regular fa-bell"></i></div>
                         </div>
                     </div>
                 </div>
-                <div class="p-5 w-full">
-                    <div class="bg-white rounded-2xl p-4 flex justify-between shadow-sm mb-4 w-full">
-                        <a href="#" id="goToRecharge" class="flex flex-col items-center gap-1 w-1/4"><div class="w-10 h-10 bg-green-100 text-green-600 rounded-xl flex justify-center items-center"><i class="fa-solid fa-download"></i></div><span class="text-[10px] font-bold text-gray-700">شحن رصيد</span></a>
-                        <div class="flex flex-col items-center gap-1 w-1/4 opacity-50"><div class="w-10 h-10 bg-red-100 text-red-600 rounded-xl flex justify-center items-center"><i class="fa-solid fa-upload"></i></div><span class="text-[10px] font-bold text-gray-700">سحب</span></div>
-                        <div class="flex flex-col items-center gap-1 w-1/4 opacity-50"><div class="w-10 h-10 bg-blue-100 text-blue-600 rounded-xl flex justify-center items-center"><i class="fa-solid fa-arrow-right-arrow-left"></i></div><span class="text-[10px] font-bold text-gray-700">تحويل</span></div>
-                        <div class="flex flex-col items-center gap-1 w-1/4 opacity-50"><div class="w-10 h-10 bg-orange-100 text-orange-600 rounded-xl flex justify-center items-center"><i class="fa-solid fa-file-invoice"></i></div><span class="text-[10px] font-bold text-gray-700">سداد</span></div>
+                <div class="bank-card-wrapper">
+                    <div class="bank-card">
+                        <div class="card-top-row">
+                            <div class="account-type">حساب برونزي <i class="fa-regular fa-star"></i></div>
+                            <div class="balance-label-left"><i class="fa-regular fa-eye eye-icon" id="toggleBalance"></i><span>الرصيد المتاح</span></div>
+                        </div>
+                        <div class="card-middle"><div class="chip"></div><i class="fa-solid fa-wifi contactless"></i></div>
+                        <div class="card-bottom">
+                            <div class="balance-amount"><span class="currency">SDG</span><span class="number" id="balanceAmount">${balance}</span></div>
+                            <div class="card-footer"><div class="card-name"><i class="fa-solid fa-circle-check"></i> ${currentUser.username}</div><span>BLD-${currentUser.account_number?.slice(0,4)}-${currentUser.account_number?.slice(4)}</span></div>
+                        </div>
                     </div>
-                    <div class="grid grid-cols-3 gap-2 mb-4 w-full">
-                        <div class="bg-white rounded-xl p-2 text-center shadow-sm"><div class="text-red-500 text-lg mb-1"><i class="fa-solid fa-arrow-up"></i></div><p class="text-[9px] text-gray-500">المدفوعات</p><h4 class="text-sm font-bold">0</h4></div>
-                        <div class="bg-white rounded-xl p-2 text-center shadow-sm"><div class="text-orange-500 text-lg mb-1"><i class="fa-regular fa-clock"></i></div><p class="text-[9px] text-gray-500">معاملات معلقة</p><h4 class="text-sm font-bold">${pendingCount}</h4></div>
-                        <div class="bg-white rounded-xl p-2 text-center shadow-sm"><div class="text-yellow-600 text-lg mb-1"><i class="fa-solid fa-gift"></i></div><p class="text-[9px] text-gray-500">المكافآت</p><h4 class="text-sm font-bold">0</h4></div>
+                </div>
+                <div class="main-content">
+                    <div class="services-box">
+                        <a href="#" id="goToRecharge" class="service-item"><div class="service-icon bg-green"><i class="fa-solid fa-download"></i></div><span>شحن رصيد</span></a>
+                        <div class="service-item"><div class="service-icon bg-red"><i class="fa-solid fa-upload"></i></div><span>سحب</span></div>
+                        <div class="service-item"><div class="service-icon bg-blue"><i class="fa-solid fa-arrow-right-arrow-left"></i></div><span>تحويل</span></div>
+                        <div class="service-item"><div class="service-icon bg-orange"><i class="fa-solid fa-file-invoice"></i></div><span>سداد خدمات</span></div>
+                    </div>
+                    <div class="stats-row">
+                        <div class="stat-card"><div class="stat-icon bg-red"><i class="fa-solid fa-arrow-up"></i></div><p>المدفوعات</p><h4>0</h4></div>
+                        <div class="stat-card"><div class="stat-icon bg-orange"><i class="fa-regular fa-clock"></i></div><p>معاملات معلقة</p><h4>${pendingCount}</h4></div>
+                        <div class="stat-card"><div class="stat-icon" style="background:#FFF3E0;color:#D4A373"><i class="fa-solid fa-gift"></i></div><p>المكافآت</p><h4>0</h4></div>
+                    </div>
+                    <div class="promo-banner">
+                        <div class="promo-text"><h3>اشحن محفظتك في<br>دقائق</h3><p>من بنكك أو فوري أو عبر وكيل<br>معتمد</p><button class="promo-btn" id="bannerRechargeBtn">ابدأ الآن</button></div>
+                        <div class="promo-graphic"><i class="fa-solid fa-coins coins"></i><div class="phone-shape"><div></div><div></div><div class="btn"></div></div></div>
                     </div>
                 </div>
                 <div class="bottom-nav">
-                    <a href="#" class="flex flex-col items-center text-[#B71C1C]"><i class="fa-solid fa-house text-lg mb-1"></i><span class="text-[10px]">الرئيسية</span></a>
-                    <a href="#" id="goToTransactions" class="flex flex-col items-center text-gray-400"><i class="fa-regular fa-file-lines text-lg mb-1"></i><span class="text-[10px]">المعاملات</span></a>
+                    <a href="#" class="nav-item active"><i class="fa-solid fa-house"></i><span>الرئيسية</span></a>
+                    <a href="#" id="goToTransactions" class="nav-item"><i class="fa-regular fa-file-lines"></i><span>المعاملات</span></a>
+                    <a href="#" id="goToInvest" class="nav-item"><i class="fa-solid fa-chart-line"></i><span>الاستثمار</span></a>
+                    <a href="#" class="nav-item"><i class="fa-solid fa-receipt"></i><span>الإيصالات</span></a>
+                    <a href="#" class="nav-item"><i class="fa-regular fa-user"></i><span>حسابي</span></a>
                 </div>
             </div>`;
 
             document.getElementById('logoutBtn').addEventListener('click', (e) => { e.preventDefault(); if (confirm('تسجيل الخروج؟')) { localStorage.removeItem('bld_user_id'); currentUser = null; navigate('login'); } });
             document.getElementById('toggleBalance').addEventListener('click', function() { const b = document.getElementById('balanceAmount'); if (b.innerText === '*****') { b.innerText = balance; this.classList.remove('fa-eye-slash'); this.classList.add('fa-eye'); } else { b.innerText = '*****'; this.classList.remove('fa-eye'); this.classList.add('fa-eye-slash'); } });
-            document.getElementById('goToRecharge').addEventListener('click', (e) => { e.preventDefault(); navigate('recharge'); });
+            const goRec = (e) => { e.preventDefault(); navigate('recharge'); };
+            document.getElementById('goToRecharge').addEventListener('click', goRec);
+            document.getElementById('bannerRechargeBtn').addEventListener('click', goRec);
             document.getElementById('goToTransactions').addEventListener('click', (e) => { e.preventDefault(); navigate('transactions'); });
+            document.getElementById('goToInvest').addEventListener('click', (e) => { e.preventDefault(); navigate('invest'); });
         }
 
         // ---------- صفحة المعاملات ----------
