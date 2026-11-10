@@ -8,26 +8,225 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        /* إعدادات لتغطية الشاشة بالكامل */
-        html, body {
-            margin: 0;
-            padding: 0;
-            width: 100%;
-            height: 100%;
-            overflow-x: hidden;
-            background-color: #F5F6F9;
-        }
-        #app {
-            width: 100%;
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-        }
-        .header-bg { background: #a82525; }
-        .btn-color { background: #b3262b; }
+        /* ================= تنسيقات لوحة التحكم (التصميم الأصلي) ================= */
+        *{margin:0;padding:0;box-sizing:border-box;font-family:'Cairo',sans-serif}
+        html,body{width:100%;max-width:100%;overflow-x:hidden;background:#F5F6F9;display:flex;justify-content:center}
+        .app-container{width:100%;max-width:100%;min-height:100vh;background:#F5F6F9;position:relative;display:flex;flex-direction:column;overflow-x:hidden}
+        .header-bg{background:linear-gradient(180deg,#B71C1C 0%,#E53935 100%);padding:20px 20px 25px 20px;border-bottom-left-radius:25px;border-bottom-right-radius:25px}
+        .top-bar{display:flex;justify-content:space-between;align-items:flex-start;color:white;margin-top:10px}
+        .top-actions{display:flex;gap:8px}
+        .notification-icon{width:38px;height:38px;border:1px solid rgba(255,255,255,0.3);border-radius:50%;display:flex;justify-content:center;align-items:center;font-size:16px;cursor:pointer;text-decoration:none;color:white;transition:.2s}
+        .user-info{display:flex;align-items:center;gap:10px}
+        .user-text{text-align:right}
+        .user-text p{font-size:12px;color:rgba(255,255,255,0.8)}
+        .user-text h3{font-size:15px;display:flex;align-items:center;justify-content:flex-end;gap:4px}
+        .user-text h3 i{color:#FFCA28;font-size:13px}
+        .avatar{width:42px;height:42px;background-color:#FFCA28;border-radius:50%;display:flex;justify-content:center;align-items:center;color:#000;font-weight:bold;font-size:18px}
         
-        /* تنسيقات الحقول العائمة */
-        .input-group { position: relative; margin-bottom: 20px; }
+        .bank-card-wrapper{padding:0 20px;margin-top:-15px;z-index:10}
+        .bank-card{background:linear-gradient(135deg,#B71C1C 0%,#8E0000 100%);border-radius:18px;padding:15px;color:white;box-shadow:0 8px 15px rgba(183,28,28,0.3);position:relative;overflow:hidden;display:flex;flex-direction:column;gap:15px}
+        .bank-card::before{content:'';position:absolute;width:150px;height:150px;border-radius:50%;background:rgba(255,255,255,0.05);top:-40px;right:-40px}
+        .card-top-row{display:flex;justify-content:space-between;align-items:center;z-index:1;width:100%;flex-direction:row-reverse}
+        .account-type{background:rgba(255,202,40,0.2);border:1px solid rgba(255,202,40,0.5);padding:3px 10px;border-radius:12px;font-size:10px;display:flex;align-items:center;gap:4px}
+        .balance-label-left{display:flex;align-items:center;gap:5px;font-size:10px;color:rgba(255,255,255,0.8)}
+        .eye-icon{cursor:pointer;transition:0.3s;font-size:12px}
+        .card-middle{display:flex;justify-content:flex-end;align-items:center;z-index:1;margin-top:-5px;gap:10px}
+        .chip{width:35px;height:25px;background-color:#FFCA28;border-radius:5px}
+        .contactless{font-size:16px;color:rgba(255,255,255,0.5)}
+        .card-bottom{z-index:1;display:flex;flex-direction:column;align-items:flex-start;width:100%}
+        .balance-amount{display:flex;justify-content:flex-start;align-items:baseline;gap:5px;margin-bottom:10px}
+        .balance-amount span.currency{color:#FFCA28;font-size:14px;font-weight:bold}
+        .balance-amount span.number{font-size:24px;font-weight:800;letter-spacing:1px}
+        .card-footer{display:flex;justify-content:space-between;align-items:center;font-size:11px;width:100%;flex-direction:row-reverse}
+        .card-name{display:flex;align-items:center;gap:4px}
+        .card-name i{color:#FFCA28}
+        
+        .main-content{padding:15px;flex:1;padding-bottom:90px;width:100%;overflow-x:hidden}
+        .services-box{background:white;border-radius:18px;padding:12px 5px;display:flex;justify-content:space-between;box-shadow:0 4px 10px rgba(0,0,0,0.03);margin-bottom:15px;width:100%}
+        .service-item{display:flex;flex-direction:column;align-items:center;gap:5px;cursor:pointer;flex:1;text-decoration:none;color:inherit}
+        .service-icon{width:42px;height:42px;border-radius:12px;display:flex;justify-content:center;align-items:center;font-size:16px}
+        .service-item span{font-size:10px;font-weight:700;color:#333}
+        .bg-green{background:#E8F5E9;color:#4CAF50}.bg-red{background:#FFEBEE;color:#F44336}.bg-blue{background:#E3F2FD;color:#2196F3}.bg-orange{background:#FFF8E1;color:#FF9800}
+        
+        .stats-row{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:15px;width:100%}
+        .stat-card{background:white;border-radius:14px;padding:10px 5px;display:flex;flex-direction:column;align-items:center;box-shadow:0 4px 10px rgba(0,0,0,0.03)}
+        .stat-icon{width:30px;height:30px;border-radius:50%;display:flex;justify-content:center;align-items:center;font-size:13px;margin-bottom:6px}
+        .stat-card p{font-size:9px;color:#777;margin-bottom:2px;text-align:center}
+        .stat-card h4{font-size:14px;color:#000;font-weight:800}
+        
+        .promo-banner{background:linear-gradient(to left,#B71C1C,#8E0000);border-radius:16px;padding:15px;display:flex;justify-content:space-between;align-items:center;position:relative;overflow:hidden;margin-bottom:15px;width:100%}
+        .promo-text{color:white;z-index:1}
+        .promo-text h3{font-size:15px;margin-bottom:3px}
+        .promo-text p{font-size:10px;color:rgba(255,255,255,0.8);margin-bottom:10px}
+        .promo-btn{background:white;color:#B71C1C;border:none;padding:4px 12px;border-radius:15px;font-weight:bold;font-size:10px;cursor:pointer;font-family:'Cairo',sans-serif}
+        .promo-graphic{position:relative;width:60px;height:70px;display:flex;align-items:flex-end;justify-content:center}
+        .phone-shape{width:40px;height:60px;background:white;border-radius:6px;border:2px solid #000;position:relative;z-index:2;display:flex;flex-direction:column;align-items:center;padding-top:15px;gap:4px}
+        .phone-shape div{width:70%;height:4px;background:#eee;border-radius:2px}
+        .phone-shape .btn{width:60%;height:8px;background:#4CAF50;border-radius:3px;margin-top:5px}
+        .coins{position:absolute;left:-5px;bottom:0;color:#FFCA28;font-size:22px;z-index:1}
+        
+        .bottom-nav{position:fixed;bottom:0;left:0;width:100%;background:white;display:flex;justify-content:space-around;padding:8px 0;box-shadow:0 -4px 10px rgba(0,0,0,0.05);border-top:1px solid #eee;z-index:20}
+        .nav-item{display:flex;flex-direction:column;align-items:center;gap:3px;color:#999;text-decoration:none;font-size:9px;cursor:pointer}
+        .nav-item i{font-size:16px}
+        .nav-item.active{color:#B71C1C;background:#FFEBEE;padding:4px 10px;border-radius:12px}
+
+        /* ================= تنسيقات الاستثمار ================= */
+        .invest-header{position:sticky;top:0;z-index:30;background:linear-gradient(180deg,#B71C1C 0%,#E53935 100%);padding:15px 20px;display:flex;align-items:center;justify-content:space-between;color:white;border-bottom-left-radius:20px;border-bottom-right-radius:20px;box-shadow:0 4px 15px rgba(183,28,28,0.25);width:100%}
+        .invest-brand{display:flex;align-items:center;gap:10px}
+        .invest-brand-logo{width:40px;height:40px;background:white;border-radius:10px;display:flex;align-items:center;justify-content:center;color:#B71C1C;font-size:18px;font-weight:800;box-shadow:0 4px 10px rgba(0,0,0,0.15)}
+        .invest-brand-text h2{font-size:16px;font-weight:800}
+        .invest-brand-text p{font-size:10px;color:rgba(255,255,255,0.85)}
+        .invest-back-btn{width:38px;height:38px;background:rgba(255,255,255,0.2);border:1px solid rgba(255,255,255,0.3);border-radius:50%;display:flex;align-items:center;justify-content:center;color:white;font-size:14px;text-decoration:none;transition:.2s}
+        .invest-title-section{padding:20px 20px 10px;text-align:center;width:100%}
+        .invest-title-section h1{font-size:22px;font-weight:800;color:#1a1a1a;margin-bottom:4px}
+        .invest-title-section p{font-size:13px;color:#777}
+        .invest-cards-container{padding:10px 15px 100px;display:flex;flex-direction:column;gap:18px;width:100%}
+        .invest-card{background:linear-gradient(145deg,#8c1d1f,#731214);border-radius:24px;padding:22px 20px;color:#fff;position:relative;overflow:hidden;box-shadow:0 10px 20px rgba(0,0,0,0.12);width:100%}
+        .invest-card::before{content:'';position:absolute;bottom:-50px;left:20%;width:150px;height:150px;background-color:rgba(255,255,255,0.05);border-radius:30px;transform:rotate(45deg);z-index:1}
+        .invest-card-content{position:relative;z-index:2}
+        .invest-card-header{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:5px}
+        .invest-card-title{font-size:18px;font-weight:800}
+        .invest-badge{background-color:#1a1a1a;color:#d4af37;padding:4px 12px;border-radius:20px;font-size:11px;font-weight:700}
+        .invest-card-subtitle{font-size:12px;color:#e0c2c2;margin-bottom:20px}
+        .invest-stats-row{display:flex;justify-content:space-between;align-items:center;margin-bottom:18px}
+        .invest-percentage{font-size:44px;font-weight:800;line-height:1;display:block}
+        .invest-percentage-label{font-size:11px;color:#e0c2c2}
+        .invest-stat-duration{text-align:left}
+        .invest-duration-months{font-size:15px;font-weight:700;display:block}
+        .invest-duration-amount{font-size:12px;color:#e0c2c2}
+        .invest-features-container{display:flex;justify-content:space-between;margin-bottom:22px;gap:10px}
+        .invest-features-left{display:flex;flex-direction:column;justify-content:center}
+        .invest-features-right{display:flex;flex-direction:column;gap:8px;align-items:flex-end;flex-grow:1}
+        .invest-pill{background-color:rgba(255,255,255,0.15);padding:6px 14px;border-radius:20px;font-size:11px;font-weight:500;display:inline-block;white-space:nowrap}
+        .invest-features-right .invest-pill{width:fit-content}
+        .invest-btn{width:100%;background-color:#fff;color:#8c1d1f;border:none;border-radius:25px;padding:13px;font-size:15px;font-weight:800;font-family:'Cairo',sans-serif;display:flex;justify-content:center;align-items:center;gap:10px;cursor:pointer;transition:transform 0.2s ease}
+        
+        /* ================= تنسيقات الحاسبة ================= */
+        .calc-page-wrapper{padding:20px 15px 30px;display:flex;justify-content:center;flex:1;background:#f4f4f4;width:100%}
+        .calc-page-card{background-color:#ffffff;width:100%;border-radius:24px;padding:16px 14px;box-shadow:0 10px 25px rgba(0,0,0,0.08);position:relative}
+        .calc-page-card .top-handle{width:36px;height:4px;background-color:#5A5A5A;border-radius:10px;margin:0 auto 12px auto}
+        .calc-page-card .header-title{font-size:18px;font-weight:700;color:#1E1E1E;text-align:center;margin-bottom:4px}
+        .calc-page-card .header-subtitle{font-size:12px;color:#888;text-align:center;margin-bottom:16px}
+        .calc-page-card .savings-card{background-color:#F9F7F2;border:1px solid #E0E0E0;border-radius:12px;padding:12px 16px;margin-bottom:14px}
+        .calc-page-card .card-header{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:12px}
+        .calc-page-card .card-title h2{font-size:14px;font-weight:700;color:#1E1E1E;margin-bottom:2px}
+        .calc-page-card .card-title span{font-size:9px;color:#888;letter-spacing:1.5px}
+        .calc-page-card .amount-display{font-size:22px;font-weight:700;color:#A32829}
+        .calc-page-card input[type=range]{-webkit-appearance:none;width:100%;background:transparent;margin:5px 0}
+        .calc-page-card input[type=range]:focus{outline:none}
+        .calc-page-card input[type=range]::-webkit-slider-runnable-track{width:100%;height:4px;background:#D3D3D3;border-radius:2px}
+        .calc-page-card input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;height:18px;width:18px;border-radius:50%;background:#A32829;cursor:pointer;margin-top:-7px;box-shadow:0 2px 4px rgba(0,0,0,0.2)}
+        .calc-page-card .slider-labels{display:flex;justify-content:space-between;color:#888;font-size:12px;margin-top:4px}
+        .calc-page-card .gradient-box{height:60px;width:100%;border-radius:10px;background:linear-gradient(to bottom,#C33232,#EAA3A3);margin-bottom:16px}
+        .calc-page-card .detail-row{display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px dashed #E0E0E0}
+        .calc-page-card .detail-row:last-child{border-bottom:none;padding-bottom:0}
+        .calc-page-card .detail-title h3{font-size:14px;font-weight:700;color:#1E1E1E;margin-bottom:2px}
+        .calc-page-card .detail-title span{font-size:9px;color:#888;letter-spacing:1px}
+        .calc-page-card .detail-value{font-size:14px;font-weight:700}
+        .calc-page-card .text-green{color:#2E8B57}
+        .calc-page-card .text-red{color:#A32829}
+        .calc-page-card .text-dark{color:#1E1E1E}
+        .calc-page-card .btn-subscribe{background-color:#A32829;color:white;border:none;border-radius:10px;padding:12px;font-size:16px;font-weight:700;font-family:inherit;cursor:pointer;width:100%;margin-top:16px;transition:background-color 0.3s ease}
+        
+        /* ================= تنسيقات شحن الرصيد ================= */
+        .recharge-page{padding:10px 15px 30px;width:100%}
+        .recharge-page .screen{display:none;flex-direction:column;flex:1}
+        .recharge-page .screen.active{display:flex}
+        .rc-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;margin-top:5px}
+        .rc-header h1{font-size:16px;color:#111;font-weight:700}
+        .rc-back-btn{width:30px;height:30px;border-radius:50%;border:1px solid #E0E0E0;background:transparent;display:flex;justify-content:center;align-items:center;cursor:pointer;color:#111;font-size:11px}
+        .progress-section{margin-bottom:15px}
+        .progress-bar{display:flex;gap:5px;margin-bottom:6px}
+        .progress-bar div{height:3px;border-radius:2px;flex:1;background:#E0E0E0}
+        .progress-bar div.active{background:#B71C1C}
+        .progress-text{display:flex;justify-content:space-between;font-size:10px;font-weight:600}
+        .progress-text span:first-child{color:#777}
+        .progress-text span:last-child{color:#B71C1C}
+        .intro-text{text-align:center;margin-bottom:15px}
+        .intro-text h2{font-size:16px;color:#111;margin-bottom:4px;font-weight:800}
+        .intro-text p{font-size:11px;color:#666;line-height:1.4}
+        .grid-container{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:15px;width:100%}
+        .rc-card{background:#fff;border-radius:12px;padding:10px 5px;display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;border:1.5px solid transparent;box-shadow:0 2px 6px rgba(0,0,0,0.02);transition:all 0.2s ease;position:relative;height:90px}
+        .rc-card.active-card{border-color:#B71C1C}
+        .rc-icon-box{width:34px;height:34px;border-radius:9px;display:flex;justify-content:center;align-items:center;margin-bottom:6px;color:white;font-size:15px;position:relative}
+        .rc-card span.name{font-size:10px;font-weight:700;color:#111}
+        .bg-fawry{background:linear-gradient(135deg,#4A72D4,#2B4E9B)}
+        .bg-bank{background:linear-gradient(135deg,#C13A3A,#8A1C1C)}
+        .bg-agent{background:linear-gradient(135deg,#9C3131,#6A1515)}
+        .bg-bravo{background:linear-gradient(135deg,#3F8A6A,#24614B)}
+        .bg-mycashy{background:linear-gradient(135deg,#8E44AD,#5E2C73)}
+        .bg-okash{background:linear-gradient(135deg,#E67E22,#B85914)}
+        .bg-transfer{background:linear-gradient(135deg,#34495E,#1A252F)}
+        .rc-badge{position:absolute;top:0;right:0;background:#F2D06B;color:#111;font-size:7px;font-weight:800;padding:1px 4px;border-radius:0 12px 0 6px}
+        .check-mark{display:none;position:absolute;top:4px;left:4px;color:#4CAF50;font-size:12px}
+        .rc-card.active-card .check-mark{display:block}
+        .info-box{background-color:#FCF9F2;border:1px solid #F0E6DF;border-radius:8px;padding:8px 10px;display:flex;align-items:center;gap:8px;margin-bottom:10px;width:100%}
+        .info-box i{color:#4CAF50;font-size:14px}
+        .info-box p{font-size:9px;color:#333;line-height:1.4;font-weight:600}
+        .bottom-spacer{flex:1}
+        .submit-btn{width:100%;padding:12px;background-color:#DFA6A6;color:white;border:none;border-radius:10px;font-size:14px;font-weight:700;cursor:not-allowed;transition:all 0.3s ease;margin-top:10px;margin-bottom:15px;display:flex;justify-content:center;align-items:center;gap:8px}
+        .submit-btn.active{background-color:#B71C1C;cursor:pointer;box-shadow:0 4px 10px rgba(183,28,28,0.3)}
+        .bank-header{display:flex;justify-content:center;align-items:center;margin-bottom:15px}
+        .bank-header h2{font-size:18px;font-weight:800;color:#111}
+        .input-label{font-size:11px;font-weight:700;color:#333;margin-bottom:6px;align-self:flex-end;margin-right:5px}
+        .amount-input-container{background-color:#FCF9F2;border:1px solid #EAE3D9;border-radius:12px;padding:10px 15px;display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;width:100%}
+        .amount-input-container input{border:none;background:transparent;font-size:20px;font-weight:700;color:#111;text-align:center;width:100%;outline:none}
+        .currency-label{font-size:13px;font-weight:800;color:#555}
+        .quick-amounts{display:flex;gap:6px;justify-content:space-between;margin-bottom:20px;width:100%}
+        .quick-btn{flex:1;padding:6px 0;background-color:#fff;border:1px solid #E0E0E0;border-radius:15px;font-size:10px;font-weight:700;color:#111;cursor:pointer}
+        .fee-section,.min-limit-section{display:flex;justify-content:space-between;align-items:flex-start;padding:0 5px;margin-bottom:10px}
+        .fee-title,.min-title{display:flex;flex-direction:column;align-items:flex-end}
+        .fee-title h4,.min-title h4{font-size:13px;font-weight:800;color:#111}
+        .fee-title span,.min-title span{font-size:8px;color:#888;letter-spacing:1px}
+        .fee-value{font-size:13px;font-weight:800;color:#4CAF50}
+        .min-value{font-size:13px;font-weight:800;color:#111}
+        .divider-dashed{border-top:1px dashed #D0D0D0;margin:8px 0}
+        .amount-box{background-color:#FCF9F2;border:1px solid #EAE3D9;border-radius:10px;padding:8px 12px;display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;margin-top:5px;width:100%}
+        .amount-box-title h4{font-size:12px;font-weight:800;color:#111;margin-bottom:1px}
+        .amount-box-title span{font-size:7px;color:#888}
+        .amount-box-value{font-size:14px;font-weight:800;color:#B71C1C}
+        .amount-box-value span{font-size:9px;color:#555;margin-right:2px}
+        .section-title-container{display:flex;align-items:center;gap:8px;margin-bottom:6px}
+        .section-title-container h3{font-size:13px;font-weight:800;color:#B71C1C;white-space:nowrap}
+        .section-line{flex:1;height:1px;background-color:#E0E0E0}
+        .instruction-text{font-size:9px;color:#555;line-height:1.4;margin-bottom:8px;text-align:right}
+        .bank-card-container{border:1.5px solid #B71C1C;border-radius:10px;padding:10px;background-color:#fff;margin-bottom:8px;width:100%}
+        .bank-card-header{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px}
+        .bank-card-logo{width:32px;height:32px;background-color:#8E44AD;border-radius:8px;display:flex;justify-content:center;align-items:center;color:white;font-size:14px}
+        .bank-card-header-text{text-align:right;flex:1;padding-left:10px}
+        .bank-card-header-text h4{font-size:12px;font-weight:800;color:#111}
+        .bank-card-header-text p{font-size:9px;color:#4CAF50;font-weight:700}
+        .card-divider{border-top:1px dashed #E0E0E0;margin:6px 0}
+        .data-row{display:flex;justify-content:space-between;align-items:center}
+        .data-label h5{font-size:11px;font-weight:800;color:#111}
+        .data-label span{font-size:7px;color:#888}
+        .data-value{display:flex;align-items:center;gap:6px;font-size:12px;font-weight:700;color:#111}
+        .copy-icon{width:24px;height:24px;background-color:#FCF5F5;border-radius:6px;display:flex;justify-content:center;align-items:center;color:#B71C1C;font-size:10px;cursor:pointer}
+        .account-number-value{color:#B71C1C;font-weight:800;font-size:13px}
+        .privacy-note{display:flex;align-items:center;gap:4px;font-size:8px;color:#888;margin-bottom:8px}
+        .input-group-outline{position:relative;margin-bottom:10px;margin-top:5px;width:100%}
+        .input-group-outline input{width:100%;padding:10px;border:1px solid #E0E0E0;border-radius:8px;font-size:12px;font-weight:700;color:#111;outline:none;background-color:#fff}
+        .input-group-outline label{position:absolute;top:-6px;right:10px;background-color:#F8F9FA;padding:0 4px;font-size:9px;color:#666;font-weight:600}
+        .receipt-header{text-align:center;margin-bottom:15px}
+        .receipt-header h2{font-size:18px;font-weight:800;color:#111;margin-bottom:4px}
+        .receipt-header p{font-size:11px;color:#555;line-height:1.4}
+        .upload-box{border:2px dashed #DFA6A6;border-radius:16px;background-color:#FCF9F2;padding:20px 15px;display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;margin-bottom:20px;text-align:center;transition:all 0.3s ease;position:relative;overflow:hidden;width:100%}
+        .upload-icon-circle{width:45px;height:45px;background-color:#F7E8E8;border-radius:12px;display:flex;justify-content:center;align-items:center;color:#B71C1C;font-size:20px;margin-bottom:12px}
+        .upload-box h3{font-size:15px;font-weight:800;color:#111;margin-bottom:4px}
+        .upload-box p{font-size:10px;color:#888}
+        .upload-box.uploaded{border-color:#4CAF50;background-color:#F1F8E9;padding:10px}
+        .upload-box.uploaded .upload-icon-circle{background-color:#C8E6C9;color:#2E7D32;margin-bottom:8px}
+        .preview-img{display:none;width:100%;max-height:120px;object-fit:contain;border-radius:8px;margin-bottom:8px}
+        .upload-box.uploaded .preview-img{display:block}
+        .summary-row{display:flex;justify-content:space-between;align-items:center;padding:10px 0}
+        .summary-label{display:flex;flex-direction:column;align-items:flex-end}
+        .summary-label h5{font-size:13px;font-weight:800;color:#111;margin-bottom:2px}
+        .summary-label span{font-size:8px;color:#888;letter-spacing:1px}
+        .summary-value{font-size:13px;font-weight:700;color:#111}
+        .summary-value.amount{font-size:14px;font-weight:800;color:#B71C1C}
+
+        /* ================= تنسيقات الدخول والتسجيل ================= */
+        .input-group { position: relative; margin-bottom: 20px; width:100%; }
         .input-group input { 
             width: 100%; padding: 16px; border: 1px solid #d1d5db; 
             border-radius: 12px; font-size: 15px; background: transparent; 
@@ -43,22 +242,18 @@
         .input-group input:not(:placeholder-shown) ~ label {
             top: 0; font-size: 11px; color: #b3262b; font-weight: 700;
         }
-
+        .btn-color { background: #b3262b; }
         @keyframes shake { 0%,100%{transform:translateX(0)} 25%{transform:translateX(-6px)} 75%{transform:translateX(6px)} }
         .animate-shake { animation: shake .4s; }
-        
-        /* إشعار النجاح */
         .success-toast { position: fixed; top: -100px; left: 50%; transform: translateX(-50%); background: #4CAF50; color: #fff; padding: 12px 20px; border-radius: 10px; font-size: 13px; font-weight: 700; display: flex; align-items: center; gap: 8px; z-index: 1000; transition: top .4s; width: 90%; max-width: 350px; justify-content: center; }
         .success-toast.show { top: 20px; }
-
-        /* تصميمات لوحة التحكم لتكون بعرض الشاشة */
-        .bottom-nav { position: fixed; bottom: 0; left: 0; width: 100%; background: white; display: flex; justify-content: space-around; padding: 10px 0; box-shadow: 0 -4px 10px rgba(0,0,0,0.05); border-top: 1px solid #eee; z-index: 20; }
     </style>
 </head>
 <body class="flex justify-center min-h-screen">
 
-    <div id="app"></div>
+    <div id="app" class="app-container"></div>
 
+    <!-- Firebase SDK -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
         import { getFirestore, doc, getDoc, collection, addDoc, query, where, getDocs, updateDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
@@ -79,7 +274,6 @@
         let currentPage = 'login';
         const appDiv = document.getElementById('app');
 
-        // ---------------- دوال مساعدة ----------------
         function showToast(msg, bg = '#4CAF50') {
             let toast = document.createElement('div');
             toast.className = 'success-toast';
@@ -102,7 +296,7 @@
             render();
         }
 
-        // ---------------- العمليات (Backend) ----------------
+        // ---------------- تسجيل الدخول ----------------
         async function login(identifier, password) {
             try {
                 const usersRef = collection(db, "users");
@@ -129,6 +323,7 @@
             }
         }
 
+        // ---------------- إنشاء حساب ----------------
         async function register(username, password) {
             return new Promise(async (resolve, reject) => {
                 const timer = setTimeout(() => reject(new Error('انتهت المهلة: لا يوجد استجابة.')), 10000);
@@ -164,6 +359,7 @@
             });
         }
 
+        // ---------------- طلب شحن ----------------
         async function submitRecharge(amount, method, senderName, senderAccount, receiptBase64) {
             try {
                 if (!currentUser) throw new Error("انتهت الجلسة");
@@ -186,6 +382,7 @@
             }
         }
 
+        // ---------------- جلب المعاملات ----------------
         async function fetchTransactions() {
             if (!currentUser) return [];
             try {
@@ -200,7 +397,7 @@
             }
         }
 
-        // ---------------- واجهات المستخدم (Render) ----------------
+        // ---------------- واجهات المستخدم ----------------
         function render() {
             if (currentUser) {
                 if (currentPage === 'login' || currentPage === 'register' || currentPage === 'success') currentPage = 'dashboard';
@@ -215,6 +412,8 @@
                 case 'dashboard': renderDashboard(); break;
                 case 'transactions': renderTransactions(); break;
                 case 'recharge': renderRecharge(); break;
+                case 'invest': renderInvest(); break;
+                case 'calculator': renderCalculator(); break;
             }
         }
 
@@ -376,7 +575,7 @@
             document.getElementById('goToLoginBtn').addEventListener('click', () => { sessionStorage.removeItem('new_account_number'); navigate('login'); });
         }
 
-        // ---------- لوحة التحكم ----------
+        // ---------- لوحة التحكم (نفس التصميم الأصلي) ----------
         async function renderDashboard() {
             if (!currentUser) return;
             const firstLetter = currentUser.username ? currentUser.username.charAt(0) : 'م';
@@ -474,62 +673,90 @@
             document.getElementById('navHome').addEventListener('click', (e) => { e.preventDefault(); navigate('dashboard'); });
         }
 
-        // ---------- صفحة شحن الرصيد ----------
+        // ---------- صفحة شحن الرصيد (4 خطوات) ----------
         function renderRecharge() {
             if (!currentUser) return;
-            let step = 1;
-            let selectedMethod = '';
-            let receiptFile = null;
-            let amountVal = '';
-            let senderNameVal = '';
-            let senderAccVal = '';
+            let step = 1, selectedMethod = '', receiptFile = null, amountVal = '', senderNameVal = '', senderAccVal = '';
 
             const renderStep = () => {
                 let content = '';
                 if (step === 1) {
                     content = `
-                    <h3 class="text-center font-bold mb-4">اختر وسيلة الشحن</h3>
-                    <div class="grid grid-cols-3 gap-2 mb-4 w-full">
-                        <div class="method-card bg-white p-3 rounded-xl text-center cursor-pointer border hover:border-[#B71C1C]" data-method="ماي كاشي"><i class="fa-solid fa-wallet text-purple-500 text-xl mb-1"></i><br><span class="text-xs font-bold">ماي كاشي</span></div>
-                        <div class="method-card bg-white p-3 rounded-xl text-center cursor-pointer border hover:border-[#B71C1C]" data-method="بنكك"><i class="fa-solid fa-building-columns text-red-500 text-xl mb-1"></i><br><span class="text-xs font-bold">بنكك</span></div>
-                        <div class="method-card bg-white p-3 rounded-xl text-center cursor-pointer border hover:border-[#B71C1C]" data-method="أوكاش"><i class="fa-solid fa-dollar-sign text-orange-500 text-xl mb-1"></i><br><span class="text-xs font-bold">أوكاش</span></div>
+                    <div class="rc-header"><button class="rc-back-btn" id="backBtn"><i class="fa-solid fa-chevron-left"></i></button><h1>شحن المحفظة</h1><div style="width:30px"></div></div>
+                    <div class="progress-section"><div class="progress-bar"><div class="active"></div><div></div><div></div><div></div></div><div class="progress-text"><span>الخطوة 1 من 4</span><span>وسيلة الشحن</span></div></div>
+                    <div class="intro-text"><h2>كيف تريد شحن محفظتك؟</h2><p>اختر حساب وكيل معتمد أو التحويل المباشر</p></div>
+                    <div class="grid-container">
+                        <div class="method-card rc-card" data-method="ماي كاشي"><i class="fa-solid fa-check check-mark"></i><div class="rc-icon-box bg-mycashy"><i class="fa-solid fa-wallet"></i></div><span class="name">ماي كاشي</span></div>
+                        <div class="method-card rc-card" data-method="بنكك"><i class="fa-solid fa-check check-mark"></i><div class="rc-icon-box bg-bank"><i class="fa-solid fa-building-columns"></i></div><span class="name">بنكك</span></div>
+                        <div class="method-card rc-card" data-method="أوكاش"><i class="fa-solid fa-check check-mark"></i><div class="rc-icon-box bg-okash"><i class="fa-solid fa-dollar-sign"></i></div><span class="name">أوكاش</span></div>
                     </div>
-                    <button id="nextBtn1" class="w-full py-3 rounded-xl bg-gray-300 text-white font-bold" disabled>متابعة</button>`;
+                    <div class="info-box"><i class="fa-solid fa-shield-halved"></i><p>الشحن عبر الوكيل المعتمد هو الأسرع، ويُنفذ عادة خلال أقل من 10 دقائق.</p></div>
+                    <div class="bottom-spacer"></div>
+                    <button class="submit-btn" id="nextBtn1" disabled>متابعة</button>`;
                 } else if (step === 2) {
                     content = `
-                    <h3 class="text-center font-bold mb-4">أدخل المبلغ</h3>
-                    <input type="number" id="amountInput" value="${amountVal}" class="w-full text-center text-2xl font-bold p-3 bg-white border rounded-xl mb-4 outline-none focus:border-[#B71C1C]" placeholder="0">
-                    <button id="nextBtn2" class="w-full py-3 rounded-xl bg-[#B71C1C] text-white font-bold">متابعة</button>`;
+                    <div class="rc-header"><button class="rc-back-btn" id="backBtn"><i class="fa-solid fa-chevron-left"></i></button><h1>شحن المحفظة</h1><div style="width:30px"></div></div>
+                    <div class="progress-section"><div class="progress-bar"><div class="active"></div><div class="active"></div><div></div><div></div></div><div class="progress-text"><span>الخطوة 2 من 4</span><span>المبلغ</span></div></div>
+                    <div class="bank-header"><h2 id="screen2-title">الشحن عبر ${selectedMethod}</h2></div>
+                    <span class="input-label">أدخل مبلغ الشحن</span>
+                    <div class="amount-input-container"><span class="currency-label">SDG</span><input type="text" placeholder="0" id="amount-input" value="${amountVal}"></div>
+                    <div class="quick-amounts">
+                        <button class="quick-btn" data-amount="250000">250,000</button>
+                        <button class="quick-btn" data-amount="100000">100,000</button>
+                        <button class="quick-btn" data-amount="50000">50,000</button>
+                        <button class="quick-btn" data-amount="10000">10,000</button>
+                    </div>
+                    <div class="fee-section"><div class="fee-title"><h4>رسوم الشحن</h4><span>TOP-UP FEE</span></div><div class="fee-value">مجاناً</div></div>
+                    <div class="divider-dashed"></div>
+                    <div class="min-limit-section"><div class="min-title"><h4>الحد الأدنى</h4><span>MINIMUM</span></div><div class="min-value">SDG 1,000</div></div>
+                    <div class="bottom-spacer"></div>
+                    <button class="submit-btn" id="nextBtn2">متابعة</button>`;
                 } else if (step === 3) {
                     content = `
-                    <h3 class="text-center font-bold mb-4">بيانات التحويل</h3>
-                    <div class="bg-white p-4 rounded-xl text-sm mb-4 w-full">
-                        <p class="flex justify-between mb-2"><span>اسم الحساب:</span> <b>علي</b></p>
-                        <p class="flex justify-between"><span>رقم الحساب:</span> <b>401108294</b></p>
+                    <div class="rc-header"><button class="rc-back-btn" id="backBtn"><i class="fa-solid fa-chevron-left"></i></button><h1>شحن المحفظة</h1><div style="width:30px"></div></div>
+                    <div class="progress-section"><div class="progress-bar"><div class="active"></div><div class="active"></div><div class="active"></div><div></div></div><div class="progress-text"><span>الخطوة 3 من 4</span><span>بيانات الإيداع</span></div></div>
+                    <div class="amount-box"><div class="amount-box-title"><h4>المبلغ المطلوب تحويله</h4><span>AMOUNT TO TRANSFER</span></div><div class="amount-box-value"><span id="display-amount">${amountVal}.00</span> <span>SDG</span></div></div>
+                    <div class="section-title-container"><h3>حساب الإيداع</h3><div class="section-line"></div></div>
+                    <p class="instruction-text">حوّل المبلغ إلى الحساب التالي ثم أرفق الإشعار في الخطوة القادمة.</p>
+                    <div class="bank-card-container">
+                        <div class="bank-card-header"><div class="bank-card-logo"><i class="fa-solid fa-wallet"></i></div><div class="bank-card-header-text"><h4>علي</h4><p>حساب المنصة الرسمي المعتمد</p></div></div>
+                        <div class="card-divider"></div>
+                        <div class="data-row"><div class="data-label"><h5>اسم الحساب</h5><span>ACCOUNT NAME</span></div><div class="data-value"><div class="copy-icon" onclick="navigator.clipboard.writeText('علي')"><i class="fa-regular fa-copy"></i></div><span>علي</span></div></div>
+                        <div class="card-divider"></div>
+                        <div class="data-row"><div class="data-label"><h5>البنك</h5><span>BANK</span></div><div class="data-value"><span>ماي كاشي (الحساب المركزي)</span></div></div>
+                        <div class="card-divider"></div>
+                        <div class="data-row"><div class="data-label"><h5>رقم الحساب</h5><span>ACCOUNT NO.</span></div><div class="data-value account-number-value"><div class="copy-icon" onclick="navigator.clipboard.writeText('401108294')"><i class="fa-regular fa-copy"></i></div><span>401108294</span></div></div>
                     </div>
-                    <input type="text" id="senderName" value="${senderNameVal}" placeholder="اسمك الكامل" class="w-full p-3 bg-white border rounded-xl mb-2">
-                    <input type="text" id="senderAcc" value="${senderAccVal}" placeholder="رقم حسابك المرسل منه" class="w-full p-3 bg-white border rounded-xl mb-4">
-                    <button id="nextBtn3" class="w-full py-3 rounded-xl bg-[#B71C1C] text-white font-bold">متابعة</button>`;
+                    <div class="privacy-note"><i class="fa-solid fa-lock"></i><span>لا نعرض أرقام هواتف شخصية للوكلاء حفاظاً على الخصوصية.</span></div>
+                    <div class="section-title-container"><h3>بيانات المحوّل</h3><div class="section-line"></div></div>
+                    <div class="input-group-outline"><label>اسم صاحب الحساب المحوّل</label><input type="text" id="sender-name-input" value="${senderNameVal || currentUser.username}"></div>
+                    <div class="input-group-outline"><label>رقم حساب المرسل</label><input type="text" id="sender-account-input" value="${senderAccVal || currentUser.account_number}"></div>
+                    <div class="input-group-outline"><label>رقم العملية (اختياري)</label><input type="text" id="transaction-id-input" placeholder="رقم العملية..."></div>
+                    <div class="bottom-spacer"></div>
+                    <button class="submit-btn active" id="nextBtn3">متابعة</button>`;
                 } else if (step === 4) {
                     content = `
-                    <h3 class="text-center font-bold mb-4">أرفق إشعار التحويل</h3>
-                    <input type="file" id="receiptFile" accept="image/*" class="hidden">
-                    <div id="uploadBox" class="border-2 border-dashed border-red-300 bg-white rounded-xl p-8 text-center cursor-pointer mb-4 w-full">
-                        <img id="previewImg" class="hidden max-h-32 mx-auto mb-2 rounded">
-                        <i class="fa-solid fa-upload text-red-500 text-2xl mb-2" id="uploadIcon"></i>
-                        <p class="text-sm text-gray-500">اضغط لاختيار صورة الإشعار</p>
+                    <div class="rc-header"><button class="rc-back-btn" id="backBtn"><i class="fa-solid fa-chevron-left"></i></button><h1>شحن المحفظة</h1><div style="width:30px"></div></div>
+                    <div class="progress-section"><div class="progress-bar"><div class="active"></div><div class="active"></div><div class="active"></div><div class="active"></div></div><div class="progress-text"><span>الخطوة 4 من 4</span><span>إرفاق الإشعار</span></div></div>
+                    <div class="receipt-header"><h2>أرفق إشعار التحويل</h2><p>سيتحقق الوكيل من الإشعار ويضيف الرصيد لمحفظتك فوراً.</p></div>
+                    <input type="file" id="file-input" accept="image/*" style="display:none" onchange="previewImage(event)">
+                    <div class="upload-box" id="upload-box" onclick="document.getElementById('file-input').click()">
+                        <img id="image-preview" class="preview-img" src="">
+                        <div class="upload-icon-circle" id="upload-icon"><i class="fa-solid fa-arrow-up-from-bracket"></i></div>
+                        <h3 id="upload-title">إرفاق إشعار التحويل</h3>
+                        <p id="upload-desc">اضغط هنا لاختيار صورة من المعرض</p>
                     </div>
-                    <button id="submitBtn" class="w-full py-3 rounded-xl bg-[#B71C1C] text-white font-bold flex justify-center items-center gap-2"><i class="fa-solid fa-paper-plane"></i> إرسال الطلب للمدير</button>`;
+                    <div class="section-title-container"><div class="section-line"></div><h3>ملخص الطلب</h3></div>
+                    <div class="summary-row"><div class="summary-label"><h5>وسيلة الشحن</h5><span>METHOD</span></div><div class="summary-value">${selectedMethod}</div></div>
+                    <div class="divider-dashed"></div>
+                    <div class="summary-row"><div class="summary-label"><h5>المبلغ</h5><span>AMOUNT</span></div><div class="summary-value amount">SDG ${amountVal}.00</div></div>
+                    <div class="divider-dashed"></div>
+                    <div class="summary-row"><div class="summary-label"><h5>اسم المحوّل</h5><span>SENDER</span></div><div class="summary-value">${senderNameVal}</div></div>
+                    <div class="bottom-spacer"></div>
+                    <button class="submit-btn active" id="submitBtn"><i class="fa-solid fa-paper-plane"></i> <span>إرسال طلب الشحن</span></button>`;
                 }
 
-                appDiv.innerHTML = `
-                <div class="flex flex-col h-full bg-[#F5F6F9] p-5 w-full">
-                    <div class="flex items-center justify-between mb-4 w-full">
-                        <a href="#" id="backBtn" class="w-8 h-8 border border-gray-300 rounded-full flex justify-center items-center text-gray-700"><i class="fa-solid fa-chevron-right"></i></a>
-                        <h2 class="font-bold">شحن المحفظة</h2><div class="w-8"></div>
-                    </div>
-                    ${content}
-                </div>`;
+                appDiv.innerHTML = `<div class="recharge-page flex flex-col h-full min-h-screen">${content}</div>`;
 
                 document.getElementById('backBtn').addEventListener('click', (e) => {
                     e.preventDefault();
@@ -540,34 +767,46 @@
                 if (step === 1) {
                     document.querySelectorAll('.method-card').forEach(card => {
                         card.addEventListener('click', function() {
-                            document.querySelectorAll('.method-card').forEach(c => c.classList.remove('border-[#B71C1C]', 'bg-red-50'));
-                            this.classList.add('border-[#B71C1C]', 'bg-red-50');
+                            document.querySelectorAll('.method-card').forEach(c => c.classList.remove('active-card'));
+                            this.classList.add('active-card');
                             selectedMethod = this.dataset.method;
                             const btn = document.getElementById('nextBtn1');
                             btn.disabled = false;
-                            btn.classList.remove('bg-gray-300');
-                            btn.classList.add('bg-[#B71C1C]');
+                            btn.classList.add('active');
                         });
                     });
                     document.getElementById('nextBtn1').addEventListener('click', () => { step++; renderStep(); });
                 } else if (step === 2) {
-                    document.getElementById('nextBtn2').addEventListener('click', () => {
-                        amountVal = document.getElementById('amountInput').value;
-                        if (!amountVal || parseFloat(amountVal) < 1000) return alert('الحد الأدنى 1000 SDG');
+                    const amtInput = document.getElementById('amount-input');
+                    const next2 = document.getElementById('nextBtn2');
+                    amtInput.addEventListener('input', function() {
+                        this.value = this.value.replace(/,/g, '').replace(/[^\d]/g, '');
+                        if(parseInt(this.value) >= 1000) { next2.classList.add('active'); }
+                        else { next2.classList.remove('active'); }
+                    });
+                    document.querySelectorAll('.quick-btn').forEach(btn => {
+                        btn.addEventListener('click', function() {
+                            amtInput.value = parseInt(this.dataset.amount).toLocaleString('en-US');
+                            if(parseInt(this.dataset.amount) >= 1000) next2.classList.add('active');
+                        });
+                    });
+                    next2.addEventListener('click', () => {
+                        amountVal = amtInput.value;
+                        if (!amountVal || parseFloat(amountVal.replace(/,/g,'')) < 1000) return alert('الحد الأدنى 1000 SDG');
                         step++; renderStep();
                     });
                 } else if (step === 3) {
                     document.getElementById('nextBtn3').addEventListener('click', () => {
-                        senderNameVal = document.getElementById('senderName').value;
-                        senderAccVal = document.getElementById('senderAcc').value;
+                        senderNameVal = document.getElementById('sender-name-input').value;
+                        senderAccVal = document.getElementById('sender-account-input').value;
                         if (!senderNameVal) return alert('أدخل اسمك');
                         step++; renderStep();
                     });
                 } else if (step === 4) {
-                    const fileInput = document.getElementById('receiptFile');
-                    const uploadBox = document.getElementById('uploadBox');
-                    const previewImg = document.getElementById('previewImg');
-                    const uploadIcon = document.getElementById('uploadIcon');
+                    const fileInput = document.getElementById('file-input');
+                    const uploadBox = document.getElementById('upload-box');
+                    const previewImg = document.getElementById('image-preview');
+                    const uploadIcon = document.getElementById('upload-icon');
 
                     uploadBox.addEventListener('click', () => fileInput.click());
                     fileInput.addEventListener('change', (e) => {
@@ -576,8 +815,11 @@
                             const reader = new FileReader();
                             reader.onload = (ev) => {
                                 previewImg.src = ev.target.result;
-                                previewImg.classList.remove('hidden');
-                                uploadIcon.classList.add('hidden');
+                                previewImg.style.display = 'block';
+                                uploadBox.classList.add('uploaded');
+                                document.getElementById('upload-title').innerText = 'تم إرفاق الصورة!';
+                                document.getElementById('upload-desc').innerText = 'اضغط لتغيير الصورة';
+                                uploadIcon.innerHTML = '<i class="fa-solid fa-check"></i>';
                             };
                             reader.readAsDataURL(receiptFile);
                         }
@@ -592,7 +834,7 @@
                         reader.onload = async (ev) => {
                             const base64Img = ev.target.result;
                             try {
-                                await submitRecharge(amountVal, selectedMethod, senderNameVal, senderAccVal, base64Img);
+                                await submitRecharge(amountVal.replace(/,/g,''), selectedMethod, senderNameVal, senderAccVal, base64Img);
                             } catch (err) {
                                 showToast(err.message, '#d32f2f');
                                 this.innerHTML = '<i class="fa-solid fa-paper-plane"></i> إعادة المحاولة';
