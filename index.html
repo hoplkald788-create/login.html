@@ -865,6 +865,143 @@
             renderStep();
         }
 
+        // ---------------- صفحة الاستثمار ----------------
+        async function renderInvest() {
+            appDiv.innerHTML = `
+            <div class="flex flex-col h-full bg-[#F5F6F9] pb-20 w-full">
+                <div class="invest-header">
+                    <div class="invest-brand"><div class="invest-brand-logo">ب</div><div class="invest-brand-text"><h2>بلدنا</h2><p>للمدفوعات الرقمية</p></div></div>
+                    <a href="#" id="backToDash" class="invest-back-btn"><i class="fa-solid fa-chevron-right"></i></a>
+                </div>
+                <div class="invest-title-section">
+                    <h1>الاستثمار</h1>
+                    <p>اختر الجولة المناسبة وابدأ رحلتك الاستثمارية</p>
+                </div>
+                <div class="invest-cards-container">
+                    <div class="invest-card">
+                        <div class="invest-card-content">
+                            <div class="invest-card-header">
+                                <div class="invest-card-title">الجولة القياسية (20%)</div>
+                                <div class="invest-badge">الأكثر طلباً</div>
+                            </div>
+                            <div class="invest-card-subtitle">بداية آمنة ومتاحة برصيد الهدية الترحيبية</div>
+                            <div class="invest-stats-row">
+                                <div class="invest-stat-main"><span class="invest-percentage">0%</span><span class="invest-percentage-label">عائد سنوي تقديري</span></div>
+                                <div class="invest-stat-duration"><span class="invest-duration-months">1 أشهر</span><span class="invest-duration-amount">من SDG 3K</span></div>
+                            </div>
+                            <div class="invest-features-container">
+                                <div class="invest-features-left"><div class="invest-pill">عائد أرباح فوري 18%</div></div>
+                                <div class="invest-features-right">
+                                    <div class="invest-pill">متاحة برصيد الهدية المجاني</div>
+                                    <div class="invest-pill">سحب مباشر بعد الاكتمال</div>
+                                    <div class="invest-pill">حماية كاملة لرأس المال</div>
+                                </div>
+                            </div>
+                            <button class="invest-btn" onclick="window.location.href='?page=calculator&round=standard'">احسب عائدك واشترك <i class="fa-solid fa-calculator"></i></button>
+                        </div>
+                    </div>
+                    <div class="invest-card">
+                        <div class="invest-card-content">
+                            <div class="invest-card-header"><div class="invest-card-title">الجولة الفضية</div></div>
+                            <div class="invest-card-subtitle">نمو متوازن لأصحاب رؤوس الأموال المتوسطة</div>
+                            <div class="invest-stats-row">
+                                <div class="invest-stat-main"><span class="invest-percentage">0%</span><span class="invest-percentage-label">عائد سنوي تقديري</span></div>
+                                <div class="invest-stat-duration"><span class="invest-duration-months">2 أشهر</span><span class="invest-duration-amount">من SDG 20K</span></div>
+                            </div>
+                            <div class="invest-features-container">
+                                <div class="invest-features-left"><div class="invest-pill">إشعارات لحظية</div></div>
+                                <div class="invest-features-right">
+                                    <div class="invest-pill">أولوية في تنفيذ طلبات السحب</div>
+                                    <div class="invest-pill">عوائد تصاعدية 25%</div>
+                                    <div class="invest-pill">تغطية سيولة عبر وكيل معتمد</div>
+                                </div>
+                            </div>
+                            <button class="invest-btn" onclick="window.location.href='?page=calculator&round=silver'">احسب عائدك واشترك <i class="fa-solid fa-calculator"></i></button>
+                        </div>
+                    </div>
+                </div>
+                <div class="bottom-nav">
+                    <a href="#" id="navHome" class="nav-item"><i class="fa-solid fa-house"></i><span>الرئيسية</span></a>
+                    <a href="#" id="navTx" class="nav-item"><i class="fa-regular fa-file-lines"></i><span>المعاملات</span></a>
+                    <a href="#" class="nav-item active"><i class="fa-solid fa-chart-line"></i><span>الاستثمار</span></a>
+                    <a href="#" class="nav-item"><i class="fa-solid fa-receipt"></i><span>الإيصالات</span></a>
+                    <a href="#" class="nav-item"><i class="fa-regular fa-user"></i><span>حسابي</span></a>
+                </div>
+            </div>`;
+
+            document.getElementById('backToDash').addEventListener('click', (e) => { e.preventDefault(); navigate('dashboard'); });
+            document.getElementById('navHome').addEventListener('click', (e) => { e.preventDefault(); navigate('dashboard'); });
+            document.getElementById('navTx').addEventListener('click', (e) => { e.preventDefault(); navigate('transactions'); });
+        }
+
+        // ---------- صفحة الحاسبة ----------
+        function renderCalculator(round = 'standard') {
+            if (!currentUser) return;
+            const isSilver = round === 'silver';
+            const cfg = isSilver 
+                ? { title:'حاسبة الجولة الفضية', subtitle:'مكافأة 10,000 SDG خلال 24 ساعة', min:20000, max:100000, def:20000, bonus:10000, minL:'20K', maxL:'100K', round }
+                : { title:'حاسبة الجولة القياسية (20%)', subtitle:'مكافأة 5,000 SDG خلال 24 ساعة', min:3000, max:20000, def:3000, bonus:5000, minL:'3K', maxL:'20K', round };
+
+            appDiv.innerHTML = `
+            <div class="flex flex-col h-full bg-[#f4f4f4] min-h-screen w-full">
+                <div class="invest-header">
+                    <div class="invest-brand"><div class="invest-brand-logo">ب</div><div class="invest-brand-text"><h2>بلدنا</h2><p>للمدفوعات الرقمية</p></div></div>
+                    <a href="#" id="backToInvest" class="invest-back-btn"><i class="fa-solid fa-chevron-right"></i></a>
+                </div>
+                <div class="calc-page-wrapper">
+                    <div class="calc-page-card">
+                        <div class="top-handle"></div>
+                        <h1 class="header-title">${cfg.title}</h1>
+                        <p class="header-subtitle">${cfg.subtitle}</p>
+                        <div class="savings-card">
+                            <div class="card-header">
+                                <div class="card-title"><h2>مبلغ الادخار</h2><span>PRINCIPAL</span></div>
+                                <div class="amount-display" id="amountDisplay">SDG ${cfg.def.toLocaleString()}</div>
+                            </div>
+                            <input type="range" min="${cfg.min}" max="${cfg.max}" value="${cfg.def}" step="100" id="savingsSlider">
+                            <div class="slider-labels"><span>${cfg.minL}</span><span>${cfg.maxL}</span></div>
+                        </div>
+                        <div class="gradient-box"></div>
+                        <div class="detail-row"><div class="detail-title"><h3>المكافأة الثابتة</h3><span>FIXED BONUS</span></div><div class="detail-value text-green">+ SDG ${cfg.bonus.toLocaleString()}</div></div>
+                        <div class="detail-row"><div class="detail-title"><h3>مدة الاستحقاق</h3><span>DURATION</span></div><div class="detail-value text-dark">24 ساعة</div></div>
+                        <div class="detail-row"><div class="detail-title"><h3>الإجمالي عند الاستحقاق</h3><span>AT MATURITY</span></div><div class="detail-value text-red" id="totalMaturity">SDG ${(cfg.def + cfg.bonus).toLocaleString()}</div></div>
+                        <div class="detail-row"><div class="detail-title"><h3>صرف العائد</h3><span>PAYOUT</span></div><div class="detail-value text-dark">تلقائي بعد 24 ساعة</div></div>
+                        
+                        <div id="calc-error" class="hidden bg-red-100 text-red-700 p-2 rounded mt-4 text-sm text-center font-bold animate-shake"></div>
+                        <button id="subscribeBtn" class="btn-subscribe mt-4">اشترك الآن</button>
+                    </div>
+                </div>
+            </div>`;
+
+            const slider = document.getElementById('savingsSlider');
+            const amtDisplay = document.getElementById('amountDisplay');
+            const totalMat = document.getElementById('totalMaturity');
+            
+            slider.addEventListener('input', () => {
+                const p = parseInt(slider.value);
+                amtDisplay.innerText = 'SDG ' + p.toLocaleString();
+                totalMat.innerText = 'SDG ' + (p + cfg.bonus).toLocaleString();
+            });
+
+            document.getElementById('backToInvest').addEventListener('click', (e) => { e.preventDefault(); navigate('invest'); });
+
+            document.getElementById('subscribeBtn').addEventListener('click', async function() {
+                const p = parseInt(slider.value);
+                if (confirm(`الاشتراك بـ ${p.toLocaleString()} SDG؟\nستحصل على ${(p + cfg.bonus).toLocaleString()} SDG بعد 24 ساعة.`)) {
+                    this.disabled = true;
+                    this.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> جاري المعالجة...';
+                    try {
+                        await subscribeInvestment(cfg.round, p, 24);
+                    } catch (err) {
+                        document.getElementById('calc-error').innerText = err.message;
+                        document.getElementById('calc-error').classList.remove('hidden');
+                        this.disabled = false;
+                        this.innerText = 'اشترك الآن';
+                    }
+                }
+            });
+        }
+
         // ---------------- التشغيل الأولي ----------------
         async function init() {
             const savedUserId = localStorage.getItem('bld_user_id');
