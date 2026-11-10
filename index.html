@@ -1,23 +1,290 @@
-<!DOCTYPE html>
+here<!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>بلدنا - المحفظة الرقمية</title>
+    <title>بلدنا - المحفظة</title>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&family=Tajawal:wght@400;500;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        body { font-family: 'Tajawal', sans-serif; background: #f9f9f9; }
-        .header-bg { background: #a82525; }
-        .btn-color { background: #b3262b; }
+        *{margin:0;padding:0;box-sizing:border-box;font-family:'Cairo',sans-serif}
+        html,body{width:100%;max-width:100%;overflow-x:hidden;background:#F5F6F9;display:flex;justify-content:center}
+        .app-container{width:100%;max-width:100%;min-height:100vh;background:#F5F6F9;position:relative;display:flex;flex-direction:column;overflow-x:hidden}
+        .header-bg{background:linear-gradient(180deg,#B71C1C,#E53935);padding:20px 20px 25px;border-bottom-left-radius:25px;border-bottom-right-radius:25px}
+        .top-bar{display:flex;justify-content:space-between;align-items:flex-start;color:#fff;margin-top:10px}
+        .top-actions{display:flex;gap:8px}
+        .notification-icon{width:38px;height:38px;border:1px solid rgba(255,255,255,.3);border-radius:50%;display:flex;justify-content:center;align-items:center;font-size:16px;cursor:pointer;text-decoration:none;color:#fff;transition:.2s}
+        .user-info{display:flex;align-items:center;gap:10px}
+        .user-text{text-align:right}
+        .user-text p{font-size:12px;color:rgba(255,255,255,.8)}
+        .user-text h3{font-size:15px;display:flex;align-items:center;justify-content:flex-end;gap:4px}
+        .user-text h3 i{color:#FFCA28;font-size:13px}
+        .avatar{width:42px;height:42px;background:#FFCA28;border-radius:50%;display:flex;justify-content:center;align-items:center;color:#000;font-weight:700;font-size:18px}
+        .bank-card-wrapper{padding:0 20px;margin-top:-15px;z-index:10}
+        .bank-card{background:linear-gradient(135deg,#B71C1C,#8E0000);border-radius:18px;padding:15px;color:#fff;box-shadow:0 8px 15px rgba(183,28,28,.3);position:relative;overflow:hidden;display:flex;flex-direction:column;gap:15px}
+        .bank-card::before{content:'';position:absolute;width:150px;height:150px;border-radius:50%;background:rgba(255,255,255,.05);top:-40px;right:-40px}
+        .card-top-row{display:flex;justify-content:space-between;align-items:center;z-index:1;width:100%;flex-direction:row-reverse}
+        .account-type{background:rgba(255,202,40,.2);border:1px solid rgba(255,202,40,.5);padding:3px 10px;border-radius:12px;font-size:10px;display:flex;align-items:center;gap:4px}
+        .balance-label-left{display:flex;align-items:center;gap:5px;font-size:10px;color:rgba(255,255,255,.8)}
+        .eye-icon{cursor:pointer;font-size:12px}
+        .card-middle{display:flex;justify-content:flex-end;align-items:center;z-index:1;gap:10px}
+        .chip{width:35px;height:25px;background:#FFCA28;border-radius:5px}
+        .contactless{font-size:16px;color:rgba(255,255,255,.5)}
+        .card-bottom{z-index:1;display:flex;flex-direction:column;align-items:flex-start;width:100%}
+        .balance-amount{display:flex;justify-content:flex-start;align-items:baseline;gap:5px;margin-bottom:10px}
+        .balance-amount span.currency{color:#FFCA28;font-size:14px;font-weight:700}
+        .balance-amount span.number{font-size:24px;font-weight:800}
+        .card-footer{display:flex;justify-content:space-between;align-items:center;font-size:11px;width:100%;flex-direction:row-reverse}
+        .card-name{display:flex;align-items:center;gap:4px}
+        .card-name i{color:#FFCA28}
+        .main-content{padding:15px;flex:1;padding-bottom:90px;width:100%}
+        .services-box{background:#fff;border-radius:18px;padding:12px 5px;display:flex;justify-content:space-between;box-shadow:0 4px 10px rgba(0,0,0,.03);margin-bottom:15px}
+        .service-item{display:flex;flex-direction:column;align-items:center;gap:5px;cursor:pointer;flex:1;text-decoration:none;color:inherit}
+        .service-icon{width:42px;height:42px;border-radius:12px;display:flex;justify-content:center;align-items:center;font-size:16px}
+        .service-item span{font-size:10px;font-weight:700;color:#333}
+        .bg-green{background:#E8F5E9;color:#4CAF50}.bg-red{background:#FFEBEE;color:#F44336}.bg-blue{background:#E3F2FD;color:#2196F3}.bg-orange{background:#FFF8E1;color:#FF9800}
+        .stats-row{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:15px}
+        .stat-card{background:#fff;border-radius:14px;padding:10px 5px;display:flex;flex-direction:column;align-items:center;box-shadow:0 4px 10px rgba(0,0,0,.03)}
+        .stat-icon{width:30px;height:30px;border-radius:50%;display:flex;justify-content:center;align-items:center;font-size:13px;margin-bottom:6px}
+        .stat-card p{font-size:9px;color:#777;margin-bottom:2px;text-align:center}
+        .stat-card h4{font-size:14px;color:#000;font-weight:800}
+        .promo-banner{background:linear-gradient(to left,#B71C1C,#8E0000);border-radius:16px;padding:15px;display:flex;justify-content:space-between;align-items:center;margin-bottom:15px}
+        .promo-text{color:#fff;z-index:1}
+        .promo-text h3{font-size:15px;margin-bottom:3px}
+        .promo-text p{font-size:10px;color:rgba(255,255,255,.8);margin-bottom:10px}
+        .promo-btn{background:#fff;color:#B71C1C;border:none;padding:4px 12px;border-radius:15px;font-weight:700;font-size:10px;cursor:pointer;font-family:inherit}
+        .promo-graphic{position:relative;width:60px;height:70px;display:flex;align-items:flex-end;justify-content:center}
+        .phone-shape{width:40px;height:60px;background:#fff;border-radius:6px;border:2px solid #000;position:relative;z-index:2;display:flex;flex-direction:column;align-items:center;padding-top:15px;gap:4px}
+        .phone-shape div{width:70%;height:4px;background:#eee;border-radius:2px}
+        .phone-shape .btn{width:60%;height:8px;background:#4CAF50;border-radius:3px;margin-top:5px}
+        .coins{position:absolute;left:-5px;bottom:0;color:#FFCA28;font-size:22px;z-index:1}
+        .bottom-nav{position:fixed;bottom:0;left:0;width:100%;background:#fff;display:flex;justify-content:space-around;padding:8px 0;box-shadow:0 -4px 10px rgba(0,0,0,.05);border-top:1px solid #eee;z-index:20}
+        .nav-item{display:flex;flex-direction:column;align-items:center;gap:3px;color:#999;text-decoration:none;font-size:9px;cursor:pointer}
+        .nav-item i{font-size:16px}
+        .nav-item.active{color:#B71C1C;background:#FFEBEE;padding:4px 10px;border-radius:12px}
+        .invest-header{position:sticky;top:0;z-index:30;background:linear-gradient(180deg,#B71C1C,#E53935);padding:15px 20px;display:flex;align-items:center;justify-content:space-between;color:#fff;border-bottom-left-radius:20px;border-bottom-right-radius:20px}
+        .invest-brand{display:flex;align-items:center;gap:10px}
+        .invest-brand-logo{width:40px;height:40px;background:#fff;border-radius:10px;display:flex;align-items:center;justify-content:center;color:#B71C1C;font-size:18px;font-weight:800}
+        .invest-brand-text h2{font-size:16px;font-weight:800}
+        .invest-brand-text p{font-size:10px;color:rgba(255,255,255,.85)}
+        .invest-back-btn{width:38px;height:38px;background:rgba(255,255,255,.2);border:1px solid rgba(255,255,255,.3);border-radius:50%;display:flex;align-items:center;justify-content:center;color:#fff;font-size:14px;text-decoration:none}
+        .invest-title-section{padding:20px 20px 10px;text-align:center}
+        .invest-title-section h1{font-size:22px;font-weight:800;color:#1a1a1a;margin-bottom:4px}
+        .invest-title-section p{font-size:13px;color:#777}
+        .invest-cards-container{padding:10px 15px 100px;display:flex;flex-direction:column;gap:18px}
+        .invest-card{background:linear-gradient(145deg,#8c1d1f,#731214);border-radius:24px;padding:22px 20px;color:#fff;position:relative;overflow:hidden;box-shadow:0 10px 20px rgba(0,0,0,.12)}
+        .invest-card::before{content:'';position:absolute;bottom:-50px;left:20%;width:150px;height:150px;background:rgba(255,255,255,.05);border-radius:30px;transform:rotate(45deg);z-index:1}
+        .invest-card-content{position:relative;z-index:2}
+        .invest-card-header{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:5px}
+        .invest-card-title{font-size:18px;font-weight:800}
+        .invest-badge{background:#1a1a1a;color:#d4af37;padding:4px 12px;border-radius:20px;font-size:11px;font-weight:700}
+        .invest-card-subtitle{font-size:12px;color:#e0c2c2;margin-bottom:20px}
+        .invest-stats-row{display:flex;justify-content:space-between;align-items:center;margin-bottom:18px}
+        .invest-percentage{font-size:44px;font-weight:800;line-height:1;display:block}
+        .invest-percentage-label{font-size:11px;color:#e0c2c2}
+        .invest-stat-duration{text-align:left}
+        .invest-duration-months{font-size:15px;font-weight:700;display:block}
+        .invest-duration-amount{font-size:12px;color:#e0c2c2}
+        .invest-features-container{display:flex;justify-content:space-between;margin-bottom:22px;gap:10px}
+        .invest-features-right{display:flex;flex-direction:column;gap:8px;align-items:flex-end;flex-grow:1}
+        .invest-pill{background:rgba(255,255,255,.15);padding:6px 14px;border-radius:20px;font-size:11px;font-weight:500;display:inline-block;white-space:nowrap}
+        .invest-features-right .invest-pill{width:fit-content}
+        .invest-btn{width:100%;background:#fff;color:#8c1d1f;border:none;border-radius:25px;padding:13px;font-size:15px;font-weight:800;font-family:inherit;display:flex;justify-content:center;align-items:center;gap:10px;cursor:pointer}
+        .my-inv-card{background:#fff;border-radius:16px;padding:16px;box-shadow:0 6px 20px rgba(0,0,0,.04);border:1px solid #f0f0f0}
+        .my-inv-header{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:20px}
+        .my-inv-header-right{display:flex;align-items:center;gap:12px}
+        .my-inv-icon-box{background:#9f2727;width:48px;height:48px;border-radius:12px;display:flex;justify-content:center;align-items:center;flex-shrink:0}
+        .my-inv-icon-box svg{width:24px;height:24px;fill:none;stroke:#fff;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+        .my-inv-title-area h2{font-size:15px;color:#111;font-weight:700;margin-bottom:2px}
+        .my-inv-title-area p{font-size:11px;color:#888;font-weight:500}
+        .my-inv-badge{background:#e5f5ee;color:#1e8a57;padding:6px 10px;border-radius:14px;font-size:11px;font-weight:700;display:flex;align-items:center;gap:6px;white-space:nowrap}
+        .my-inv-badge::before{content:'';display:inline-block;width:6px;height:6px;background:#1e8a57;border-radius:50%}
+        .my-inv-badge.completed{background:#e8e8e8;color:#666}
+        .my-inv-badge.completed::before{background:#666}
+        .my-inv-progress{margin-bottom:20px}
+        .my-inv-progress-labels{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
+        .my-inv-progress-labels .label{color:#888;font-size:13px;font-weight:500}
+        .my-inv-progress-labels .percent{color:#9f2727;font-size:16px;font-weight:800}
+        .my-inv-progress-bar{width:100%;height:10px;background:#e5e3df;border-radius:8px;overflow:hidden}
+        .my-inv-progress-fill{height:100%;background:#9f2727;border-radius:8px;transition:width 1s linear}
+        .my-inv-footer{display:flex;justify-content:space-between;align-items:center;text-align:center;border-top:1px solid #f0f0f0;padding-top:14px}
+        .my-inv-stat{display:flex;flex-direction:column;gap:4px}
+        .my-inv-stat .label{color:#888;font-size:12px;font-weight:500}
+        .my-inv-stat .value{color:#111;font-size:15px;font-weight:800}
+        .my-inv-stat .value.green{color:#4cb08b}
+        .subscribe-alert{margin:10px 15px 0;padding:12px 16px;border-radius:12px;font-size:13px;font-weight:700;display:flex;gap:10px;align-items:flex-start}
+        .subscribe-alert.success{background:rgba(46,204,113,.12);border:1px solid rgba(46,204,113,.3);color:#2ecc71}
+        .subscribe-alert.error{background:rgba(255,105,139,.1);border:1px solid rgba(255,105,139,.3);color:#ff698b}
+        .subscribe-alert.info{background:rgba(54,185,244,.12);border:1px solid rgba(54,185,244,.3);color:#1e8fbe}
+        .section-label{margin:5px 5px 0;font-size:13px;font-weight:700;color:#555}
+        .calc-page-wrapper{padding:20px 15px 30px;display:flex;justify-content:center;flex:1;background:#f4f4f4}
+        .calc-page-card{background:#fff;width:100%;max-width:400px;border-radius:24px;padding:16px 14px;box-shadow:0 10px 25px rgba(0,0,0,.08)}
+        .calc-page-card .top-handle{width:36px;height:4px;background:#5A5A5A;border-radius:10px;margin:0 auto 12px}
+        .calc-page-card .header-title{font-size:18px;font-weight:700;color:#1E1E1E;text-align:center;margin-bottom:4px}
+        .calc-page-card .header-subtitle{font-size:12px;color:#888;text-align:center;margin-bottom:16px}
+        .calc-page-card .savings-card{background:#F9F7F2;border:1px solid #E0E0E0;border-radius:12px;padding:12px 16px;margin-bottom:14px}
+        .calc-page-card .card-header{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:12px}
+        .calc-page-card .card-title h2{font-size:14px;font-weight:700;color:#1E1E1E;margin-bottom:2px}
+        .calc-page-card .card-title span{font-size:9px;color:#888;letter-spacing:1.5px}
+        .calc-page-card .amount-display{font-size:22px;font-weight:700;color:#A32829}
+        .calc-page-card input[type=range]{-webkit-appearance:none;width:100%;background:transparent;margin:5px 0}
+        .calc-page-card input[type=range]:focus{outline:none}
+        .calc-page-card input[type=range]::-webkit-slider-runnable-track{width:100%;height:4px;background:#D3D3D3;border-radius:2px}
+        .calc-page-card input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;height:18px;width:18px;border-radius:50%;background:#A32829;cursor:pointer;margin-top:-7px;box-shadow:0 2px 4px rgba(0,0,0,.2)}
+        .calc-page-card .slider-labels{display:flex;justify-content:space-between;color:#888;font-size:12px;margin-top:4px}
+        .calc-page-card .gradient-box{height:60px;width:100%;border-radius:10px;background:linear-gradient(to bottom,#C33232,#EAA3A3);margin-bottom:16px}
+        .calc-page-card .detail-row{display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px dashed #E0E0E0}
+        .calc-page-card .detail-row:last-child{border-bottom:none}
+        .calc-page-card .detail-title h3{font-size:14px;font-weight:700;color:#1E1E1E;margin-bottom:2px}
+        .calc-page-card .detail-title span{font-size:9px;color:#888;letter-spacing:1px}
+        .calc-page-card .detail-value{font-size:14px;font-weight:700}
+        .text-green{color:#2E8B57}.text-red{color:#A32829}.text-dark{color:#1E1E1E}
+        .btn-subscribe{background:#A32829;color:#fff;border:none;border-radius:10px;padding:12px;font-size:16px;font-weight:700;font-family:inherit;cursor:pointer;width:100%;margin-top:16px}
+        .recharge-page{padding:10px 15px 30px}
+        .recharge-page .screen{display:none;flex-direction:column;flex:1}
+        .recharge-page .screen.active{display:flex}
+        .rc-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;margin-top:5px}
+        .rc-header h1{font-size:16px;color:#111;font-weight:700}
+        .rc-back-btn{width:30px;height:30px;border-radius:50%;border:1px solid #E0E0E0;background:transparent;display:flex;justify-content:center;align-items:center;cursor:pointer;color:#111;font-size:11px}
+        .progress-section{margin-bottom:15px}
+        .progress-bar{display:flex;gap:5px;margin-bottom:6px}
+        .progress-bar div{height:3px;border-radius:2px;flex:1;background:#E0E0E0}
+        .progress-bar div.active{background:#B71C1C}
+        .progress-text{display:flex;justify-content:space-between;font-size:10px;font-weight:600}
+        .progress-text span:first-child{color:#777}
+        .progress-text span:last-child{color:#B71C1C}
+        .intro-text{text-align:center;margin-bottom:15px}
+        .intro-text h2{font-size:16px;color:#111;margin-bottom:4px;font-weight:800}
+        .intro-text p{font-size:11px;color:#666;line-height:1.4}
+        .grid-container{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:15px}
+        .rc-card{background:#fff;border-radius:12px;padding:10px 5px;display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;border:1.5px solid transparent;box-shadow:0 2px 6px rgba(0,0,0,.02);transition:all .2s;position:relative;height:90px}
+        .rc-card.active-card{border-color:#B71C1C}
+        .rc-icon-box{width:34px;height:34px;border-radius:9px;display:flex;justify-content:center;align-items:center;margin-bottom:6px;color:#fff;font-size:15px;position:relative}
+        .rc-card span.name{font-size:10px;font-weight:700;color:#111}
+        .bg-fawry{background:linear-gradient(135deg,#4A72D4,#2B4E9B)}
+        .bg-bank{background:linear-gradient(135deg,#C13A3A,#8A1C1C)}
+        .bg-agent{background:linear-gradient(135deg,#9C3131,#6A1515)}
+        .bg-bravo{background:linear-gradient(135deg,#3F8A6A,#24614B)}
+        .bg-mycashy{background:linear-gradient(135deg,#8E44AD,#5E2C73)}
+        .bg-okash{background:linear-gradient(135deg,#E67E22,#B85914)}
+        .bg-transfer{background:linear-gradient(135deg,#34495E,#1A252F)}
+        .rc-badge{position:absolute;top:0;right:0;background:#F2D06B;color:#111;font-size:7px;font-weight:800;padding:1px 4px;border-radius:0 12px 0 6px}
+        .check-mark{display:none;position:absolute;top:4px;left:4px;color:#4CAF50;font-size:12px}
+        .rc-card.active-card .check-mark{display:block}
+        .info-box{background:#FCF9F2;border:1px solid #F0E6DF;border-radius:8px;padding:8px 10px;display:flex;align-items:center;gap:8px;margin-bottom:10px}
+        .info-box i{color:#4CAF50;font-size:14px}
+        .info-box p{font-size:9px;color:#333;line-height:1.4;font-weight:600}
+        .bottom-spacer{flex:1}
+        .submit-btn{width:100%;padding:12px;background:#DFA6A6;color:#fff;border:none;border-radius:10px;font-size:14px;font-weight:700;cursor:not-allowed;margin-top:10px;margin-bottom:15px;display:flex;justify-content:center;align-items:center;gap:8px;font-family:inherit}
+        .submit-btn.active{background:#B71C1C;cursor:pointer;box-shadow:0 4px 10px rgba(183,28,28,.3)}
+        .bank-header{display:flex;justify-content:center;align-items:center;margin-bottom:15px}
+        .bank-header h2{font-size:18px;font-weight:800;color:#111}
+        .input-label{font-size:11px;font-weight:700;color:#333;margin-bottom:6px;align-self:flex-end;margin-right:5px}
+        .amount-input-container{background:#FCF9F2;border:1px solid #EAE3D9;border-radius:12px;padding:10px 15px;display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
+        .amount-input-container input{border:none;background:transparent;font-size:20px;font-weight:700;color:#111;text-align:center;width:100%;outline:none}
+        .currency-label{font-size:13px;font-weight:800;color:#555}
+        .quick-amounts{display:flex;gap:6px;justify-content:space-between;margin-bottom:20px}
+        .quick-btn{flex:1;padding:6px 0;background:#fff;border:1px solid #E0E0E0;border-radius:15px;font-size:10px;font-weight:700;color:#111;cursor:pointer}
+        .fee-section,.min-limit-section{display:flex;justify-content:space-between;align-items:flex-start;padding:0 5px;margin-bottom:10px}
+        .fee-title,.min-title{display:flex;flex-direction:column;align-items:flex-end}
+        .fee-title h4,.min-title h4{font-size:13px;font-weight:800;color:#111}
+        .fee-title span,.min-title span{font-size:8px;color:#888;letter-spacing:1px}
+        .fee-value{font-size:13px;font-weight:800;color:#4CAF50}
+        .min-value{font-size:13px;font-weight:800;color:#111}
+        .divider-dashed{border-top:1px dashed #D0D0D0;margin:8px 0}
+        .amount-box{background:#FCF9F2;border:1px solid #EAE3D9;border-radius:10px;padding:8px 12px;display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
+        .amount-box-title h4{font-size:12px;font-weight:800;color:#111}
+        .amount-box-title span{font-size:7px;color:#888}
+        .amount-box-value{font-size:14px;font-weight:800;color:#B71C1C}
+        .amount-box-value span{font-size:9px;color:#555;margin-right:2px}
+        .section-title-container{display:flex;align-items:center;gap:8px;margin-bottom:6px}
+        .section-title-container h3{font-size:13px;font-weight:800;color:#B71C1C;white-space:nowrap}
+        .section-line{flex:1;height:1px;background:#E0E0E0}
+        .instruction-text{font-size:9px;color:#555;line-height:1.4;margin-bottom:8px;text-align:right}
+        .bank-card-container{border:1.5px solid #B71C1C;border-radius:10px;padding:10px;background:#fff;margin-bottom:8px}
+        .bank-card-header{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px}
+        .bank-card-logo{width:32px;height:32px;background:#8E44AD;border-radius:8px;display:flex;justify-content:center;align-items:center;color:#fff;font-size:14px}
+        .bank-card-header-text{text-align:right;flex:1;padding-left:10px}
+        .bank-card-header-text h4{font-size:12px;font-weight:800;color:#111}
+        .bank-card-header-text p{font-size:9px;color:#4CAF50;font-weight:700}
+        .card-divider{border-top:1px dashed #E0E0E0;margin:6px 0}
+        .data-row{display:flex;justify-content:space-between;align-items:center}
+        .data-label h5{font-size:11px;font-weight:800;color:#111}
+        .data-label span{font-size:7px;color:#888}
+        .data-value{display:flex;align-items:center;gap:6px;font-size:12px;font-weight:700;color:#111}
+        .copy-icon{width:24px;height:24px;background:#FCF5F5;border-radius:6px;display:flex;justify-content:center;align-items:center;color:#B71C1C;font-size:10px;cursor:pointer}
+        .account-number-value{color:#B71C1C;font-weight:800;font-size:13px}
+        .privacy-note{display:flex;align-items:center;gap:4px;font-size:8px;color:#888;margin-bottom:8px}
+        .input-group-outline{position:relative;margin-bottom:10px;margin-top:5px}
+        .input-group-outline input{width:100%;padding:10px;border:1px solid #E0E0E0;border-radius:8px;font-size:12px;font-weight:700;color:#111;outline:none;background:#fff;font-family:inherit}
+        .input-group-outline label{position:absolute;top:-6px;right:10px;background:#F5F6F9;padding:0 4px;font-size:9px;color:#666;font-weight:600}
+        .receipt-header{text-align:center;margin-bottom:15px}
+        .receipt-header h2{font-size:18px;font-weight:800;color:#111;margin-bottom:4px}
+        .receipt-header p{font-size:11px;color:#555;line-height:1.4}
+        .upload-box{border:2px dashed #DFA6A6;border-radius:16px;background:#FCF9F2;padding:20px 15px;display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;margin-bottom:20px;text-align:center;transition:all .3s;position:relative;overflow:hidden}
+        .upload-icon-circle{width:45px;height:45px;background:#F7E8E8;border-radius:12px;display:flex;justify-content:center;align-items:center;color:#B71C1C;font-size:20px;margin-bottom:12px}
+        .upload-box h3{font-size:15px;font-weight:800;color:#111;margin-bottom:4px}
+        .upload-box p{font-size:10px;color:#888}
+        .upload-box.uploaded{border-color:#4CAF50;background:#F1F8E9;padding:10px}
+        .preview-img{display:none;width:100%;max-height:120px;object-fit:contain;border-radius:8px;margin-bottom:8px}
+        .upload-box.uploaded .preview-img{display:block}
+        .summary-row{display:flex;justify-content:space-between;align-items:center;padding:10px 0}
+        .summary-label h5{font-size:13px;font-weight:800;color:#111}
+        .summary-label span{font-size:8px;color:#888}
+        .summary-value{font-size:13px;font-weight:700;color:#111}
+        .summary-value.amount{font-size:14px;font-weight:800;color:#B71C1C}
+        .success-toast{position:fixed;top:-100px;left:50%;transform:translateX(-50%);background:#4CAF50;color:#fff;padding:12px 20px;border-radius:10px;font-size:13px;font-weight:700;display:flex;align-items:center;gap:8px;z-index:1000;transition:top .4s;width:90%;max-width:350px;justify-content:center}
+        .success-toast.show{top:20px}
+        .tx-list{padding:15px 15px 100px;display:flex;flex-direction:column;gap:10px}
+        .tx-card{background:#fff;border-radius:14px;padding:14px;display:flex;align-items:center;gap:12px;box-shadow:0 2px 8px rgba(0,0,0,.04);cursor:pointer;transition:.15s;border:1px solid #f0f0f0}
+        .tx-icon{width:46px;height:46px;border-radius:12px;display:flex;justify-content:center;align-items:center;font-size:18px;flex-shrink:0}
+        .tx-icon.deposit{background:#E8F5E9;color:#2E7D32}
+        .tx-icon.withdraw{background:#FFEBEE;color:#C62828}
+        .tx-icon.invest{background:#E3F2FD;color:#1565C0}
+        .tx-info{flex:1;text-align:right}
+        .tx-info h4{font-size:14px;font-weight:800;color:#111;margin-bottom:2px}
+        .tx-info p{font-size:11px;color:#888}
+        .tx-right{display:flex;flex-direction:column;align-items:flex-start;gap:4px}
+        .tx-amount{font-size:15px;font-weight:800}
+        .tx-amount.positive{color:#2E7D32}
+        .tx-amount.negative{color:#C62828}
+        .tx-status{font-size:9px;padding:2px 8px;border-radius:8px;font-weight:700}
+        .tx-status.pending{background:#FFF3E0;color:#E65100}
+        .tx-status.approved{background:#E8F5E9;color:#2E7D32}
+        .tx-status.rejected{background:#FFEBEE;color:#C62828}
+        .tx-empty{text-align:center;padding:60px 20px;color:#999}
+        .tx-empty i{font-size:60px;color:#ddd;margin-bottom:15px}
+        .modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.6);display:none;align-items:center;justify-content:center;z-index:1500;padding:20px;backdrop-filter:blur(3px)}
+        .modal-overlay.active{display:flex}
+        .modal-box{background:#fff;border-radius:20px;width:100%;max-width:420px;max-height:90vh;overflow-y:auto;animation:popIn .3s}
+        @keyframes popIn{from{opacity:0;transform:scale(.9)}to{opacity:1;transform:scale(1)}}
+        .modal-header{padding:18px 20px;border-bottom:1px solid #eee;display:flex;justify-content:space-between;align-items:center;position:sticky;top:0;background:#fff;border-radius:20px 20px 0 0}
+        .modal-header h3{font-size:17px;font-weight:800;color:#111}
+        .modal-close{width:32px;height:32px;border-radius:50%;background:#f5f5f5;border:none;color:#666;font-size:16px;cursor:pointer}
+        .modal-body{padding:20px}
+        .detail-item{display:flex;justify-content:space-between;align-items:flex-start;padding:10px 0;border-bottom:1px dashed #eee}
+        .detail-item:last-child{border-bottom:none}
+        .detail-item .dl{color:#888;font-size:12px;font-weight:600}
+        .detail-item .dv{color:#111;font-size:13px;font-weight:800;text-align:left;max-width:60%;word-break:break-word}
+        .detail-item .dv.green{color:#2E7D32}
+        .detail-item .dv.red{color:#C62828}
+        .detail-item .dv.mono{font-family:monospace;letter-spacing:.5px}
+        .receipt-preview{width:100%;border-radius:10px;margin-top:10px;border:1px solid #eee}
+        .modal-status-box{padding:14px;border-radius:12px;margin-bottom:15px;display:flex;align-items:center;gap:10px;font-weight:700;font-size:13px}
+        .modal-status-box.approved{background:#E8F5E9;color:#2E7D32;border:1px solid #A5D6A7}
+        .modal-status-box.pending{background:#FFF3E0;color:#E65100;border:1px solid #FFCC80}
+        .modal-status-box.rejected{background:#FFEBEE;color:#C62828;border:1px solid #EF9A9A}
+        @media(min-width:500px){.app-container{max-width:450px;margin:0 auto;box-shadow:0 0 20px rgba(0,0,0,.1)}.bottom-nav{max-width:450px;right:50%;left:auto;transform:translateX(50%)}.invest-header{max-width:450px;margin:0 auto}}
+        
+        /* تنسيقات حقول الإدخال العائمة */
         .input-group { position: relative; margin-bottom: 20px; }
-        .input-group input, .input-group select { 
+        .input-group input { 
             width: 100%; padding: 16px; border: 1px solid #d1d5db; 
             border-radius: 12px; font-size: 15px; background: transparent; 
             color: #111; outline: none; transition: 0.2s;
         }
-        .input-group input:focus, .input-group select:focus { border-color: #b3262b; box-shadow: 0 0 0 3px rgba(179,38,43,.1); }
+        .input-group input:focus { border-color: #b3262b; box-shadow: 0 0 0 3px rgba(179,38,43,.1); }
         .input-group label { 
             position: absolute; right: 16px; top: 50%; transform: translateY(-50%); 
             color: #9ca3af; font-size: 15px; pointer-events: none; 
@@ -29,587 +296,891 @@
         }
         @keyframes shake { 0%,100%{transform:translateX(0)} 25%{transform:translateX(-6px)} 75%{transform:translateX(6px)} }
         .animate-shake { animation: shake .4s; }
-        .success-toast { position: fixed; top: -100px; left: 50%; transform: translateX(-50%); background: #4CAF50; color: #fff; padding: 12px 20px; border-radius: 10px; font-size: 13px; font-weight: 700; display: flex; align-items: center; gap: 8px; z-index: 1000; transition: top .4s; width: 90%; max-width: 350px; justify-content: center; }
-        .success-toast.show { top: 20px; }
     </style>
 </head>
-<body class="flex justify-center min-h-screen">
+<body>
 
-    <!-- حاوية التطبيق -->
-    <div id="app" class="w-full max-w-md bg-white min-h-screen shadow-lg relative overflow-hidden flex flex-col"></div>
+<div id="app" class="app-container"></div>
 
-    <!-- Firebase SDK -->
-    <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-        import { getFirestore, doc, getDoc, collection, addDoc, query, where, getDocs } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+<!-- Firebase SDK -->
+<script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+    import { getFirestore, doc, getDoc, collection, addDoc, query, where, getDocs, updateDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
-        const firebaseConfig = {
-            apiKey: "AIzaSyCdV3qgXHHxz4e8mf1c-2TrZujXqY-LuQc",
-            authDomain: "black-9deb2.firebaseapp.com",
-            projectId: "black-9deb2",
-            storageBucket: "black-9deb2.firebasestorage.app",
-            messagingSenderId: "725901940218",
-            appId: "1:725901940218:web:bc10585da68be02dc14043"
-        };
+    const firebaseConfig = {
+        apiKey: "AIzaSyCdV3qgXHHxz4e8mf1c-2TrZujXqY-LuQc",
+        authDomain: "black-9deb2.firebaseapp.com",
+        projectId: "black-9deb2",
+        storageBucket: "black-9deb2.firebasestorage.app",
+        messagingSenderId: "725901940218",
+        appId: "1:725901940218:web:bc10585da68be02dc14043"
+    };
 
-        const app = initializeApp(firebaseConfig);
-        const db = getFirestore(app);
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
 
-        let currentUser = null;
-        let currentPage = 'login'; // يبدأ دائماً من صفحة تسجيل الدخول
-        const appDiv = document.getElementById('app');
+    let currentUser = null;
+    let currentPage = 'login';
+    const appDiv = document.getElementById('app');
 
-        // ---------------- دوال مساعدة ----------------
-        function showToast(msg, bg = '#4CAF50') {
-            let toast = document.createElement('div');
-            toast.className = 'success-toast';
-            toast.innerHTML = `<i class="fa-solid fa-circle-check"></i> <span>${msg}</span>`;
-            toast.style.backgroundColor = bg;
-            document.body.appendChild(toast);
-            setTimeout(() => toast.classList.add('show'), 10);
-            setTimeout(() => { toast.classList.remove('show'); setTimeout(() => toast.remove(), 400); }, 4000);
+    // ---------------- دوال مساعدة ----------------
+    function showToast(msg, bg = '#4CAF50') {
+        let toast = document.createElement('div');
+        toast.className = 'success-toast';
+        toast.innerHTML = `<i class="fa-solid fa-circle-check"></i> <span>${msg}</span>`;
+        toast.style.backgroundColor = bg;
+        document.body.appendChild(toast);
+        setTimeout(() => toast.classList.add('show'), 10);
+        setTimeout(() => { toast.classList.remove('show'); setTimeout(() => toast.remove(), 400); }, 4000);
+    }
+
+    function formatDate(dateStr) {
+        if (!dateStr) return '—';
+        const d = dateStr.toDate ? dateStr.toDate() : new Date(dateStr);
+        const months = ['يناير', 'فبراير', 'مارس', 'أبريل', 'مايو', 'يونيو', 'يوليو', 'أغسطس', 'سبتمبر', 'أكتوبر', 'نوفمبر', 'ديسمبر'];
+        return `${d.getDate()} ${months[d.getMonth()]} ${d.getFullYear()} - ${String(d.getHours()).padStart(2, '0')}:${String(d.getMinutes()).padStart(2, '0')}`;
+    }
+
+    function navigate(page) {
+        currentPage = page;
+        render();
+    }
+
+    // ---------------- تسجيل الدخول ----------------
+    async function login(identifier, password) {
+        try {
+            const usersRef = collection(db, "users");
+            const q1 = query(usersRef, where("account_number", "==", identifier));
+            const q2 = query(usersRef, where("username", "==", identifier));
+            
+            let snapshot = await getDocs(q1);
+            if (snapshot.empty) snapshot = await getDocs(q2);
+
+            if (snapshot.empty) throw new Error("رقم الحساب أو اسم المستخدم غير موجود");
+
+            const userDoc = snapshot.docs[0];
+            const userData = userDoc.data();
+
+            if (userData.password !== password) throw new Error("كلمة المرور خاطئة");
+            if (userData.status === 'banned') throw new Error("حسابك محظور");
+
+            currentUser = { id: userDoc.id, ...userData };
+            localStorage.setItem('bld_user_id', userDoc.id);
+            showToast("تم تسجيل الدخول بنجاح");
+            navigate('dashboard');
+        } catch (error) {
+            throw error;
         }
+    }
 
-        function formatDate(dateStr) {
-            if (!dateStr) return '—';
-            const d = dateStr.toDate ? dateStr.toDate() : new Date(dateStr);
-            const months = ['يناير', 'فبراير', 'مارس', 'أبريل', 'مايو', 'يونيو', 'يوليو', 'أغسطس', 'سبتمبر', 'أكتوبر', 'نوفمبر', 'ديسمبر'];
-            return `${d.getDate()} ${months[d.getMonth()]} ${d.getFullYear()} - ${String(d.getHours()).padStart(2, '0')}:${String(d.getMinutes()).padStart(2, '0')}`;
-        }
-
-        function navigate(page) {
-            currentPage = page;
-            render();
-        }
-
-        // ---------------- تسجيل الدخول ----------------
-        async function login(identifier, password) {
+    // ---------------- إنشاء حساب ----------------
+    async function register(username, password) {
+        return new Promise(async (resolve, reject) => {
+            const timer = setTimeout(() => reject(new Error('انتهت المهلة: قاعدة البيانات ترفض الاتصال.')), 10000);
             try {
                 const usersRef = collection(db, "users");
-                const q1 = query(usersRef, where("account_number", "==", identifier));
-                const q2 = query(usersRef, where("username", "==", identifier));
+                const qUser = query(usersRef, where("username", "==", username));
+                const userSnap = await getDocs(qUser);
                 
-                let snapshot = await getDocs(q1);
-                if (snapshot.empty) snapshot = await getDocs(q2);
+                if (!userSnap.empty) { clearTimeout(timer); reject(new Error("اسم المستخدم مسجل بالفعل، جرب اسماً آخر")); return; }
 
-                if (snapshot.empty) throw new Error("رقم الحساب أو اسم المستخدم غير موجود");
+                const randomPart = Math.floor(100 + Math.random() * 900); 
+                const timePart = Math.floor(Date.now() / 1000).toString().slice(-4); 
+                const accountNumber = timePart + randomPart; 
 
-                const userDoc = snapshot.docs[0];
-                const userData = userDoc.data();
-
-                if (userData.password !== password) throw new Error("كلمة المرور خاطئة");
-                if (userData.status === 'banned') throw new Error("حسابك محظور");
-
-                currentUser = { id: userDoc.id, ...userData };
-                localStorage.setItem('bld_user_id', userDoc.id);
-                showToast("تم تسجيل الدخول بنجاح");
-                navigate('dashboard');
-            } catch (error) {
-                throw error;
-            }
-        }
-
-        // ---------------- إنشاء حساب ----------------
-        async function register(username, password) {
-            return new Promise(async (resolve, reject) => {
-                const timer = setTimeout(() => reject(new Error('انتهت المهلة: لا يوجد استجابة من قاعدة البيانات.')), 10000);
-                try {
-                    const usersRef = collection(db, "users");
-                    const qUser = query(usersRef, where("username", "==", username));
-                    const userSnap = await getDocs(qUser);
-                    
-                    if (!userSnap.empty) { clearTimeout(timer); reject(new Error("اسم المستخدم مسجل بالفعل، جرب اسماً آخر")); return; }
-
-                    const randomPart = Math.floor(100 + Math.random() * 900); 
-                    const timePart = Math.floor(Date.now() / 1000).toString().slice(-4); 
-                    const accountNumber = timePart + randomPart; 
-
-                    const newUser = {
-                        account_number: accountNumber,
-                        username: username,
-                        password: password,
-                        balance: 0,
-                        status: 'active',
-                        role: 'user',
-                        created_at: new Date()
-                    };
-
-                    await addDoc(usersRef, newUser);
-                    clearTimeout(timer);
-                    sessionStorage.setItem('new_account_number', accountNumber);
-                    resolve();
-                } catch (error) {
-                    clearTimeout(timer);
-                    reject(error);
-                }
-            });
-        }
-
-        // ---------------- طلب شحن ----------------
-        async function submitRecharge(amount, method, senderName, senderAccount, receiptBase64) {
-            try {
-                if (!currentUser) throw new Error("انتهت الجلسة");
-                const txData = {
-                    user_id: currentUser.id,
-                    type: 'deposit',
-                    amount: parseFloat(amount),
-                    status: 'pending',
-                    method: method,
-                    sender_name: senderName,
-                    sender_account: senderAccount,
-                    receipt_url: receiptBase64 || null, 
+                const newUser = {
+                    account_number: accountNumber,
+                    username: username,
+                    password: password,
+                    balance: 0,
+                    status: 'active',
+                    role: 'user',
                     created_at: new Date()
                 };
-                await addDoc(collection(db, "transactions"), txData);
-                showToast("✅ تم إرسال طلبك! سيصلك الرصيد بعد موافقة الإدارة");
-                setTimeout(() => navigate('transactions'), 2000);
+
+                await addDoc(usersRef, newUser);
+                clearTimeout(timer);
+                sessionStorage.setItem('new_account_number', accountNumber);
+                resolve();
             } catch (error) {
-                throw error;
+                clearTimeout(timer);
+                reject(error);
             }
+        });
+    }
+
+    // ---------------- طلب شحن ----------------
+    async function submitRecharge(amount, method, senderName, senderAccount, receiptBase64) {
+        try {
+            if (!currentUser) throw new Error("انتهت الجلسة");
+            const txData = {
+                user_id: currentUser.id,
+                type: 'deposit',
+                amount: parseFloat(amount),
+                status: 'pending',
+                method: method,
+                sender_name: senderName,
+                sender_account: senderAccount,
+                receipt_url: receiptBase64 || null, 
+                created_at: new Date()
+            };
+            await addDoc(collection(db, "transactions"), txData);
+            showToast("✅ تم إرسال طلبك! سيصلك الرصيد بعد موافقة الإدارة");
+            setTimeout(() => navigate('transactions'), 2000);
+        } catch (error) {
+            throw error;
+        }
+    }
+
+    // ---------------- جلب المعاملات ----------------
+    async function fetchTransactions() {
+        if (!currentUser) return [];
+        try {
+            const txRef = collection(db, "transactions");
+            const q = query(txRef, where("user_id", "==", currentUser.id));
+            const snapshot = await getDocs(q);
+            let txs = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+            txs.sort((a, b) => (b.created_at?.toDate?.() || new Date(b.created_at)) - (a.created_at?.toDate?.() || new Date(a.created_at)));
+            return txs;
+        } catch (error) {
+            return [];
+        }
+    }
+
+    // ---------------- الاشتراك في الاستثمار ----------------
+    async function subscribeInvestment(round, amount, durationHours) {
+        try {
+            if (!currentUser) throw new Error("انتهت الجلسة");
+            const principal = parseFloat(amount);
+            const bonus = round === 'silver' ? 10000 : 5000;
+            
+            if (currentUser.balance < principal) throw new Error("رصيدك غير كافٍ");
+
+            const startDate = new Date();
+            const endDate = new Date(startDate.getTime() + durationHours * 60 * 60 * 1000);
+
+            const invData = {
+                user_id: currentUser.id,
+                round_type: round,
+                principal: principal,
+                bonus: bonus,
+                total_return: principal + bonus,
+                duration_months: 1, // للتوافق
+                start_date: startDate,
+                end_date: endDate,
+                status: 'active'
+            };
+
+            await addDoc(collection(db, "investments"), invData);
+            
+            // خصم المبلغ من الرصيد
+            const userRef = doc(db, "users", currentUser.id);
+            const newBalance = currentUser.balance - principal;
+            await updateDoc(userRef, { balance: newBalance });
+            currentUser.balance = newBalance;
+
+            showToast("✅ تم الاشتراك بنجاح!");
+            setTimeout(() => navigate('invest'), 2000);
+        } catch (error) {
+            throw error;
+        }
+    }
+
+    // ---------------- جلب الاستثمارات ----------------
+    async function fetchInvestments() {
+        if (!currentUser) return [];
+        try {
+            const invRef = collection(db, "investments");
+            const q = query(invRef, where("user_id", "==", currentUser.id));
+            const snapshot = await getDocs(q);
+            let invs = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+            invs.sort((a, b) => (b.start_date?.toDate?.() || new Date(b.start_date)) - (a.start_date?.toDate?.() || new Date(a.start_date)));
+            return invs;
+        } catch (error) {
+            return [];
+        }
+    }
+
+    // ---------------- واجهات المستخدم (Render) ----------------
+    function render() {
+        if (currentUser) {
+            if (currentPage === 'login' || currentPage === 'register' || currentPage === 'success') currentPage = 'dashboard';
+        } else {
+            if (currentPage !== 'login' && currentPage !== 'register' && currentPage !== 'success') currentPage = 'login';
         }
 
-        // ---------------- جلب المعاملات ----------------
-        async function fetchTransactions() {
-            if (!currentUser) return [];
+        switch (currentPage) {
+            case 'login': renderLogin(); break;
+            case 'register': renderRegister(); break;
+            case 'success': renderSuccess(); break;
+            case 'dashboard': renderDashboard(); break;
+            case 'transactions': renderTransactions(); break;
+            case 'recharge': renderRecharge(); break;
+            case 'invest': renderInvest(); break;
+            case 'calculator': renderCalculator(); break;
+        }
+    }
+
+    // ---------- صفحة تسجيل الدخول ----------
+    function renderLogin() {
+        appDiv.innerHTML = `
+        <div class="flex flex-col h-full bg-white min-h-screen">
+            <div class="header-bg text-white pt-10 pb-8 px-6 relative rounded-b-[20px] text-center">
+                <div class="flex flex-col items-center mt-2">
+                    <img src="https://i.ibb.co/8gSqTySf/256398-removebg-preview.png" class="h-16 object-contain mb-3">
+                    <p class="text-sm font-medium mb-4">بلدنا للمدفوعات الرقمية</p>
+                    <div class="flex items-center justify-center gap-2 text-xs text-white/90 bg-black/20 px-4 py-1.5 rounded-full mb-6">
+                        <i class="fa-solid fa-shield-halved text-[#4CAF50]"></i> اتصال مشفّر وبيانات محمية
+                    </div>
+                    <h1 class="text-2xl font-bold mb-1">مرحباً بعودتك</h1>
+                    <p class="text-sm font-medium opacity-90">سجّل الدخول لإدارة محفظتك</p>
+                </div>
+                <div class="absolute bottom-0 left-0 w-0 h-0 border-l-[50px] border-l-transparent border-b-[40px] border-b-[#2e7d32]"></div>
+            </div>
+            <div class="px-6 py-8 flex-1 flex flex-col">
+                <div id="login-error" class="hidden bg-red-50 border border-red-300 text-red-700 text-sm font-medium rounded-xl p-3 mb-4 animate-shake"></div>
+                <form id="loginForm" class="flex flex-col">
+                    <div class="input-group">
+                        <input type="text" name="identifier" id="identifier" placeholder=" " required>
+                        <label for="identifier">رقم الحساب أو اسم المستخدم</label>
+                    </div>
+                    <div class="input-group">
+                        <input type="password" name="password" id="password" placeholder=" " required inputmode="numeric" maxlength="4">
+                        <label for="password">كلمة المرور</label>
+                    </div>
+                    <div class="flex items-center justify-between mb-6 mt-2">
+                        <label class="flex items-center gap-2 cursor-pointer">
+                            <input type="checkbox" id="rememberMe" class="w-4 h-4 text-[#b3262b] rounded border-gray-300 focus:ring-[#b3262b]">
+                            <span class="text-sm text-gray-600 font-medium">تذكر بيانات الدخول</span>
+                        </label>
+                        <a href="#" class="text-sm text-[#b3262b] font-bold hover:underline">نسيت كلمة المرور؟</a>
+                    </div>
+                    <button type="submit" id="loginBtn" class="btn-color text-white font-bold text-lg py-3.5 rounded-xl transition hover:opacity-90">تسجيل الدخول</button>
+                </form>
+                <div class="text-center mt-6 text-sm text-gray-600">ليس لديك حساب؟ <a href="#" id="goToRegister" class="text-[#b3262b] font-bold">أنشئ حساباً</a></div>
+            </div>
+        </div>`;
+
+        const identifierInput = document.getElementById('identifier');
+        const rememberCheckbox = document.getElementById('rememberMe');
+        const savedIdentifier = localStorage.getItem('bld_saved_account');
+        if (savedIdentifier) {
+            identifierInput.value = savedIdentifier;
+            rememberCheckbox.checked = true;
+        }
+
+        document.getElementById('goToRegister').addEventListener('click', (e) => { e.preventDefault(); navigate('register'); });
+        document.getElementById('loginForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const identifier = identifierInput.value.trim();
+            const password = document.getElementById('password').value.trim();
+            const errorDiv = document.getElementById('login-error');
+            const btn = document.getElementById('loginBtn');
+            btn.disabled = true;
+            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> جاري التحقق...';
+            errorDiv.classList.add('hidden');
             try {
-                const txRef = collection(db, "transactions");
-                const q = query(txRef, where("user_id", "==", currentUser.id));
-                const snapshot = await getDocs(q);
-                let txs = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-                txs.sort((a, b) => (b.created_at?.toDate?.() || new Date(b.created_at)) - (a.created_at?.toDate?.() || new Date(a.created_at)));
-                return txs;
-            } catch (error) {
-                return [];
+                if (rememberCheckbox.checked) localStorage.setItem('bld_saved_account', identifier);
+                else localStorage.removeItem('bld_saved_account');
+                await login(identifier, password);
+            } catch (err) {
+                errorDiv.textContent = '⚠️ ' + err.message;
+                errorDiv.classList.remove('hidden');
+                btn.disabled = false;
+                btn.innerHTML = 'تسجيل الدخول';
             }
-        }
+        });
+    }
 
-        // ---------------- واجهات المستخدم (Render) ----------------
-        function render() {
-            if (currentUser) {
-                if (currentPage === 'login' || currentPage === 'register' || currentPage === 'success') currentPage = 'dashboard';
-            } else {
-                if (currentPage !== 'login' && currentPage !== 'register' && currentPage !== 'success') currentPage = 'login';
+    // ---------- صفحة إنشاء حساب ----------
+    function renderRegister() {
+        appDiv.innerHTML = `
+        <div class="flex flex-col h-full bg-white min-h-screen">
+            <div class="header-bg text-white pt-10 pb-6 px-6 relative rounded-b-[20px]">
+                <a href="#" id="backToLogin" class="absolute top-6 right-6 w-10 h-10 bg-white/20 rounded-full flex items-center justify-center"><i class="fa-solid fa-chevron-left"></i></a>
+                <div class="flex flex-col items-center mt-2">
+                    <img src="https://i.ibb.co/8gSqTySf/256398-removebg-preview.png" class="h-16 object-contain mb-3">
+                    <p class="text-sm font-medium mb-5">بلدنا للمدفوعات الرقمية</p>
+                    <h1 class="text-2xl font-bold mb-2">إنشاء حساب جديد</h1>
+                    <p class="text-sm font-medium">افتح محفظتك الآن</p>
+                </div>
+            </div>
+            <div class="px-6 py-8 flex-1 flex flex-col justify-center">
+                <div id="register-error" class="hidden bg-red-50 border border-red-300 text-red-700 text-sm font-medium rounded-xl p-3 mb-4 animate-shake"></div>
+                <form id="registerForm" class="flex flex-col">
+                    <div class="input-group">
+                        <input type="text" name="username" id="username" placeholder=" " required>
+                        <label for="username">اسم المستخدم</label>
+                    </div>
+                    <div class="input-group">
+                        <input type="password" name="password" id="password" placeholder=" " required inputmode="numeric" pattern="[0-9]{4}" maxlength="4">
+                        <label for="password">كلمة المرور (4 أرقام)</label>
+                    </div>
+                    <button type="submit" id="registerBtn" class="btn-color text-white font-bold text-lg py-3.5 rounded-xl mt-4 hover:opacity-90 transition">إنشاء حساب</button>
+                </form>
+            </div>
+        </div>`;
+
+        document.getElementById('backToLogin').addEventListener('click', (e) => { e.preventDefault(); navigate('login'); });
+        document.getElementById('registerForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const username = document.getElementById('username').value.trim();
+            const password = document.getElementById('password').value.trim();
+            const errorDiv = document.getElementById('register-error');
+            const btn = document.getElementById('registerBtn');
+
+            if (!/^\d{4}$/.test(password)) {
+                errorDiv.textContent = '⚠️ يرجى إدخال كلمة مرور مكونة من 4 أرقام فقط';
+                errorDiv.classList.remove('hidden');
+                return;
             }
+            btn.disabled = true;
+            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> جاري الإنشاء...';
+            errorDiv.classList.add('hidden');
 
-            switch (currentPage) {
-                case 'login': renderLogin(); break;
-                case 'register': renderRegister(); break;
-                case 'success': renderSuccess(); break;
-                case 'dashboard': renderDashboard(); break;
-                case 'transactions': renderTransactions(); break;
-                case 'recharge': renderRecharge(); break;
+            try {
+                await register(username, password);
+                currentPage = 'success';
+                render();
+            } catch (err) {
+                errorDiv.textContent = '⚠️ ' + err.message;
+                errorDiv.classList.remove('hidden');
+                btn.disabled = false;
+                btn.innerHTML = 'إنشاء حساب';
             }
-        }
+        });
+    }
 
-        // ---------- صفحة تسجيل الدخول ----------
-        function renderLogin() {
-            appDiv.innerHTML = `
-            <div class="flex flex-col h-full bg-white">
-                <div class="header-bg text-white pt-10 pb-8 px-6 relative rounded-b-[20px] text-center">
-                    <div class="flex flex-col items-center mt-2">
-                        <img src="https://i.ibb.co/8gSqTySf/256398-removebg-preview.png" class="h-16 object-contain mb-3">
-                        <p class="text-sm font-medium mb-4">بلدنا للمدفوعات الرقمية</p>
-                        <div class="flex items-center justify-center gap-2 text-xs text-white/90 bg-black/20 px-4 py-1.5 rounded-full mb-6">
-                            <i class="fa-solid fa-shield-halved text-[#4CAF50]"></i> اتصال مشفّر وبيانات محمية
-                        </div>
-                        <h1 class="text-2xl font-bold mb-1">مرحباً بعودتك</h1>
-                        <p class="text-sm font-medium opacity-90">سجّل الدخول لإدارة محفظتك</p>
+    // ---------- صفحة النجاح ----------
+    function renderSuccess() {
+        const accountNumber = sessionStorage.getItem('new_account_number');
+        if (!accountNumber) { navigate('login'); return; }
+        appDiv.innerHTML = `
+        <div class="flex flex-col h-full bg-white min-h-screen">
+            <div class="header-bg text-white pt-12 pb-10 px-6 relative rounded-b-[20px] text-center animate-pop">
+                <div class="flex flex-col items-center mt-2">
+                    <img src="https://i.ibb.co/8gSqTySf/256398-removebg-preview.png" class="h-20 object-contain mb-4">
+                    <p class="text-sm font-medium mb-6">بلدنا للمدفوعات الرقمية</p>
+                    <div class="w-24 h-24 bg-white/20 rounded-full flex items-center justify-center mb-6 animate-pulse-check"><i class="fa-solid fa-check text-5xl text-white"></i></div>
+                    <h1 class="text-2xl font-extrabold mb-3 text-center">مبروك! 🎉</h1>
+                    <p class="text-base font-medium text-center">تم إنشاء حسابك بنجاح</p>
+                </div>
+                <div class="absolute bottom-0 left-0 w-0 h-0 border-l-[50px] border-l-transparent border-b-[40px] border-b-[#2e7d32]"></div>
+            </div>
+            <div class="px-6 py-8 flex-1 flex flex-col justify-center animate-pop">
+                <div class="bg-red-50 border-2 border-red-200 rounded-2xl p-6 shadow-sm">
+                    <div class="flex items-center justify-center gap-2 mb-4"><div class="w-9 h-9 bg-[#b3262b] rounded-lg flex items-center justify-center"><i class="fa-solid fa-hashtag text-white text-sm"></i></div><div class="text-sm font-bold text-[#b3262b]">رقم الحساب الخاص بك</div></div>
+                    <div class="text-4xl font-extrabold text-[#b3262b] tracking-widest font-mono text-center py-3" style="direction:ltr">${accountNumber}</div>
+                    <button type="button" id="copyBtn" class="w-full mt-4 py-3 bg-[#b3262b] text-white rounded-xl font-bold flex justify-center items-center gap-2 shadow-lg"><i class="fa-regular fa-copy"></i> نسخ رقم الحساب</button>
+                    <button type="button" id="goToLoginBtn" class="w-full mt-3 py-3 bg-white border-2 border-[#b3262b] text-[#b3262b] rounded-xl font-bold flex justify-center items-center gap-2"><i class="fa-solid fa-right-to-bracket"></i> تسجيل الدخول</button>
+                </div>
+            </div>
+        </div>`;
+        document.getElementById('copyBtn').addEventListener('click', () => navigator.clipboard.writeText(accountNumber).then(() => alert('تم النسخ')));
+        document.getElementById('goToLoginBtn').addEventListener('click', () => { sessionStorage.removeItem('new_account_number'); navigate('login'); });
+    }
+
+    // ---------- لوحة التحكم ----------
+    async function renderDashboard() {
+        if (!currentUser) return;
+        const firstLetter = currentUser.username ? currentUser.username.charAt(0) : 'م';
+        const balance = currentUser.balance ? parseFloat(currentUser.balance).toLocaleString('en', {minimumFractionDigits: 2}) : '0.00';
+        const txs = await fetchTransactions();
+        const pendingCount = txs.filter(t => t.status === 'pending').length;
+
+        appDiv.innerHTML = `
+        <div class="flex flex-col h-full bg-[#F5F6F9] pb-20 min-h-screen">
+            <div class="header-bg">
+                <div class="top-bar">
+                    <div class="user-info">
+                        <div class="user-text"><p>طاب يومك</p><h3>${currentUser.username} <i class="fa-solid fa-circle-check"></i></h3></div>
+                        <div class="avatar">${firstLetter}</div>
                     </div>
-                    <div class="absolute bottom-0 left-0 w-0 h-0 border-l-[50px] border-l-transparent border-b-[40px] border-b-[#2e7d32]"></div>
-                </div>
-                <div class="px-6 py-8 flex-1 flex flex-col">
-                    <div id="login-error" class="hidden bg-red-50 border border-red-300 text-red-700 text-sm font-medium rounded-xl p-3 mb-4 animate-shake"></div>
-                    <form id="loginForm" class="flex flex-col">
-                        <div class="input-group">
-                            <input type="text" name="identifier" id="identifier" placeholder=" " required>
-                            <label for="identifier">رقم الحساب أو اسم المستخدم</label>
-                        </div>
-                        <div class="input-group">
-                            <input type="password" name="password" id="password" placeholder=" " required inputmode="numeric" maxlength="4">
-                            <label for="password">كلمة المرور (4 أرقام)</label>
-                        </div>
-                        <div class="flex items-center justify-between mb-6 mt-2">
-                            <label class="flex items-center gap-2 cursor-pointer">
-                                <input type="checkbox" id="rememberMe" class="w-4 h-4 text-[#b3262b] rounded border-gray-300 focus:ring-[#b3262b]">
-                                <span class="text-sm text-gray-600 font-medium">تذكر بيانات الدخول</span>
-                            </label>
-                        </div>
-                        <button type="submit" id="loginBtn" class="btn-color text-white font-bold text-lg py-3.5 rounded-xl transition hover:opacity-90">تسجيل الدخول</button>
-                    </form>
-                    <div class="text-center mt-6 text-sm text-gray-600">ليس لديك حساب؟ <a href="#" id="goToRegister" class="text-[#b3262b] font-bold">أنشئ حساباً</a></div>
-                </div>
-            </div>`;
-
-            const identifierInput = document.getElementById('identifier');
-            const rememberCheckbox = document.getElementById('rememberMe');
-            const savedIdentifier = localStorage.getItem('bld_saved_account');
-            if (savedIdentifier) {
-                identifierInput.value = savedIdentifier;
-                rememberCheckbox.checked = true;
-            }
-
-            document.getElementById('goToRegister').addEventListener('click', (e) => { e.preventDefault(); navigate('register'); });
-
-            document.getElementById('loginForm').addEventListener('submit', async (e) => {
-                e.preventDefault();
-                const identifier = identifierInput.value.trim();
-                const password = document.getElementById('password').value.trim();
-                const errorDiv = document.getElementById('login-error');
-                const btn = document.getElementById('loginBtn');
-                
-                btn.disabled = true;
-                btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> جاري التحقق...';
-                errorDiv.classList.add('hidden');
-
-                try {
-                    if (rememberCheckbox.checked) localStorage.setItem('bld_saved_account', identifier);
-                    else localStorage.removeItem('bld_saved_account');
-                    await login(identifier, password);
-                } catch (err) {
-                    errorDiv.textContent = '⚠️ ' + err.message;
-                    errorDiv.classList.remove('hidden');
-                    btn.disabled = false;
-                    btn.innerHTML = 'تسجيل الدخول';
-                }
-            });
-        }
-
-        // ---------- صفحة إنشاء حساب ----------
-        function renderRegister() {
-            appDiv.innerHTML = `
-            <div class="flex flex-col h-full bg-white">
-                <div class="header-bg text-white pt-10 pb-6 px-6 relative rounded-b-[20px]">
-                    <a href="#" id="backToLogin" class="absolute top-6 right-6 w-10 h-10 bg-white/20 rounded-full flex items-center justify-center"><i class="fa-solid fa-chevron-left"></i></a>
-                    <div class="flex flex-col items-center mt-2">
-                        <img src="https://i.ibb.co/8gSqTySf/256398-removebg-preview.png" class="h-16 object-contain mb-3">
-                        <p class="text-sm font-medium mb-5">بلدنا للمدفوعات الرقمية</p>
-                        <h1 class="text-2xl font-bold mb-2">إنشاء حساب جديد</h1>
-                        <p class="text-sm font-medium">افتح محفظتك الآن</p>
+                    <div class="top-actions">
+                        <a href="#" id="logoutBtn" class="notification-icon"><i class="fa-solid fa-right-from-bracket"></i></a>
+                        <div class="notification-icon"><i class="fa-regular fa-bell"></i></div>
                     </div>
                 </div>
-                <div class="px-6 py-8 flex-1 flex flex-col justify-center">
-                    <div id="register-error" class="hidden bg-red-50 border border-red-300 text-red-700 text-sm font-medium rounded-xl p-3 mb-4 animate-shake"></div>
-                    <form id="registerForm" class="flex flex-col">
-                        <div class="input-group">
-                            <input type="text" name="username" id="username" placeholder=" " required>
-                            <label for="username">اسم المستخدم</label>
-                        </div>
-                        <div class="input-group">
-                            <input type="password" name="password" id="password" placeholder=" " required inputmode="numeric" pattern="[0-9]{4}" maxlength="4">
-                            <label for="password">كلمة المرور (4 أرقام)</label>
-                        </div>
-                        <button type="submit" id="registerBtn" class="btn-color text-white font-bold text-lg py-3.5 rounded-xl mt-4 hover:opacity-90 transition">إنشاء حساب</button>
-                    </form>
-                </div>
-            </div>`;
-
-            document.getElementById('backToLogin').addEventListener('click', (e) => { e.preventDefault(); navigate('login'); });
-
-            document.getElementById('registerForm').addEventListener('submit', async (e) => {
-                e.preventDefault();
-                const username = document.getElementById('username').value.trim();
-                const password = document.getElementById('password').value.trim();
-                const errorDiv = document.getElementById('register-error');
-                const btn = document.getElementById('registerBtn');
-
-                if (!/^\d{4}$/.test(password)) {
-                    errorDiv.textContent = '⚠️ يرجى إدخال كلمة مرور مكونة من 4 أرقام فقط';
-                    errorDiv.classList.remove('hidden');
-                    return;
-                }
-
-                btn.disabled = true;
-                btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> جاري الإنشاء...';
-                errorDiv.classList.add('hidden');
-
-                try {
-                    await register(username, password);
-                    currentPage = 'success';
-                    render();
-                } catch (err) {
-                    errorDiv.textContent = '⚠️ ' + err.message;
-                    errorDiv.classList.remove('hidden');
-                    btn.disabled = false;
-                    btn.innerHTML = 'إنشاء حساب';
-                }
-            });
-        }
-
-        // ---------- صفحة النجاح ----------
-        function renderSuccess() {
-            const accountNumber = sessionStorage.getItem('new_account_number');
-            if (!accountNumber) { navigate('login'); return; }
-            appDiv.innerHTML = `
-            <div class="flex flex-col h-full bg-white">
-                <div class="header-bg text-white pt-12 pb-10 px-6 relative rounded-b-[20px] text-center">
-                    <div class="flex flex-col items-center mt-2">
-                        <img src="https://i.ibb.co/8gSqTySf/256398-removebg-preview.png" class="h-20 object-contain mb-4">
-                        <p class="text-sm font-medium mb-6">بلدنا للمدفوعات الرقمية</p>
-                        <div class="w-24 h-24 bg-white/20 rounded-full flex items-center justify-center mb-6"><i class="fa-solid fa-check text-5xl text-white"></i></div>
-                        <h1 class="text-2xl font-extrabold mb-3 text-center">مبروك! 🎉</h1>
-                        <p class="text-base font-medium text-center">تم إنشاء حسابك بنجاح</p>
+            </div>
+            <div class="bank-card-wrapper">
+                <div class="bank-card">
+                    <div class="card-top-row">
+                        <div class="account-type">حساب برونزي <i class="fa-regular fa-star"></i></div>
+                        <div class="balance-label-left"><i class="fa-regular fa-eye eye-icon" id="toggleBalance"></i><span>الرصيد المتاح</span></div>
                     </div>
-                    <div class="absolute bottom-0 left-0 w-0 h-0 border-l-[50px] border-l-transparent border-b-[40px] border-b-[#2e7d32]"></div>
-                </div>
-                <div class="px-6 py-8 flex-1 flex flex-col justify-center">
-                    <div class="bg-red-50 border-2 border-red-200 rounded-2xl p-6 shadow-sm">
-                        <div class="flex items-center justify-center gap-2 mb-4"><div class="w-9 h-9 bg-[#b3262b] rounded-lg flex items-center justify-center"><i class="fa-solid fa-hashtag text-white text-sm"></i></div><div class="text-sm font-bold text-[#b3262b]">رقم الحساب الخاص بك</div></div>
-                        <div class="text-4xl font-extrabold text-[#b3262b] tracking-widest font-mono text-center py-3" style="direction:ltr">${accountNumber}</div>
-                        <button type="button" id="copyBtn" class="w-full mt-4 py-3 bg-[#b3262b] text-white rounded-xl font-bold flex justify-center items-center gap-2 shadow-lg"><i class="fa-regular fa-copy"></i> نسخ رقم الحساب</button>
-                        <button type="button" id="goToLoginBtn" class="w-full mt-3 py-3 bg-white border-2 border-[#b3262b] text-[#b3262b] rounded-xl font-bold flex justify-center items-center gap-2"><i class="fa-solid fa-right-to-bracket"></i> تسجيل الدخول</button>
+                    <div class="card-middle"><div class="chip"></div><i class="fa-solid fa-wifi contactless"></i></div>
+                    <div class="card-bottom">
+                        <div class="balance-amount"><span class="currency">SDG</span><span class="number" id="balanceAmount">${balance}</span></div>
+                        <div class="card-footer"><div class="card-name"><i class="fa-solid fa-circle-check"></i> ${currentUser.username}</div><span>BLD-${currentUser.account_number?.slice(0,4)}-${currentUser.account_number?.slice(4)}</span></div>
                     </div>
                 </div>
-            </div>`;
-            document.getElementById('copyBtn').addEventListener('click', () => navigator.clipboard.writeText(accountNumber).then(() => alert('تم النسخ')));
-            document.getElementById('goToLoginBtn').addEventListener('click', () => { sessionStorage.removeItem('new_account_number'); navigate('login'); });
-        }
-
-        // ---------- لوحة التحكم ----------
-        async function renderDashboard() {
-            if (!currentUser) return;
-            const firstLetter = currentUser.username ? currentUser.username.charAt(0) : 'م';
-            const balance = currentUser.balance ? parseFloat(currentUser.balance).toLocaleString('en', {minimumFractionDigits: 2}) : '0.00';
-            const txs = await fetchTransactions();
-            const pendingCount = txs.filter(t => t.status === 'pending').length;
-
-            appDiv.innerHTML = `
-            <div class="flex flex-col h-full bg-[#F5F6F9] pb-20">
-                <div class="header-bg p-5 pb-8 rounded-b-3xl text-white">
-                    <div class="flex justify-between items-center mt-2">
-                        <div class="flex items-center gap-3">
-                            <div class="text-right">
-                                <p class="text-xs opacity-80">طاب يومك</p>
-                                <h3 class="text-sm font-bold flex items-center gap-1">${currentUser.username} <i class="fa-solid fa-circle-check text-yellow-400"></i></h3>
-                            </div>
-                            <div class="w-10 h-10 bg-yellow-400 rounded-full flex justify-center items-center text-black font-bold text-lg">${firstLetter}</div>
-                        </div>
-                        <a href="#" id="logoutBtn" class="w-10 h-10 border border-white/30 rounded-full flex justify-center items-center"><i class="fa-solid fa-right-from-bracket"></i></a>
-                    </div>
+            </div>
+            <div class="main-content">
+                <div class="services-box">
+                    <a href="#" id="goToRecharge" class="service-item"><div class="service-icon bg-green"><i class="fa-solid fa-download"></i></div><span>شحن رصيد</span></a>
+                    <div class="service-item"><div class="service-icon bg-red"><i class="fa-solid fa-upload"></i></div><span>سحب</span></div>
+                    <div class="service-item"><div class="service-icon bg-blue"><i class="fa-solid fa-arrow-right-arrow-left"></i></div><span>تحويل</span></div>
+                    <div class="service-item"><div class="service-icon bg-orange"><i class="fa-solid fa-file-invoice"></i></div><span>سداد خدمات</span></div>
                 </div>
-                <div class="px-5 -mt-6 relative z-10">
-                    <div class="bg-gradient-to-br from-[#B71C1C] to-[#8E0000] rounded-2xl p-4 text-white shadow-lg">
-                        <div class="flex justify-between items-center flex-row-reverse mb-4">
-                            <span class="text-xs bg-white/20 px-2 py-1 rounded">حساب برونزي</span>
-                            <span class="text-xs opacity-80"><i class="fa-regular fa-eye ml-1 cursor-pointer" id="toggleBalance"></i> الرصيد المتاح</span>
-                        </div>
-                        <div class="text-3xl font-extrabold mb-4" dir="ltr"><span class="text-sm text-yellow-400 mr-1">SDG</span> <span id="balanceAmount">${balance}</span></div>
-                        <div class="flex justify-between text-xs flex-row-reverse border-t border-white/20 pt-3">
-                            <span>BLD-${currentUser.account_number?.slice(0,4)}-${currentUser.account_number?.slice(4)}</span>
-                            <span class="flex items-center gap-1"><i class="fa-solid fa-circle-check text-yellow-400"></i> ${currentUser.username}</span>
-                        </div>
-                    </div>
+                <div class="stats-row">
+                    <div class="stat-card"><div class="stat-icon bg-red"><i class="fa-solid fa-arrow-up"></i></div><p>المدفوعات</p><h4>0</h4></div>
+                    <div class="stat-card"><div class="stat-icon bg-orange"><i class="fa-regular fa-clock"></i></div><p>معاملات معلقة</p><h4>${pendingCount}</h4></div>
+                    <div class="stat-card"><div class="stat-icon" style="background:#FFF3E0;color:#D4A373"><i class="fa-solid fa-gift"></i></div><p>المكافآت</p><h4>1.3K</h4></div>
                 </div>
-                <div class="p-5">
-                    <div class="bg-white rounded-2xl p-4 flex justify-between shadow-sm mb-4">
-                        <a href="#" id="goToRecharge" class="flex flex-col items-center gap-1 w-1/4"><div class="w-10 h-10 bg-green-100 text-green-600 rounded-xl flex justify-center items-center"><i class="fa-solid fa-download"></i></div><span class="text-[10px] font-bold text-gray-700">شحن رصيد</span></a>
-                        <div class="flex flex-col items-center gap-1 w-1/4 opacity-50"><div class="w-10 h-10 bg-red-100 text-red-600 rounded-xl flex justify-center items-center"><i class="fa-solid fa-upload"></i></div><span class="text-[10px] font-bold text-gray-700">سحب</span></div>
-                        <div class="flex flex-col items-center gap-1 w-1/4 opacity-50"><div class="w-10 h-10 bg-blue-100 text-blue-600 rounded-xl flex justify-center items-center"><i class="fa-solid fa-arrow-right-arrow-left"></i></div><span class="text-[10px] font-bold text-gray-700">تحويل</span></div>
-                        <div class="flex flex-col items-center gap-1 w-1/4 opacity-50"><div class="w-10 h-10 bg-orange-100 text-orange-600 rounded-xl flex justify-center items-center"><i class="fa-solid fa-file-invoice"></i></div><span class="text-[10px] font-bold text-gray-700">سداد</span></div>
-                    </div>
-                    <div class="grid grid-cols-3 gap-2 mb-4">
-                        <div class="bg-white rounded-xl p-2 text-center shadow-sm"><div class="text-red-500 text-lg mb-1"><i class="fa-solid fa-arrow-up"></i></div><p class="text-[9px] text-gray-500">المدفوعات</p><h4 class="text-sm font-bold">0</h4></div>
-                        <div class="bg-white rounded-xl p-2 text-center shadow-sm"><div class="text-orange-500 text-lg mb-1"><i class="fa-regular fa-clock"></i></div><p class="text-[9px] text-gray-500">معاملات معلقة</p><h4 class="text-sm font-bold">${pendingCount}</h4></div>
-                        <div class="bg-white rounded-xl p-2 text-center shadow-sm"><div class="text-yellow-600 text-lg mb-1"><i class="fa-solid fa-gift"></i></div><p class="text-[9px] text-gray-500">المكافآت</p><h4 class="text-sm font-bold">0</h4></div>
-                    </div>
+                <div class="promo-banner">
+                    <div class="promo-text"><h3>اشحن محفظتك في<br>دقائق</h3><p>من بنكك أو فوري أو عبر وكيل<br>معتمد</p><button class="promo-btn" id="bannerRechargeBtn">ابدأ الآن</button></div>
+                    <div class="promo-graphic"><i class="fa-solid fa-coins coins"></i><div class="phone-shape"><div></div><div></div><div class="btn"></div></div></div>
                 </div>
-                <div class="fixed bottom-0 w-full max-w-md bg-white border-t flex justify-around py-3 z-20">
-                    <a href="#" class="flex flex-col items-center text-[#B71C1C]"><i class="fa-solid fa-house text-lg mb-1"></i><span class="text-[10px]">الرئيسية</span></a>
-                    <a href="#" id="goToTransactions" class="flex flex-col items-center text-gray-400"><i class="fa-regular fa-file-lines text-lg mb-1"></i><span class="text-[10px]">المعاملات</span></a>
-                </div>
-            </div>`;
+            </div>
+            <div class="bottom-nav">
+                <a href="#" class="nav-item active"><i class="fa-solid fa-house"></i><span>الرئيسية</span></a>
+                <a href="#" id="goToTransactions" class="nav-item"><i class="fa-regular fa-file-lines"></i><span>المعاملات</span></a>
+                <a href="#" id="goToInvest" class="nav-item"><i class="fa-solid fa-chart-line"></i><span>الاستثمار</span></a>
+                <a href="#" class="nav-item"><i class="fa-solid fa-receipt"></i><span>الإيصالات</span></a>
+                <a href="#" class="nav-item"><i class="fa-regular fa-user"></i><span>حسابي</span></a>
+            </div>
+        </div>`;
 
-            document.getElementById('logoutBtn').addEventListener('click', (e) => { e.preventDefault(); if (confirm('تسجيل الخروج؟')) { localStorage.removeItem('bld_user_id'); currentUser = null; navigate('login'); } });
-            document.getElementById('toggleBalance').addEventListener('click', function() { const b = document.getElementById('balanceAmount'); if (b.innerText === '*****') { b.innerText = balance; this.classList.remove('fa-eye-slash'); this.classList.add('fa-eye'); } else { b.innerText = '*****'; this.classList.remove('fa-eye'); this.classList.add('fa-eye-slash'); } });
-            document.getElementById('goToRecharge').addEventListener('click', (e) => { e.preventDefault(); navigate('recharge'); });
-            document.getElementById('goToTransactions').addEventListener('click', (e) => { e.preventDefault(); navigate('transactions'); });
-        }
+        document.getElementById('logoutBtn').addEventListener('click', (e) => { e.preventDefault(); if (confirm('تسجيل الخروج؟')) { localStorage.removeItem('bld_user_id'); currentUser = null; navigate('login'); } });
+        document.getElementById('toggleBalance').addEventListener('click', function() { const b = document.getElementById('balanceAmount'); if (b.innerText === '*****') { b.innerText = balance; this.classList.remove('fa-eye-slash'); this.classList.add('fa-eye'); } else { b.innerText = '*****'; this.classList.remove('fa-eye'); this.classList.add('fa-eye-slash'); } });
+        const goRec = (e) => { e.preventDefault(); navigate('recharge'); };
+        document.getElementById('goToRecharge').addEventListener('click', goRec);
+        document.getElementById('bannerRechargeBtn').addEventListener('click', goRec);
+        document.getElementById('goToTransactions').addEventListener('click', (e) => { e.preventDefault(); navigate('transactions'); });
+        document.getElementById('goToInvest').addEventListener('click', (e) => { e.preventDefault(); navigate('invest'); });
+    }
 
-        // ---------- صفحة المعاملات ----------
-        async function renderTransactions() {
-            if (!currentUser) return;
-            const txs = await fetchTransactions();
-            let txHtml = '';
-            if (txs.length === 0) {
-                txHtml = `<p class="text-center text-gray-500 mt-10">لا توجد معاملات</p>`;
-            } else {
-                txs.forEach(tx => {
-                    const isPending = tx.status === 'pending';
-                    const isApproved = tx.status === 'approved';
-                    const statusColor = isPending ? 'bg-yellow-100 text-yellow-700' : (isApproved ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700');
-                    const statusText = isPending ? 'قيد الانتظار' : (isApproved ? 'مكتمل' : 'مرفوض');
-                    const dateStr = formatDate(tx.created_at);
-                    txHtml += `
-                    <div class="bg-white p-3 rounded-xl shadow-sm flex items-center gap-3 border border-gray-100">
-                        <div class="w-10 h-10 bg-green-100 text-green-600 rounded-lg flex justify-center items-center"><i class="fa-solid fa-arrow-down"></i></div>
-                        <div class="flex-1"><h4 class="font-bold text-sm">شحن رصيد</h4><p class="text-xs text-gray-400">${dateStr}</p></div>
-                        <div class="text-left"><div class="text-green-600 font-bold text-sm" dir="ltr">+ ${parseFloat(tx.amount).toLocaleString()}</div><div class="text-[10px] px-2 py-0.5 rounded mt-1 ${statusColor}">${statusText}</div></div>
-                    </div>`;
-                });
-            }
-            appDiv.innerHTML = `
-            <div class="flex flex-col h-full bg-[#F5F6F9] pb-20">
-                <div class="bg-[#B71C1C] text-white p-4 flex items-center justify-between">
-                    <a href="#" id="backToDash" class="w-8 h-8 bg-white/20 rounded-full flex justify-center items-center"><i class="fa-solid fa-chevron-right"></i></a>
-                    <h2 class="font-bold">المعاملات</h2><div class="w-8"></div>
-                </div>
-                <div class="p-4 flex flex-col gap-3">${txHtml}</div>
-                <div class="fixed bottom-0 w-full max-w-md bg-white border-t flex justify-around py-3 z-20">
-                    <a href="#" id="navHome" class="flex flex-col items-center text-gray-400"><i class="fa-solid fa-house text-lg mb-1"></i><span class="text-[10px]">الرئيسية</span></a>
-                    <a href="#" class="flex flex-col items-center text-[#B71C1C]"><i class="fa-regular fa-file-lines text-lg mb-1"></i><span class="text-[10px]">المعاملات</span></a>
-                </div>
-            </div>`;
-            document.getElementById('backToDash').addEventListener('click', (e) => { e.preventDefault(); navigate('dashboard'); });
-            document.getElementById('navHome').addEventListener('click', (e) => { e.preventDefault(); navigate('dashboard'); });
-        }
-
-        // ---------- صفحة شحن الرصيد ----------
-        function renderRecharge() {
-            if (!currentUser) return;
-            let step = 1;
-            let selectedMethod = '';
-            let receiptFile = null;
-            let amountVal = '';
-            let senderNameVal = '';
-            let senderAccVal = '';
-
-            const renderStep = () => {
-                let content = '';
-                if (step === 1) {
-                    content = `
-                    <h3 class="text-center font-bold mb-4">اختر وسيلة الشحن</h3>
-                    <div class="grid grid-cols-3 gap-2 mb-4">
-                        <div class="method-card bg-white p-3 rounded-xl text-center cursor-pointer border hover:border-[#B71C1C]" data-method="ماي كاشي"><i class="fa-solid fa-wallet text-purple-500 text-xl mb-1"></i><br><span class="text-xs font-bold">ماي كاشي</span></div>
-                        <div class="method-card bg-white p-3 rounded-xl text-center cursor-pointer border hover:border-[#B71C1C]" data-method="بنكك"><i class="fa-solid fa-building-columns text-red-500 text-xl mb-1"></i><br><span class="text-xs font-bold">بنكك</span></div>
-                        <div class="method-card bg-white p-3 rounded-xl text-center cursor-pointer border hover:border-[#B71C1C]" data-method="أوكاش"><i class="fa-solid fa-dollar-sign text-orange-500 text-xl mb-1"></i><br><span class="text-xs font-bold">أوكاش</span></div>
-                    </div>
-                    <button id="nextBtn1" class="w-full py-3 rounded-xl bg-gray-300 text-white font-bold" disabled>متابعة</button>`;
-                } else if (step === 2) {
-                    content = `
-                    <h3 class="text-center font-bold mb-4">أدخل المبلغ</h3>
-                    <input type="number" id="amountInput" value="${amountVal}" class="w-full text-center text-2xl font-bold p-3 bg-white border rounded-xl mb-4 outline-none focus:border-[#B71C1C]" placeholder="0">
-                    <button id="nextBtn2" class="w-full py-3 rounded-xl bg-[#B71C1C] text-white font-bold">متابعة</button>`;
-                } else if (step === 3) {
-                    content = `
-                    <h3 class="text-center font-bold mb-4">بيانات التحويل</h3>
-                    <div class="bg-white p-4 rounded-xl text-sm mb-4">
-                        <p class="flex justify-between mb-2"><span>اسم الحساب:</span> <b>علي</b></p>
-                        <p class="flex justify-between"><span>رقم الحساب:</span> <b>401108294</b></p>
-                    </div>
-                    <input type="text" id="senderName" value="${senderNameVal}" placeholder="اسمك الكامل" class="w-full p-3 bg-white border rounded-xl mb-2">
-                    <input type="text" id="senderAcc" value="${senderAccVal}" placeholder="رقم حسابك المرسل منه" class="w-full p-3 bg-white border rounded-xl mb-4">
-                    <button id="nextBtn3" class="w-full py-3 rounded-xl bg-[#B71C1C] text-white font-bold">متابعة</button>`;
-                } else if (step === 4) {
-                    content = `
-                    <h3 class="text-center font-bold mb-4">أرفق إشعار التحويل</h3>
-                    <input type="file" id="receiptFile" accept="image/*" class="hidden">
-                    <div id="uploadBox" class="border-2 border-dashed border-red-300 bg-white rounded-xl p-8 text-center cursor-pointer mb-4">
-                        <img id="previewImg" class="hidden max-h-32 mx-auto mb-2 rounded">
-                        <i class="fa-solid fa-upload text-red-500 text-2xl mb-2" id="uploadIcon"></i>
-                        <p class="text-sm text-gray-500">اضغط لاختيار صورة الإشعار</p>
-                    </div>
-                    <button id="submitBtn" class="w-full py-3 rounded-xl bg-[#B71C1C] text-white font-bold flex justify-center items-center gap-2"><i class="fa-solid fa-paper-plane"></i> إرسال الطلب للمدير</button>`;
-                }
-
-                appDiv.innerHTML = `
-                <div class="flex flex-col h-full bg-[#F5F6F9] p-5">
-                    <div class="flex items-center justify-between mb-4">
-                        <a href="#" id="backBtn" class="w-8 h-8 border border-gray-300 rounded-full flex justify-center items-center text-gray-700"><i class="fa-solid fa-chevron-right"></i></a>
-                        <h2 class="font-bold">شحن المحفظة</h2><div class="w-8"></div>
-                    </div>
-                    ${content}
+    // ---------- صفحة المعاملات ----------
+    async function renderTransactions() {
+        if (!currentUser) return;
+        const txs = await fetchTransactions();
+        let txHtml = '';
+        if (txs.length === 0) {
+            txHtml = `<div class="tx-empty"><i class="fa-regular fa-receipt"></i><p>لا توجد معاملات بعد</p></div>`;
+        } else {
+            txs.forEach(tx => {
+                const isPending = tx.status === 'pending';
+                const isApproved = tx.status === 'approved';
+                const statusColor = isPending ? 'bg-yellow-100 text-yellow-700' : (isApproved ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700');
+                const statusText = isPending ? 'قيد الانتظار' : (isApproved ? 'مكتمل' : 'مرفوض');
+                const dateStr = formatDate(tx.created_at);
+                txHtml += `
+                <div class="tx-card" onclick='showTxDetails(${JSON.stringify(tx)})'>
+                    <div class="tx-icon deposit"><i class="fa-solid fa-arrow-down"></i></div>
+                    <div class="tx-info"><h4>شحن رصيد المحفظة</h4><p>${dateStr}</p></div>
+                    <div class="tx-right"><div class="tx-amount positive">+ ${parseFloat(tx.amount).toLocaleString()}</div><div class="tx-status ${tx.status}">${statusText}</div></div>
                 </div>`;
+            });
+        }
+        appDiv.innerHTML = `
+        <div class="flex flex-col h-full bg-[#F5F6F9] pb-20 min-h-screen">
+            <div class="invest-header">
+                <div class="invest-brand"><div class="invest-brand-logo">ب</div><div class="invest-brand-text"><h2>بلدنا</h2><p>للمدفوعات الرقمية</p></div></div>
+                <a href="#" id="backToDash" class="invest-back-btn"><i class="fa-solid fa-chevron-right"></i></a>
+            </div>
+            <div class="invest-title-section"><h1>المعاملات</h1><p>سجل جميع عملياتك المالية</p></div>
+            <div class="tx-list">${txHtml}</div>
+            <div class="bottom-nav">
+                <a href="#" id="navHome" class="nav-item"><i class="fa-solid fa-house"></i><span>الرئيسية</span></a>
+                <a href="#" class="nav-item active"><i class="fa-regular fa-file-lines"></i><span>المعاملات</span></a>
+                <a href="#" id="navInvest" class="nav-item"><i class="fa-solid fa-chart-line"></i><span>الاستثمار</span></a>
+                <a href="#" class="nav-item"><i class="fa-solid fa-receipt"></i><span>الإيصالات</span></a>
+                <a href="#" class="nav-item"><i class="fa-regular fa-user"></i><span>حسابي</span></a>
+            </div>
+        </div>
+        <div class="modal-overlay" id="txModal" onclick="if(event.target===this)closeTxModal()">
+            <div class="modal-box">
+                <div class="modal-header"><h3 id="txModalTitle">تفاصيل المعاملة</h3><button class="modal-close" onclick="closeTxModal()">✕</button></div>
+                <div class="modal-body" id="txModalBody"></div>
+            </div>
+        </div>`;
+        document.getElementById('backToDash').addEventListener('click', (e) => { e.preventDefault(); navigate('dashboard'); });
+        document.getElementById('navHome').addEventListener('click', (e) => { e.preventDefault(); navigate('dashboard'); });
+        document.getElementById('navInvest').addEventListener('click', (e) => { e.preventDefault(); navigate('invest'); });
+    }
 
-                document.getElementById('backBtn').addEventListener('click', (e) => {
-                    e.preventDefault();
-                    if (step === 1) navigate('dashboard');
-                    else { step--; renderStep(); }
+    window.showTxDetails = function(tx) {
+        const modal = document.getElementById('txModal'), body = document.getElementById('txModalBody'), title = document.getElementById('txModalTitle');
+        const statusMap = {pending:'قيد الانتظار',approved:'مكتمل',rejected:'مرفوض'};
+        const statusIcons = {pending:'fa-clock',approved:'fa-check-circle',rejected:'fa-times-circle'};
+        title.innerText = 'شحن رصيد المحفظة';
+        let html = `<div class="modal-status-box ${tx.status}"><i class="fa-solid ${statusIcons[tx.status]||'fa-info-circle'}"></i><span>${statusMap[tx.status]||tx.status}</span></div>
+            <div class="detail-item"><span class="dl">رقم المعاملة</span><span class="dv mono">#${tx.id ? tx.id.slice(-6) : '---'}</span></div>
+            <div class="detail-item"><span class="dl">المبلغ</span><span class="dv green">+ ${parseFloat(tx.amount).toLocaleString()} SDG</span></div>
+            <div class="detail-item"><span class="dl">التاريخ</span><span class="dv">${formatDate(tx.created_at)}</span></div>`;
+        if(tx.method) html += `<div class="detail-item"><span class="dl">الوسيلة</span><span class="dv">${tx.method}</span></div>`;
+        if(tx.sender_name) html += `<div class="detail-item"><span class="dl">اسم المحوّل</span><span class="dv">${tx.sender_name}</span></div>`;
+        if(tx.sender_account) html += `<div class="detail-item"><span class="dl">حساب المرسل</span><span class="dv mono">${tx.sender_account}</span></div>`;
+        if(tx.receipt_url) html += `<div style="margin-top:15px"><div class="dl" style="margin-bottom:8px;font-size:12px;color:#888;font-weight:600">صورة الإشعار</div><img src="${tx.receipt_url}" class="receipt-preview"></div>`;
+        body.innerHTML = html;
+        modal.classList.add('active'); document.body.style.overflow = 'hidden';
+    }
+    window.closeTxModal = function() { document.getElementById('txModal').classList.remove('active'); document.body.style.overflow = ''; }
+
+    // ---------- صفحة شحن الرصيد (4 خطوات) ----------
+    function renderRecharge() {
+        if (!currentUser) return;
+        let step = 1, selectedMethod = '', receiptFile = null, amountVal = '', senderNameVal = '', senderAccVal = '';
+
+        const renderStep = () => {
+            let content = '';
+            if (step === 1) {
+                content = `
+                <div class="rc-header"><button class="rc-back-btn" id="backBtn"><i class="fa-solid fa-chevron-left"></i></button><h1>شحن المحفظة</h1><div style="width:30px"></div></div>
+                <div class="progress-section"><div class="progress-bar"><div class="active"></div><div></div><div></div><div></div></div><div class="progress-text"><span>الخطوة 1 من 4</span><span>وسيلة الشحن</span></div></div>
+                <div class="intro-text"><h2>كيف تريد شحن محفظتك؟</h2><p>اختر حساب وكيل معتمد أو التحويل المباشر</p></div>
+                <div class="grid-container">
+                    <div class="rc-card method-card" data-method="ماي كاشي"><i class="fa-solid fa-check check-mark"></i><div class="rc-icon-box bg-mycashy"><i class="fa-solid fa-wallet"></i></div><span class="name">ماي كاشي</span></div>
+                    <div class="rc-card method-card" data-method="بنكك"><i class="fa-solid fa-check check-mark"></i><div class="rc-icon-box bg-bank"><i class="fa-solid fa-building-columns"></i></div><span class="name">بنكك</span></div>
+                    <div class="rc-card method-card" data-method="أوكاش"><i class="fa-solid fa-check check-mark"></i><div class="rc-icon-box bg-okash"><i class="fa-solid fa-dollar-sign"></i></div><span class="name">أوكاش</span></div>
+                </div>
+                <div class="info-box"><i class="fa-solid fa-shield-halved"></i><p>الشحن عبر الوكيل المعتمد هو الأسرع، ويُنفذ عادة خلال أقل من 10 دقائق.</p></div>
+                <div class="bottom-spacer"></div>
+                <button class="submit-btn" id="nextBtn1" disabled>متابعة</button>`;
+            } else if (step === 2) {
+                content = `
+                <div class="rc-header"><button class="rc-back-btn" id="backBtn"><i class="fa-solid fa-chevron-left"></i></button><h1>شحن المحفظة</h1><div style="width:30px"></div></div>
+                <div class="progress-section"><div class="progress-bar"><div class="active"></div><div class="active"></div><div></div><div></div></div><div class="progress-text"><span>الخطوة 2 من 4</span><span>المبلغ</span></div></div>
+                <div class="bank-header"><h2 id="screen2-title">الشحن عبر ${selectedMethod}</h2></div>
+                <span class="input-label">أدخل مبلغ الشحن</span>
+                <div class="amount-input-container"><span class="currency-label">SDG</span><input type="text" placeholder="0" id="amount-input" value="${amountVal}"></div>
+                <div class="quick-amounts">
+                    <button class="quick-btn" data-amount="250000">250,000</button>
+                    <button class="quick-btn" data-amount="100000">100,000</button>
+                    <button class="quick-btn" data-amount="50000">50,000</button>
+                    <button class="quick-btn" data-amount="10000">10,000</button>
+                </div>
+                <div class="fee-section"><div class="fee-title"><h4>رسوم الشحن</h4><span>TOP-UP FEE</span></div><div class="fee-value">مجاناً</div></div>
+                <div class="divider-dashed"></div>
+                <div class="min-limit-section"><div class="min-title"><h4>الحد الأدنى</h4><span>MINIMUM</span></div><div class="min-value">SDG 1,000</div></div>
+                <div class="bottom-spacer"></div>
+                <button class="submit-btn" id="nextBtn2">متابعة</button>`;
+            } else if (step === 3) {
+                content = `
+                <div class="rc-header"><button class="rc-back-btn" id="backBtn"><i class="fa-solid fa-chevron-left"></i></button><h1>شحن المحفظة</h1><div style="width:30px"></div></div>
+                <div class="progress-section"><div class="progress-bar"><div class="active"></div><div class="active"></div><div class="active"></div><div></div></div><div class="progress-text"><span>الخطوة 3 من 4</span><span>بيانات الإيداع</span></div></div>
+                <div class="amount-box"><div class="amount-box-title"><h4>المبلغ المطلوب تحويله</h4><span>AMOUNT TO TRANSFER</span></div><div class="amount-box-value"><span id="display-amount">${amountVal}.00</span> <span>SDG</span></div></div>
+                <div class="section-title-container"><h3>حساب الإيداع</h3><div class="section-line"></div></div>
+                <p class="instruction-text">حوّل المبلغ إلى الحساب التالي ثم أرفق الإشعار في الخطوة القادمة.</p>
+                <div class="bank-card-container">
+                    <div class="bank-card-header"><div class="bank-card-logo"><i class="fa-solid fa-wallet"></i></div><div class="bank-card-header-text"><h4>علي</h4><p>حساب المنصة الرسمي المعتمد</p></div></div>
+                    <div class="card-divider"></div>
+                    <div class="data-row"><div class="data-label"><h5>اسم الحساب</h5><span>ACCOUNT NAME</span></div><div class="data-value"><div class="copy-icon" onclick="navigator.clipboard.writeText('علي')"><i class="fa-regular fa-copy"></i></div><span>علي</span></div></div>
+                    <div class="card-divider"></div>
+                    <div class="data-row"><div class="data-label"><h5>البنك</h5><span>BANK</span></div><div class="data-value"><span>ماي كاشي (الحساب المركزي)</span></div></div>
+                    <div class="card-divider"></div>
+                    <div class="data-row"><div class="data-label"><h5>رقم الحساب</h5><span>ACCOUNT NO.</span></div><div class="data-value account-number-value"><div class="copy-icon" onclick="navigator.clipboard.writeText('401108294')"><i class="fa-regular fa-copy"></i></div><span>401108294</span></div></div>
+                </div>
+                <div class="privacy-note"><i class="fa-solid fa-lock"></i><span>لا نعرض أرقام هواتف شخصية للوكلاء حفاظاً على الخصوصية.</span></div>
+                <div class="section-title-container"><h3>بيانات المحوّل</h3><div class="section-line"></div></div>
+                <div class="input-group-outline"><label>اسم صاحب الحساب المحوّل</label><input type="text" id="sender-name-input" value="${senderNameVal || currentUser.username}"></div>
+                <div class="input-group-outline"><label>رقم حساب المرسل</label><input type="text" id="sender-account-input" value="${senderAccVal || currentUser.account_number}"></div>
+                <div class="input-group-outline"><label>رقم العملية (اختياري)</label><input type="text" id="transaction-id-input" placeholder="رقم العملية..."></div>
+                <div class="bottom-spacer"></div>
+                <button class="submit-btn active" id="nextBtn3">متابعة</button>`;
+            } else if (step === 4) {
+                content = `
+                <div class="rc-header"><button class="rc-back-btn" id="backBtn"><i class="fa-solid fa-chevron-left"></i></button><h1>شحن المحفظة</h1><div style="width:30px"></div></div>
+                <div class="progress-section"><div class="progress-bar"><div class="active"></div><div class="active"></div><div class="active"></div><div class="active"></div></div><div class="progress-text"><span>الخطوة 4 من 4</span><span>إرفاق الإشعار</span></div></div>
+                <div class="receipt-header"><h2>أرفق إشعار التحويل</h2><p>سيتحقق الوكيل من الإشعار ويضيف الرصيد لمحفظتك فوراً.</p></div>
+                <input type="file" id="file-input" accept="image/*" style="display:none" onchange="previewImage(event)">
+                <div class="upload-box" id="upload-box" onclick="document.getElementById('file-input').click()">
+                    <img id="image-preview" class="preview-img" src="">
+                    <div class="upload-icon-circle" id="upload-icon"><i class="fa-solid fa-arrow-up-from-bracket"></i></div>
+                    <h3 id="upload-title">إرفاق إشعار التحويل</h3>
+                    <p id="upload-desc">اضغط هنا لاختيار صورة من المعرض</p>
+                </div>
+                <div class="section-title-container"><div class="section-line"></div><h3>ملخص الطلب</h3></div>
+                <div class="summary-row"><div class="summary-label"><h5>وسيلة الشحن</h5><span>METHOD</span></div><div class="summary-value">${selectedMethod}</div></div>
+                <div class="divider-dashed"></div>
+                <div class="summary-row"><div class="summary-label"><h5>المبلغ</h5><span>AMOUNT</span></div><div class="summary-value amount">SDG ${amountVal}.00</div></div>
+                <div class="divider-dashed"></div>
+                <div class="summary-row"><div class="summary-label"><h5>اسم المحوّل</h5><span>SENDER</span></div><div class="summary-value">${senderNameVal}</div></div>
+                <div class="bottom-spacer"></div>
+                <button class="submit-btn active" id="submitBtn"><i class="fa-solid fa-paper-plane"></i> <span>إرسال طلب الشحن</span></button>`;
+            }
+
+            appDiv.innerHTML = `<div class="recharge-page flex flex-col h-full min-h-screen">${content}</div>`;
+
+            document.getElementById('backBtn').addEventListener('click', (e) => {
+                e.preventDefault();
+                if (step === 1) navigate('dashboard');
+                else { step--; renderStep(); }
+            });
+
+            if (step === 1) {
+                document.querySelectorAll('.method-card').forEach(card => {
+                    card.addEventListener('click', function() {
+                        document.querySelectorAll('.method-card').forEach(c => c.classList.remove('active-card'));
+                        this.classList.add('active-card');
+                        selectedMethod = this.dataset.method;
+                        const btn = document.getElementById('nextBtn1');
+                        btn.disabled = false;
+                        btn.classList.add('active');
+                    });
                 });
-
-                if (step === 1) {
-                    document.querySelectorAll('.method-card').forEach(card => {
-                        card.addEventListener('click', function() {
-                            document.querySelectorAll('.method-card').forEach(c => c.classList.remove('border-[#B71C1C]', 'bg-red-50'));
-                            this.classList.add('border-[#B71C1C]', 'bg-red-50');
-                            selectedMethod = this.dataset.method;
-                            const btn = document.getElementById('nextBtn1');
-                            btn.disabled = false;
-                            btn.classList.remove('bg-gray-300');
-                            btn.classList.add('bg-[#B71C1C]');
-                        });
+                document.getElementById('nextBtn1').addEventListener('click', () => { step++; renderStep(); });
+            } else if (step === 2) {
+                const amtInput = document.getElementById('amount-input');
+                const next2 = document.getElementById('nextBtn2');
+                amtInput.addEventListener('input', function() {
+                    this.value = this.value.replace(/,/g, '').replace(/[^\d]/g, '');
+                    if(parseInt(this.value) >= 1000) { next2.classList.add('active'); }
+                    else { next2.classList.remove('active'); }
+                });
+                document.querySelectorAll('.quick-btn').forEach(btn => {
+                    btn.addEventListener('click', function() {
+                        amtInput.value = parseInt(this.dataset.amount).toLocaleString('en-US');
+                        if(parseInt(this.dataset.amount) >= 1000) next2.classList.add('active');
                     });
-                    document.getElementById('nextBtn1').addEventListener('click', () => { step++; renderStep(); });
-                } else if (step === 2) {
-                    document.getElementById('nextBtn2').addEventListener('click', () => {
-                        amountVal = document.getElementById('amountInput').value;
-                        if (!amountVal || parseFloat(amountVal) < 1000) return alert('الحد الأدنى 1000 SDG');
-                        step++; renderStep();
-                    });
-                } else if (step === 3) {
-                    document.getElementById('nextBtn3').addEventListener('click', () => {
-                        senderNameVal = document.getElementById('senderName').value;
-                        senderAccVal = document.getElementById('senderAcc').value;
-                        if (!senderNameVal) return alert('أدخل اسمك');
-                        step++; renderStep();
-                    });
-                } else if (step === 4) {
-                    const fileInput = document.getElementById('receiptFile');
-                    const uploadBox = document.getElementById('uploadBox');
-                    const previewImg = document.getElementById('previewImg');
-                    const uploadIcon = document.getElementById('uploadIcon');
+                });
+                next2.addEventListener('click', () => {
+                    amountVal = amtInput.value;
+                    if (!amountVal || parseFloat(amountVal.replace(/,/g,'')) < 1000) return alert('الحد الأدنى 1000 SDG');
+                    step++; renderStep();
+                });
+            } else if (step === 3) {
+                document.getElementById('nextBtn3').addEventListener('click', () => {
+                    senderNameVal = document.getElementById('sender-name-input').value;
+                    senderAccVal = document.getElementById('sender-account-input').value;
+                    if (!senderNameVal) return alert('أدخل اسمك');
+                    step++; renderStep();
+                });
+            } else if (step === 4) {
+                const fileInput = document.getElementById('file-input');
+                const uploadBox = document.getElementById('upload-box');
+                const previewImg = document.getElementById('image-preview');
+                const uploadIcon = document.getElementById('upload-icon');
 
-                    uploadBox.addEventListener('click', () => fileInput.click());
-                    fileInput.addEventListener('change', (e) => {
-                        if (e.target.files && e.target.files[0]) {
-                            receiptFile = e.target.files[0];
-                            const reader = new FileReader();
-                            reader.onload = (ev) => {
-                                previewImg.src = ev.target.result;
-                                previewImg.classList.remove('hidden');
-                                uploadIcon.classList.add('hidden');
-                            };
-                            reader.readAsDataURL(receiptFile);
-                        }
-                    });
-
-                    document.getElementById('submitBtn').addEventListener('click', async function() {
-                        if (!receiptFile) return alert('أرفق الصورة أولاً');
-                        this.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> جاري الإرسال...';
-                        this.disabled = true;
-
+                uploadBox.addEventListener('click', () => fileInput.click());
+                fileInput.addEventListener('change', (e) => {
+                    if (e.target.files && e.target.files[0]) {
+                        receiptFile = e.target.files[0];
                         const reader = new FileReader();
-                        reader.onload = async (ev) => {
-                            const base64Img = ev.target.result;
-                            try {
-                                await submitRecharge(amountVal, selectedMethod, senderNameVal, senderAccVal, base64Img);
-                            } catch (err) {
-                                showToast(err.message, '#d32f2f');
-                                this.innerHTML = '<i class="fa-solid fa-paper-plane"></i> إعادة المحاولة';
-                                this.disabled = false;
-                            }
+                        reader.onload = (ev) => {
+                            previewImg.src = ev.target.result;
+                            previewImg.style.display = 'block';
+                            uploadBox.classList.add('uploaded');
+                            document.getElementById('upload-title').innerText = 'تم إرفاق الصورة!';
+                            document.getElementById('upload-desc').innerText = 'اضغط لتغيير الصورة';
+                            uploadIcon.innerHTML = '<i class="fa-solid fa-check"></i>';
                         };
                         reader.readAsDataURL(receiptFile);
-                    });
-                }
-            };
-            renderStep();
-        }
-
-        // ---------------- التشغيل الأولي ----------------
-        async function init() {
-            const savedUserId = localStorage.getItem('bld_user_id');
-            if (savedUserId) {
-                try {
-                    const userDoc = await getDoc(doc(db, "users", savedUserId));
-                    if (userDoc.exists()) {
-                        currentUser = { id: userDoc.id, ...userDoc.data() };
-                        currentPage = 'dashboard';
                     }
-                } catch (e) { console.error(e); }
+                });
+
+                document.getElementById('submitBtn').addEventListener('click', async function() {
+                    if (!receiptFile) return alert('أرفق الصورة أولاً');
+                    this.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> جاري الإرسال...';
+                    this.disabled = true;
+
+                    const reader = new FileReader();
+                    reader.onload = async (ev) => {
+                        const base64Img = ev.target.result;
+                        try {
+                            await submitRecharge(amountVal.replace(/,/g,''), selectedMethod, senderNameVal, senderAccVal, base64Img);
+                        } catch (err) {
+                            showToast(err.message, '#d32f2f');
+                            this.innerHTML = '<i class="fa-solid fa-paper-plane"></i> إعادة المحاولة';
+                            this.disabled = false;
+                        }
+                    };
+                    reader.readAsDataURL(receiptFile);
+                });
             }
-            render();
+        };
+        renderStep();
+    }
+
+    // ---------- صفحة الاستثمار ----------
+    async function renderInvest() {
+        if (!currentUser) return;
+        const invs = await fetchInvestments();
+        let invHtml = '';
+        
+        if (invs.length > 0) {
+            invHtml += `<div class="section-label"><i class="fa-solid fa-briefcase"></i> استثماراتي (${invs.length})</div>
+            <div class="invest-cards-container" style="padding-bottom:15px">`;
+            invs.forEach(inv => {
+                const isDone = inv.status === 'completed';
+                const title = inv.round_type === 'silver' ? 'الجولة الفضية' : 'الجولة القياسية (20%)';
+                const start = inv.start_date?.toDate?.() || new Date(inv.start_date);
+                const end = inv.end_date?.toDate?.() || new Date(inv.end_date);
+                const now = new Date();
+                const totalSec = Math.max(1, (end - start) / 1000);
+                const elapsedSec = Math.max(0, (now - start) / 1000);
+                const progress = isDone ? 100 : Math.min(100, Math.max(1, Math.round((elapsedSec / totalSec) * 100)));
+                const earned = Math.round(inv.bonus * progress / 100);
+
+                invHtml += `
+                <div class="my-inv-card">
+                    <div class="my-inv-header">
+                        <div class="my-inv-header-right">
+                            <div class="my-inv-icon-box"><svg viewBox="0 0 24 24"><path d="M3 3v18h18"/><path d="M7 14l4-4 3 3 5-6"/><path d="M15 6h4v4"/></svg></div>
+                            <div class="my-inv-title-area"><h2>${title}</h2><p>بدأت ${formatDate(inv.start_date)}</p></div>
+                        </div>
+                        <div class="my-inv-badge ${isDone?'completed':''}">${isDone?'مكتملة ✓':'نشطة'}</div>
+                    </div>
+                    <div class="my-inv-progress">
+                        <div class="my-inv-progress-labels"><span class="label">نسبة الإنجاز</span><span class="percent">${progress}%</span></div>
+                        <div class="my-inv-progress-bar"><div class="my-inv-progress-fill" style="width:${progress}%"></div></div>
+                    </div>
+                    <div class="my-inv-footer">
+                        <div class="my-inv-stat"><span class="label">المبلغ</span><span class="value">SDG ${parseFloat(inv.principal).toLocaleString()}</span></div>
+                        <div class="my-inv-stat"><span class="label">المكتسب</span><span class="value green">+ ${earned.toLocaleString()}</span></div>
+                        <div class="my-inv-stat"><span class="label">المكافأة</span><span class="value">${parseFloat(inv.bonus).toLocaleString()}</span></div>
+                    </div>
+                </div>`;
+            });
+            invHtml += `</div><div class="section-label"><i class="fa-solid fa-plus-circle"></i> ابدأ جولة جديدة</div>`;
         }
 
-        init();
-    </script>
+        appDiv.innerHTML = `
+        <div class="flex flex-col h-full bg-[#F5F6F9] pb-20 min-h-screen">
+            <div class="invest-header">
+                <div class="invest-brand"><div class="invest-brand-logo">ب</div><div class="invest-brand-text"><h2>بلدنا</h2><p>للمدفوعات الرقمية</p></div></div>
+                <a href="#" id="backToDash" class="invest-back-btn"><i class="fa-solid fa-chevron-right"></i></a>
+            </div>
+            <div class="invest-title-section"><h1>الاستثمار</h1><p>تابع استثماراتك وابدأ جولات جديدة</p></div>
+            ${invHtml}
+            <div class="invest-cards-container">
+                <div class="invest-card">
+                    <div class="invest-card-content">
+                        <div class="invest-card-header"><div class="invest-card-title">الجولة القياسية (20%)</div><div class="invest-badge">الأكثر طلباً</div></div>
+                        <div class="invest-card-subtitle">مكافأة 5,000 SDG خلال 24 ساعة</div>
+                        <div class="invest-stats-row">
+                            <div><span class="invest-percentage">+5K</span><span class="invest-percentage-label">مكافأة ثابتة</span></div>
+                            <div class="invest-stat-duration"><span class="invest-duration-months">24 ساعة</span><span class="invest-duration-amount">من SDG 3K</span></div>
+                        </div>
+                        <div class="invest-features-container">
+                            <div><div class="invest-pill">+ SDG 5,000 مكافأة</div></div>
+                            <div class="invest-features-right"><div class="invest-pill">مكافأة بعد 24 ساعة</div><div class="invest-pill">سحب مباشر</div><div class="invest-pill">حماية كاملة</div></div>
+                        </div>
+                        <button class="invest-btn" data-round="standard">احسب عائدك واشترك <i class="fa-solid fa-calculator"></i></button>
+                    </div>
+                </div>
+                <div class="invest-card">
+                    <div class="invest-card-content">
+                        <div class="invest-card-header"><div class="invest-card-title">الجولة الفضية</div></div>
+                        <div class="invest-card-subtitle">مكافأة 10,000 SDG خلال 24 ساعة</div>
+                        <div class="invest-stats-row">
+                            <div><span class="invest-percentage">+10K</span><span class="invest-percentage-label">مكافأة ثابتة</span></div>
+                            <div class="invest-stat-duration"><span class="invest-duration-months">24 ساعة</span><span class="invest-duration-amount">من SDG 20K</span></div>
+                        </div>
+                        <div class="invest-features-container">
+                            <div><div class="invest-pill">+ SDG 10,000 مكافأة</div></div>
+                            <div class="invest-features-right"><div class="invest-pill">مكافأة بعد 24 ساعة</div><div class="invest-pill">أولوية السحب</div><div class="invest-pill">تغطية سيولة</div></div>
+                        </div>
+                        <button class="invest-btn" data-round="silver">احسب عائدك واشترك <i class="fa-solid fa-calculator"></i></button>
+                    </div>
+                </div>
+            </div>
+            <div class="bottom-nav">
+                <a href="#" id="navHome" class="nav-item"><i class="fa-solid fa-house"></i><span>الرئيسية</span></a>
+                <a href="#" id="navTx" class="nav-item"><i class="fa-regular fa-file-lines"></i><span>المعاملات</span></a>
+                <a href="#" class="nav-item active"><i class="fa-solid fa-chart-line"></i><span>الاستثمار</span></a>
+                <a href="#" class="nav-item"><i class="fa-solid fa-receipt"></i><span>الإيصالات</span></a>
+                <a href="#" class="nav-item"><i class="fa-regular fa-user"></i><span>حسابي</span></a>
+            </div>
+        </div>`;
+
+        document.getElementById('backToDash').addEventListener('click', (e) => { e.preventDefault(); navigate('dashboard'); });
+        document.getElementById('navHome').addEventListener('click', (e) => { e.preventDefault(); navigate('dashboard'); });
+        document.getElementById('navTx').addEventListener('click', (e) => { e.preventDefault(); navigate('transactions'); });
+        
+        document.querySelectorAll('.invest-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                const round = this.dataset.round;
+                navigate('calculator');
+                setTimeout(() => renderCalculator(round), 50);
+            });
+        });
+    }
+
+    // ---------- صفحة الحاسبة ----------
+    function renderCalculator(round = 'standard') {
+        if (!currentUser) return;
+        const isSilver = round === 'silver';
+        const cfg = isSilver 
+            ? { title:'حاسبة الجولة الفضية', subtitle:'مكافأة 10,000 SDG خلال 24 ساعة', min:20000, max:100000, def:20000, bonus:10000, minL:'20K', maxL:'100K', round }
+            : { title:'حاسبة الجولة القياسية (20%)', subtitle:'مكافأة 5,000 SDG خلال 24 ساعة', min:3000, max:20000, def:3000, bonus:5000, minL:'3K', maxL:'20K', round };
+
+        appDiv.innerHTML = `
+        <div class="flex flex-col h-full bg-[#f4f4f4] min-h-screen">
+            <div class="invest-header">
+                <div class="invest-brand"><div class="invest-brand-logo">ب</div><div class="invest-brand-text"><h2>بلدنا</h2><p>للمدفوعات الرقمية</p></div></div>
+                <a href="#" id="backToInvest" class="invest-back-btn"><i class="fa-solid fa-chevron-right"></i></a>
+            </div>
+            <div class="calc-page-wrapper">
+                <div class="calc-page-card">
+                    <div class="top-handle"></div>
+                    <h1 class="header-title">${cfg.title}</h1>
+                    <p class="header-subtitle">${cfg.subtitle}</p>
+                    <div class="savings-card">
+                        <div class="card-header">
+                            <div class="card-title"><h2>مبلغ الادخار</h2><span>PRINCIPAL</span></div>
+                            <div class="amount-display" id="amountDisplay">SDG ${cfg.def.toLocaleString()}</div>
+                        </div>
+                        <input type="range" min="${cfg.min}" max="${cfg.max}" value="${cfg.def}" step="100" id="savingsSlider">
+                        <div class="slider-labels"><span>${cfg.minL}</span><span>${cfg.maxL}</span></div>
+                    </div>
+                    <div class="gradient-box"></div>
+                    <div class="detail-row"><div class="detail-title"><h3>المكافأة الثابتة</h3><span>FIXED BONUS</span></div><div class="detail-value text-green">+ SDG ${cfg.bonus.toLocaleString()}</div></div>
+                    <div class="detail-row"><div class="detail-title"><h3>مدة الاستحقاق</h3><span>DURATION</span></div><div class="detail-value text-dark">24 ساعة</div></div>
+                    <div class="detail-row"><div class="detail-title"><h3>الإجمالي عند الاستحقاق</h3><span>AT MATURITY</span></div><div class="detail-value text-red" id="totalMaturity">SDG ${(cfg.def + cfg.bonus).toLocaleString()}</div></div>
+                    <div class="detail-row"><div class="detail-title"><h3>صرف العائد</h3><span>PAYOUT</span></div><div class="detail-value text-dark">تلقائي بعد 24 ساعة</div></div>
+                    
+                    <div id="calc-error" class="hidden bg-red-100 text-red-700 p-2 rounded mt-4 text-sm text-center font-bold animate-shake"></div>
+                    <button id="subscribeBtn" class="btn-subscribe mt-4">اشترك الآن</button>
+                </div>
+            </div>
+        </div>`;
+
+        const slider = document.getElementById('savingsSlider');
+        const amtDisplay = document.getElementById('amountDisplay');
+        const totalMat = document.getElementById('totalMaturity');
+        
+        slider.addEventListener('input', () => {
+            const p = parseInt(slider.value);
+            amtDisplay.innerText = 'SDG ' + p.toLocaleString();
+            totalMat.innerText = 'SDG ' + (p + cfg.bonus).toLocaleString();
+        });
+
+        document.getElementById('backToInvest').addEventListener('click', (e) => { e.preventDefault(); navigate('invest'); });
+
+        document.getElementById('subscribeBtn').addEventListener('click', async function() {
+            const p = parseInt(slider.value);
+            if (confirm(`الاشتراك بـ ${p.toLocaleString()} SDG؟\nستحصل على ${(p + cfg.bonus).toLocaleString()} SDG بعد 24 ساعة.`)) {
+                this.disabled = true;
+                this.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> جاري المعالجة...';
+                try {
+                    await subscribeInvestment(cfg.round, p, 24);
+                } catch (err) {
+                    document.getElementById('calc-error').innerText = err.message;
+                    document.getElementById('calc-error').classList.remove('hidden');
+                    this.disabled = false;
+                    this.innerText = 'اشترك الآن';
+                }
+            }
+        });
+    }
+
+    // ---------------- التشغيل الأولي ----------------
+    async function init() {
+        const savedUserId = localStorage.getItem('bld_user_id');
+        if (savedUserId) {
+            try {
+                const userDoc = await getDoc(doc(db, "users", savedUserId));
+                if (userDoc.exists()) {
+                    currentUser = { id: userDoc.id, ...userDoc.data() };
+                    currentPage = 'dashboard';
+                }
+            } catch (e) { console.error(e); }
+        }
+        render();
+    }
+
+    init();
+</script>
 </body>
 </html>
