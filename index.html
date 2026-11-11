@@ -6,7 +6,9 @@
     <title>بلدنا - المحفظة</title>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&family=Tajawal:wght@400;500;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined" rel="stylesheet">
     <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <style>
         /* ================= التصميم الأصلي 100% ================= */
         *{margin:0;padding:0;box-sizing:border-box;font-family:'Cairo',sans-serif}
@@ -874,7 +876,6 @@
         .main-status.status-complete .status-badge { background-color: #e5f5eb; color: #5cb881; }
         .main-status.status-complete .status-badge::before { background-color: #5cb881; }
 
-        /* زر العودة للرئيسية */
         .btn-home-action {
             display: none;
             width: 100%;
@@ -891,7 +892,7 @@
         .btn-home-action.show { display: block; }
 
         /* ========================================= */
-        /* تنسيقات شاشة الإيصالات - كما هي 100% */
+        /* تنسيقات شاشة الإيصالات */
         /* ========================================= */
         .receipts-page {
             background-color: #f7f8fa;
@@ -1112,6 +1113,592 @@
             background-color: #ffebee;
             color: #c62828;
         }
+
+        /* ========================================= */
+        /* تنسيقات الإيصال الكامل */
+        /* ========================================= */
+        .full-receipt-page {
+            background-color: #f0f2f5;
+            min-height: 100vh;
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            padding: 0;
+        }
+
+        .full-receipt-screen {
+            width: 100%;
+            max-width: 1200px;
+            background-color: #ffffff;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .full-receipt-header {
+            background-color: #c8102e;
+            height: 90px;
+            padding: 0 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: relative;
+        }
+
+        .full-receipt-header::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 0;
+            border-bottom: 20px solid #1a5e3a;
+            border-right: 20px solid transparent;
+        }
+
+        .full-receipt-header-right {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            justify-content: center;
+            color: white;
+        }
+
+        .full-logo-box {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 22px;
+            font-weight: 800;
+            line-height: 1;
+        }
+
+        .full-logo-icon {
+            position: relative;
+            width: 24px;
+            height: 24px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .full-logo-icon svg {
+            width: 100%;
+            height: 100%;
+            fill: white;
+        }
+
+        .full-logo-icon .yellow-dot {
+            position: absolute;
+            bottom: 0px;
+            left: 1px;
+            width: 7px;
+            height: 7px;
+            background-color: #f1c40f;
+            border-radius: 50%;
+        }
+
+        .full-receipt-header-right p {
+            font-size: 10px;
+            margin-top: 2px;
+            opacity: 0.9;
+            line-height: 1;
+        }
+
+        .full-receipt-header-left {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            justify-content: center;
+            color: white;
+        }
+
+        .full-receipt-header-left h1 {
+            font-size: 20px;
+            font-weight: 800;
+            line-height: 1;
+        }
+
+        .full-receipt-header-left p {
+            font-size: 10px;
+            letter-spacing: 1px;
+            opacity: 0.9;
+            margin-top: 2px;
+            line-height: 1;
+        }
+
+        .full-receipt-body {
+            padding: 10px 25px 15px 25px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .full-amount-container {
+            background-color: #fcfaf7;
+            border: 1px solid #e8e8e8;
+            border-radius: 25px;
+            padding: 4px 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+
+        .full-amount-text h2 {
+            font-size: 12px;
+            color: #222;
+            font-weight: 700;
+            line-height: 1.2;
+        }
+
+        .full-amount-text p {
+            font-size: 7px;
+            color: #999;
+            letter-spacing: 0.5px;
+            line-height: 1;
+        }
+
+        .full-amount-number {
+            font-size: 22px;
+            font-weight: 800;
+            color: #c8102e;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .full-amount-number span {
+            font-size: 12px;
+            font-weight: 700;
+            color: #222;
+        }
+
+        .full-section-header {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 4px;
+        }
+
+        .full-section-header h3 {
+            font-size: 11px;
+            color: #c8102e;
+            font-weight: 700;
+            white-space: nowrap;
+        }
+
+        .full-section-header .line {
+            flex: 1;
+            height: 1px;
+            background-color: #e0e0e0;
+        }
+
+        .full-data-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            column-gap: 25px;
+            position: relative;
+            z-index: 2;
+        }
+
+        .full-data-column {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .full-data-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 3px 0;
+            border-bottom: 1px dashed #d0d0d0;
+        }
+
+        .full-data-row:last-child {
+            border-bottom: none;
+        }
+
+        .full-label-group h4 {
+            font-size: 10px;
+            color: #333;
+            font-weight: 700;
+            line-height: 1.1;
+        }
+
+        .full-label-group p {
+            font-size: 7px;
+            color: #888;
+            letter-spacing: 0.2px;
+            line-height: 1;
+        }
+
+        .full-value-group {
+            font-size: 12px;
+            font-weight: 700;
+            color: #222;
+            direction: ltr;
+            text-align: left;
+            white-space: nowrap;
+        }
+
+        .full-value-red {
+            color: #c8102e;
+        }
+
+        .full-bg-arrow {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 200px;
+            opacity: 0.03;
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        .full-footer {
+            text-align: center;
+            padding: 5px 0 10px 0;
+            border-top: 1px solid #c8102e;
+            margin-top: 5px;
+            position: relative;
+            z-index: 2;
+        }
+
+        .full-footer h2 {
+            color: #c8102e;
+            font-size: 12px;
+            font-weight: 800;
+            margin-bottom: 0px;
+        }
+
+        .full-footer p {
+            color: #888;
+            font-size: 8px;
+        }
+
+        .receipt-actions {
+            padding: 15px;
+            display: flex;
+            gap: 10px;
+            width: 100%;
+        }
+        .btn-thermal, .btn-save {
+            flex: 1;
+            padding: 12px;
+            border-radius: 10px;
+            font-weight: 700;
+            font-size: 14px;
+            font-family: 'Cairo', sans-serif;
+            cursor: pointer;
+            border: none;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 8px;
+        }
+        .btn-thermal {
+            background-color: #a61a1d;
+            color: white;
+        }
+        .btn-save {
+            background-color: #1a1a1a;
+            color: white;
+        }
+
+        @media (max-width: 768px) {
+            .full-receipt-header { padding: 0 15px; height: 75px; }
+            .full-logo-box { font-size: 18px; }
+            .full-receipt-header-left h1 { font-size: 16px; }
+            .full-amount-container { padding: 4px 10px; }
+            .full-amount-number { font-size: 18px; }
+            .full-data-grid { grid-template-columns: 1fr; column-gap: 0; }
+            .full-receipt-body { padding: 8px 15px; }
+            .receipt-actions { flex-direction: column; }
+        }
+
+        /* ========================================= */
+        /* تنسيقات صفحة حسابي (التصميم الجديد) */
+        /* ========================================= */
+        .profile-page-container {
+            background-color: #f4f6f9;
+            width: 100%;
+            min-height: 100vh;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .profile-header-section {
+            background: linear-gradient(135deg, #b71c1c 0%, #d32f2f 100%);
+            color: white;
+            padding: 20px 20px 40px 20px;
+            position: relative;
+            border-bottom-left-radius: 20px;
+            border-bottom-right-radius: 20px;
+            overflow: hidden;
+        }
+
+        .profile-header-section::before {
+            content: '';
+            position: absolute;
+            left: -50px;
+            top: -50px;
+            width: 200px;
+            height: 200px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 50%;
+            z-index: 1;
+        }
+
+        .profile-header-section::after {
+            content: '';
+            position: absolute;
+            left: 20px;
+            bottom: -20px;
+            width: 80px;
+            height: 80px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 50%;
+            z-index: 1;
+        }
+
+        .profile-top-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            position: relative;
+            z-index: 2;
+            margin-bottom: 25px;
+        }
+
+        .profile-brand-area {
+            text-align: left;
+            direction: ltr;
+        }
+
+        .profile-brand-logo {
+            font-size: 24px;
+            font-weight: 800;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .profile-brand-logo i {
+            font-size: 20px;
+        }
+
+        .profile-brand-text {
+            font-size: 9px;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            opacity: 0.8;
+            margin-top: 2px;
+        }
+
+        .profile-my-account-btn {
+            font-size: 14px;
+            font-weight: 500;
+            opacity: 0.9;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .profile-info {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: relative;
+            z-index: 2;
+        }
+
+        .profile-user-details {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            gap: 5px;
+        }
+
+        .profile-user-name-row {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            font-size: 22px;
+            font-weight: 700;
+        }
+
+        .profile-verified-icon {
+            color: #ffca28;
+            font-size: 18px;
+        }
+
+        .profile-handle-name {
+            font-size: 13px;
+            color: rgba(255,255,255,0.8);
+            font-family: monospace;
+            direction: ltr;
+        }
+
+        .profile-user-handle {
+            background-color: #e5ca62;
+            color: #4a3b00;
+            padding: 2px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 700;
+            display: inline-block;
+            margin-top: 5px;
+            margin-right: 25px;
+        }
+
+        .profile-avatar-circle {
+            width: 75px;
+            height: 75px;
+            background-color: #d4af37;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 32px;
+            font-weight: 700;
+            color: #333;
+            border: 3px solid rgba(255,255,255,0.3);
+        }
+
+        .profile-content-area {
+            padding: 20px;
+            margin-top: -25px;
+            position: relative;
+            z-index: 3;
+        }
+
+        .profile-info-card {
+            background: white;
+            border-radius: 15px;
+            padding: 20px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+            margin-bottom: 25px;
+        }
+
+        .profile-info-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 0;
+        }
+
+        .profile-info-row:first-child {
+            border-bottom: 1px dashed #e0e0e0;
+        }
+
+        .profile-info-label {
+            text-align: right;
+            color: #333;
+            font-weight: 700;
+            font-size: 15px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .profile-info-label span:last-child {
+            font-size: 10px;
+            color: #888;
+            font-weight: 500;
+            letter-spacing: 0.5px;
+        }
+
+        .profile-info-value {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 18px;
+            font-weight: 700;
+            color: #b71c1c;
+            direction: ltr;
+        }
+
+        .profile-info-value .profile-icon-box {
+            background-color: #fce4ec;
+            color: #b71c1c;
+            width: 30px;
+            height: 30px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border-radius: 8px;
+            font-size: 16px;
+        }
+
+        .profile-info-value.phone-value {
+            color: #333;
+        }
+
+        .profile-section-title {
+            text-align: right;
+            color: #b71c1c;
+            font-size: 14px;
+            font-weight: 700;
+            margin-bottom: 15px;
+            position: relative;
+        }
+
+        .profile-services-list {
+            background: white;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+            margin-bottom: 25px;
+        }
+
+        .profile-service-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 18px 20px;
+            border-bottom: 1px solid #f0f0f0;
+            text-decoration: none;
+            color: inherit;
+            cursor: pointer;
+        }
+
+        .profile-service-item:last-child {
+            border-bottom: none;
+        }
+
+        .profile-service-text {
+            font-weight: 500;
+            font-size: 15px;
+            color: #333;
+        }
+
+        .profile-service-icon-wrapper {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .profile-service-icon {
+            background-color: #fce4ec;
+            color: #b71c1c;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border-radius: 10px;
+            font-size: 20px;
+        }
+
+        .profile-arrow-icon {
+            color: #ccc;
+            font-size: 18px;
+            transform: scaleX(-1);
+        }
+
+        .profile-section-title.security-title {
+            margin-top: 10px;
+        }
     </style>
 </head>
 <body class="flex justify-center min-h-screen">
@@ -1139,6 +1726,13 @@
         let currentPage = 'login';
         let currentCalcRound = 'standard';
         let currentFilter = 'all';
+        let selectedTxId = null;
+
+        let cachedTransactions = null;
+        let cachedInvestments = null;
+        let cacheTime = 0;
+        const CACHE_DURATION = 5000;
+
         const appDiv = document.getElementById('app');
 
         function showToast(msg, bg = '#4CAF50') { return; }
@@ -1153,7 +1747,13 @@
         function formatShortDate(dateStr) {
             if (!dateStr) return '—';
             const d = dateStr.toDate ? dateStr.toDate() : new Date(dateStr);
-            return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')} ${String(d.getHours()).padStart(2,'0')}:${String(d.getMinutes()).padStart(2,'0')}`;
+            return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+        }
+
+        function formatShortTime(dateStr) {
+            if (!dateStr) return '—';
+            const d = dateStr.toDate ? dateStr.toDate() : new Date(dateStr);
+            return `${String(d.getHours()).padStart(2,'0')}:${String(d.getMinutes()).padStart(2,'0')}:${String(d.getSeconds()).padStart(2,'0')}`;
         }
 
         function navigate(page, round = 'standard') {
@@ -1182,6 +1782,8 @@
 
                 currentUser = { id: userDoc.id, ...userData };
                 localStorage.setItem('bld_user_id', userDoc.id);
+                cachedTransactions = null;
+                cachedInvestments = null;
                 navigate('dashboard');
             } catch (error) {
                 throw error;
@@ -1191,7 +1793,7 @@
         // ---------------- إنشاء حساب ----------------
         async function register(username, password) {
             return new Promise(async (resolve, reject) => {
-                const timer = setTimeout(() => reject(new Error('انتهت المهلة: لا يوجد استجابة.')), 10000);
+                const timer = setTimeout(() => reject(new Error('انتهت المهلة')), 10000);
                 try {
                     const usersRef = collection(db, "users");
                     const qUser = query(usersRef, where("username", "==", username));
@@ -1210,6 +1812,7 @@
                         balance: 0,
                         status: 'active',
                         role: 'user',
+                        phone: '0100000000',
                         created_at: new Date()
                     };
 
@@ -1240,6 +1843,7 @@
                     created_at: new Date()
                 };
                 await addDoc(collection(db, "transactions"), txData);
+                cachedTransactions = null;
                 navigate('transactions');
             } catch (error) {
                 throw error;
@@ -1261,6 +1865,7 @@
                     created_at: new Date()
                 };
                 await addDoc(collection(db, "transactions"), txData);
+                cachedTransactions = null;
                 navigate('withdraw_details');
             } catch (error) {
                 throw error;
@@ -1301,6 +1906,7 @@
                     status: 'active'
                 };
                 await addDoc(collection(db, "investments"), invData);
+                cachedInvestments = null;
 
                 navigate('invest');
             } catch (error) {
@@ -1309,8 +1915,11 @@
         }
 
         // ---------------- جلب الاستثمارات ----------------
-        async function fetchInvestments() {
+        async function fetchInvestments(force = false) {
             if (!currentUser) return [];
+            if (!force && cachedInvestments && (Date.now() - cacheTime < CACHE_DURATION)) {
+                return cachedInvestments;
+            }
             try {
                 const invRef = collection(db, "investments");
                 const q = query(invRef, where("user_id", "==", currentUser.id));
@@ -1338,6 +1947,8 @@
                 }
 
                 invs.sort((a, b) => (b.start_date?.toDate?.() || new Date(b.start_date)) - (a.start_date?.toDate?.() || new Date(a.start_date)));
+                cachedInvestments = invs;
+                cacheTime = Date.now();
                 return invs;
             } catch (error) {
                 return [];
@@ -1345,21 +1956,26 @@
         }
 
         // ---------------- جلب المعاملات ----------------
-        async function fetchTransactions() {
+        async function fetchTransactions(force = false) {
             if (!currentUser) return [];
+            if (!force && cachedTransactions && (Date.now() - cacheTime < CACHE_DURATION)) {
+                return cachedTransactions;
+            }
             try {
                 const txRef = collection(db, "transactions");
                 const q = query(txRef, where("user_id", "==", currentUser.id));
                 const snapshot = await getDocs(q);
                 let txs = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
                 txs.sort((a, b) => (b.created_at?.toDate?.() || new Date(b.created_at)) - (a.created_at?.toDate?.() || new Date(a.created_at)));
+                cachedTransactions = txs;
+                cacheTime = Date.now();
                 return txs;
             } catch (error) {
                 return [];
             }
         }
 
-        // ---------------- جلب الإيصالات (السحب فقط) ----------------
+        // ---------------- جلب الإيصالات ----------------
         async function fetchReceipts() {
             if (!currentUser) return [];
             try {
@@ -1394,6 +2010,8 @@
                 case 'withdraw': renderWithdraw(); break;
                 case 'withdraw_details': renderWithdrawDetails(); break;
                 case 'receipts': renderReceipts(); break;
+                case 'full_receipt': renderFullReceipt(); break;
+                case 'profile': renderProfile(); break;
             }
         }
 
@@ -1614,11 +2232,11 @@
                     <a href="#" id="goToTransactions" class="nav-item"><i class="fa-regular fa-file-lines"></i><span>المعاملات</span></a>
                     <a href="#" id="goToInvest" class="nav-item"><i class="fa-solid fa-chart-line"></i><span>الاستثمار</span></a>
                     <a href="#" id="goToReceipts" class="nav-item"><i class="fa-solid fa-receipt"></i><span>الإيصالات</span></a>
-                    <a href="#" class="nav-item"><i class="fa-regular fa-user"></i><span>حسابي</span></a>
+                    <a href="#" id="goToProfile" class="nav-item"><i class="fa-regular fa-user"></i><span>حسابي</span></a>
                 </div>
             </div>`;
 
-            document.getElementById('logoutBtn').addEventListener('click', (e) => { e.preventDefault(); if (confirm('تسجيل الخروج؟')) { localStorage.removeItem('bld_user_id'); currentUser = null; navigate('login'); } });
+            document.getElementById('logoutBtn').addEventListener('click', (e) => { e.preventDefault(); if (confirm('تسجيل الخروج؟')) { localStorage.removeItem('bld_user_id'); currentUser = null; cachedTransactions = null; cachedInvestments = null; navigate('login'); } });
             document.getElementById('toggleBalance').addEventListener('click', function() { const b = document.getElementById('balanceAmount'); if (b.innerText === '*****') { b.innerText = balance; this.classList.remove('fa-eye-slash'); this.classList.add('fa-eye'); } else { b.innerText = '*****'; this.classList.remove('fa-eye'); this.classList.add('fa-eye-slash'); } });
             const goRec = (e) => { e.preventDefault(); navigate('recharge'); };
             document.getElementById('goToRecharge').addEventListener('click', goRec);
@@ -1627,6 +2245,7 @@
             document.getElementById('goToInvest').addEventListener('click', (e) => { e.preventDefault(); navigate('invest'); });
             document.getElementById('goToWithdraw').addEventListener('click', (e) => { e.preventDefault(); navigate('withdraw'); });
             document.getElementById('goToReceipts').addEventListener('click', (e) => { e.preventDefault(); navigate('receipts'); });
+            document.getElementById('goToProfile').addEventListener('click', (e) => { e.preventDefault(); navigate('profile'); });
         }
 
         // ---------- صفحة المعاملات ----------
@@ -1657,7 +2276,7 @@
                     const titleText = isIncoming ? 'شحن رصيد المحفظة' : 'سحب أرباح';
 
                     txHtml += `
-                    <div class="bg-white p-3 rounded-xl shadow-sm flex items-center gap-3 border border-gray-100 w-full cursor-pointer hover:bg-gray-50 transition" onclick='showTxDetails(${JSON.stringify(tx)})'>
+                    <div class="bg-white p-3 rounded-xl shadow-sm flex items-center gap-3 border border-gray-100 w-full">
                         <div class="w-10 h-10 ${iconBg} rounded-lg flex justify-center items-center"><i class="fa-solid ${iconClass}"></i></div>
                         <div class="flex-1"><h4 class="font-bold text-sm">${titleText}</h4><p class="text-xs text-gray-400">${dateStr}</p></div>
                         <div class="text-left">
@@ -1687,12 +2306,6 @@
                     <a href="#" id="navHome" class="flex flex-col items-center text-gray-400"><i class="fa-solid fa-house text-lg mb-1"></i><span class="text-[10px]">الرئيسية</span></a>
                     <a href="#" class="flex flex-col items-center text-[#B71C1C]"><i class="fa-regular fa-file-lines text-lg mb-1"></i><span class="text-[10px]">المعاملات</span></a>
                 </div>
-            </div>
-            <div class="modal-overlay" id="txModal" onclick="if(event.target===this)closeTxModal()">
-                <div class="modal-box">
-                    <div class="modal-header"><h3 id="txModalTitle">تفاصيل الطلب</h3><button class="modal-close" onclick="closeTxModal()">✕</button></div>
-                    <div class="modal-body" id="txModalBody"></div>
-                </div>
             </div>`;
             
             document.getElementById('backToDash').addEventListener('click', (e) => { e.preventDefault(); navigate('dashboard'); });
@@ -1703,24 +2316,6 @@
             currentFilter = filter;
             renderTransactions();
         };
-
-        window.showTxDetails = function(tx) {
-            const modal = document.getElementById('txModal'), body = document.getElementById('txModalBody'), title = document.getElementById('txModalTitle');
-            const statusMap = {pending:'قيد الإجراء',approved:'مكتمل',rejected:'مرفوض'};
-            const statusIcons = {pending:'fa-clock',approved:'fa-check-circle',rejected:'fa-times-circle'};
-            const isIncoming = tx.type === 'deposit';
-            
-            title.innerText = isIncoming ? 'تفاصيل طلب الشحن' : 'تفاصيل عملية السحب';
-            let html = `<div class="modal-status-box ${tx.status}"><i class="fa-solid ${statusIcons[tx.status]||'fa-info-circle'}"></i><span>${statusMap[tx.status]||tx.status}</span></div>
-                <div class="detail-item"><span class="dl">رقم المعاملة</span><span class="dv mono">#${tx.id ? tx.id.slice(-6) : '---'}</span></div>
-                <div class="detail-item"><span class="dl">المبلغ</span><span class="dv ${isIncoming ? 'green' : 'red'}">${isIncoming ? '+' : '-'} ${parseFloat(tx.amount).toLocaleString()} SDG</span></div>
-                <div class="detail-item"><span class="dl">التاريخ والوقت</span><span class="dv">${formatDate(tx.created_at)}</span></div>`;
-            if(tx.method) html += `<div class="detail-item"><span class="dl">الوسيلة</span><span class="dv">${tx.method}</span></div>`;
-            if(tx.receipt_url) html += `<div style="margin-top:15px"><div class="dl" style="margin-bottom:8px;font-size:12px;color:#888;font-weight:600">صورة الإشعار</div><img src="${tx.receipt_url}" class="receipt-preview"></div>`;
-            body.innerHTML = html;
-            modal.classList.add('active'); document.body.style.overflow = 'hidden';
-        }
-        window.closeTxModal = function() { document.getElementById('txModal').classList.remove('active'); document.body.style.overflow = ''; }
 
         // ---------- صفحة شحن الرصيد ----------
         function renderRecharge() {
@@ -2151,7 +2746,6 @@
                 <a href="?page=dashboard" class="btn-home-action" id="btnHome">العودة للصفحة الرئيسية</a>
             </div>`;
 
-            // تحريك الأنيميشن
             const sleep = (ms) => new Promise(resolve => setTimeout(resolve, ms));
             
             async function startAnimation() {
@@ -2165,15 +2759,15 @@
                 const statusBadge = document.getElementById('statusBadge');
                 const btnHome = document.getElementById('btnHome');
 
-                await sleep(1000); 
+                await sleep(500); 
                 icon1.classList.add('done');
 
-                await sleep(2000); 
+                await sleep(1000); 
                 icon2.classList.add('active');
                 document.getElementById('title2').style.color = '#e74c3c';
                 timelineProgress.style.height = '33%';
 
-                await sleep(2000); 
+                await sleep(1000); 
                 icon2.classList.remove('active');
                 icon2.classList.add('done');
                 document.getElementById('title2').style.color = '#1a1a1a';
@@ -2182,7 +2776,7 @@
                 document.getElementById('title3').style.color = '#e74c3c';
                 timelineProgress.style.height = '66%';
 
-                await sleep(2000); 
+                await sleep(1000); 
                 icon3.classList.remove('active');
                 icon3.classList.add('done');
                 document.getElementById('title3').style.color = '#1a1a1a';
@@ -2203,7 +2797,7 @@
             startAnimation();
         }
 
-        // ---------- صفحة الإيصالات (السحب فقط) ----------
+        // ---------- صفحة الإيصالات ----------
         async function renderReceipts() {
             if (!currentUser) return;
             const txs = await fetchReceipts();
@@ -2272,217 +2866,323 @@
                     <a href="#" id="navTx" class="flex flex-col items-center text-gray-400"><i class="fa-regular fa-file-lines text-lg mb-1"></i><span class="text-[10px]">المعاملات</span></a>
                     <a href="#" class="flex flex-col items-center text-[#B71C1C]"><i class="fa-solid fa-receipt text-lg mb-1"></i><span class="text-[10px]">الإيصالات</span></a>
                     <a href="#" id="navWithdraw" class="flex flex-col items-center text-gray-400"><i class="fa-solid fa-upload text-lg mb-1"></i><span class="text-[10px]">سحب</span></a>
-                    <a href="#" class="flex flex-col items-center text-gray-400"><i class="fa-regular fa-user text-lg mb-1"></i><span class="text-[10px]">حسابي</span></a>
+                    <a href="#" id="navProfile" class="flex flex-col items-center text-gray-400"><i class="fa-regular fa-user text-lg mb-1"></i><span class="text-[10px]">حسابي</span></a>
                 </div>
             </div>`;
 
             document.getElementById('navHome').addEventListener('click', (e) => { e.preventDefault(); navigate('dashboard'); });
             document.getElementById('navTx').addEventListener('click', (e) => { e.preventDefault(); navigate('transactions'); });
             document.getElementById('navWithdraw').addEventListener('click', (e) => { e.preventDefault(); navigate('withdraw'); });
+            document.getElementById('navProfile').addEventListener('click', (e) => { e.preventDefault(); navigate('profile'); });
         }
 
         window.handleReceiptClick = function(status, txId) {
             if (status === 'pending') {
                 alert('يجب الموافقة من الإدارة أولاً، وسوف يتم فتح الإيصال بعد الموافقة.');
             } else if (status === 'approved') {
-                alert('تمت الموافقة على طلب السحب بنجاح. الإيصال مفتوح للتفاصيل.');
+                selectedTxId = txId;
+                navigate('full_receipt');
             } else {
                 alert('تم رفض هذا الطلب من قبل الإدارة.');
             }
         };
 
-        // ---------- صفحة الاستثمار ----------
-        async function renderInvest() {
-            const invs = await fetchInvestments();
-            let invHtml = '';
-            
-            if (invs.length > 0) {
-                invHtml += `<div class="section-label" style="margin: 15px 15px 0;"><i class="fa-solid fa-briefcase"></i> استثماراتي (${invs.length})</div>
-                <div class="invest-cards-container" style="padding-bottom:15px;">`;
-                invs.forEach(inv => {
-                    const isDone = inv.status === 'completed';
-                    const title = inv.round_type === 'silver' ? 'الجولة الفضية' : 'الجولة القياسية (20%)';
-                    
-                    const start = inv.start_date?.toDate?.() || new Date(inv.start_date);
-                    const end = inv.end_date?.toDate?.() || new Date(inv.end_date);
-                    const now = new Date();
-                    
-                    const totalSec = Math.max(1, (end - start) / 1000);
-                    const elapsedSec = Math.max(0, (now - start) / 1000);
-                    const progress = isDone ? 100 : Math.min(100, Math.max(1, Math.round((elapsedSec / totalSec) * 100)));
-                    const earned = Math.round(inv.bonus * progress / 100);
+        // ---------- صفحة الإيصال الكامل ----------
+        async function renderFullReceipt() {
+            if (!currentUser) return;
+            if (!selectedTxId) { navigate('receipts'); return; }
 
-                    invHtml += `
-                    <div class="my-inv-card">
-                        <div class="my-inv-header">
-                            <div class="my-inv-header-right">
-                                <div class="my-inv-icon-box"><svg viewBox="0 0 24 24"><path d="M3 3v18h18"/><path d="M7 14l4-4 3 3 5-6"/><path d="M15 6h4v4"/></svg></div>
-                                <div class="my-inv-title-area"><h2>${title}</h2><p>بدأت ${formatDate(inv.start_date)}</p></div>
-                            </div>
-                            <div class="my-inv-badge ${isDone?'completed':''}">${isDone?'مكتملة ✓':'نشطة'}</div>
-                        </div>
-                        <div class="my-inv-progress">
-                            <div class="my-inv-progress-labels"><span class="label">نسبة الإنجاز</span><span class="percent">${progress}%</span></div>
-                            <div class="my-inv-progress-bar"><div class="my-inv-progress-fill" style="width:${progress}%"></div></div>
-                        </div>
-                        <div class="my-inv-footer">
-                            <div class="my-inv-stat"><span class="label">المبلغ</span><span class="value">SDG ${parseFloat(inv.principal).toLocaleString()}</span></div>
-                            <div class="my-inv-stat"><span class="label">المكتسب</span><span class="value green">+ ${earned.toLocaleString()}</span></div>
-                            <div class="my-inv-stat"><span class="label">المكافأة</span><span class="value">${parseFloat(inv.bonus).toLocaleString()}</span></div>
-                        </div>
-                    </div>`;
-                });
-                invHtml += `</div>`;
+            let tx = null;
+            try {
+                const docRef = doc(db, "transactions", selectedTxId);
+                const docSnap = await getDoc(docRef);
+                if (docSnap.exists()) {
+                    tx = { id: docSnap.id, ...docSnap.data() };
+                }
+            } catch (e) {
+                console.error(e);
             }
 
+            if (!tx) { navigate('receipts'); return; }
+
+            const txCode = `WTH-${tx.id ? tx.id.slice(-10).toUpperCase() : '0000000000'}`;
+            const bankRef = tx.bank_ref || `FT${Math.floor(Math.random() * 90000000 + 10000000)}`;
+            const methodName = tx.method || 'ماي كاشي';
+            const beneficiaryName = tx.beneficiary_name || '—';
+            const beneficiaryAccount = tx.beneficiary_account || '—';
+            const userAccount = currentUser.account_number;
+            const amount = parseFloat(tx.amount).toLocaleString('en', {minimumFractionDigits: 2});
+            const date = formatShortDate(tx.created_at);
+            const time = formatShortTime(tx.created_at);
+
             appDiv.innerHTML = `
-            <div class="flex flex-col h-full bg-[#F5F6F9] pb-20 w-full">
-                <div class="invest-header">
-                    <div class="invest-brand"><div class="invest-brand-logo">ب</div><div class="invest-brand-text"><h2>بلدنا</h2><p>للمدفوعات الرقمية</p></div></div>
-                    <a href="#" id="backToDash" class="invest-back-btn"><i class="fa-solid fa-chevron-right"></i></a>
-                </div>
-                <div class="invest-title-section">
-                    <h1>الاستثمار</h1>
-                    <p>اختر الجولة المناسبة وابدأ رحلتك الاستثمارية</p>
+            <div class="full-receipt-page">
+                <div class="full-receipt-screen" id="receiptScreen">
+                    <div class="full-receipt-header">
+                        <div class="full-receipt-header-right">
+                            <div class="full-logo-box">
+                                <div class="full-logo-icon">
+                                    <svg viewBox="0 0 24 24"><path d="M12 3L3 12H8V21H16V12H21L12 3Z" /></svg>
+                                    <div class="yellow-dot"></div>
+                                </div>
+                                بلدنا
+                            </div>
+                            <p>منصة التداول والاستثمار</p>
+                        </div>
+                        <div class="full-receipt-header-left">
+                            <h1>إيصال سحب</h1>
+                            <p>WITHDRAWAL RECEIPT</p>
+                        </div>
+                    </div>
+
+                    <div class="full-receipt-body">
+                        <div class="full-amount-container">
+                            <div class="full-amount-text">
+                                <h2>المبلغ المسحوب</h2>
+                                <p>AMOUNT WITHDRAWN</p>
+                            </div>
+                            <div class="full-amount-number">
+                                ${amount} <span>SDG</span>
+                            </div>
+                        </div>
+
+                        <div class="full-section-header">
+                            <h3>بيانات العملية</h3>
+                            <div class="line"></div>
+                        </div>
+
+                        <svg class="full-bg-arrow" viewBox="0 0 100 100" fill="#c8102e">
+                            <path d="M50 0 L100 50 L70 50 L70 100 L30 100 L30 50 L0 50 Z" />
+                        </svg>
+
+                        <div class="full-data-grid">
+                            <div class="full-data-column">
+                                <div class="full-data-row">
+                                    <div class="full-label-group">
+                                        <h4>رقم حساب المستخدم</h4>
+                                        <p>USER ACCOUNT NO.</p>
+                                    </div>
+                                    <div class="full-value-group">${userAccount}</div>
+                                </div>
+
+                                <div class="full-data-row">
+                                    <div class="full-label-group">
+                                        <h4>طريقة التحويل</h4>
+                                        <p>TRANSFER METHOD</p>
+                                    </div>
+                                    <div class="full-value-group">${methodName}</div>
+                                </div>
+
+                                <div class="full-data-row">
+                                    <div class="full-label-group">
+                                        <h4>البنك المستهدف</h4>
+                                        <p>DESTINATION BANK</p>
+                                    </div>
+                                    <div class="full-value-group">${methodName}</div>
+                                </div>
+
+                                <div class="full-data-row">
+                                    <div class="full-label-group">
+                                        <h4>اسم المستفيد</h4>
+                                        <p>BENEFICIARY NAME</p>
+                                    </div>
+                                    <div class="full-value-group">${beneficiaryName}</div>
+                                </div>
+
+                                <div class="full-data-row">
+                                    <div class="full-label-group">
+                                        <h4>رقم حساب المستفيد</h4>
+                                        <p>BENEFICIARY ACCOUNT NO.</p>
+                                    </div>
+                                    <div class="full-value-group">${beneficiaryAccount}</div>
+                                </div>
+                            </div>
+
+                            <div class="full-data-column">
+                                <div class="full-data-row">
+                                    <div class="full-label-group">
+                                        <h4>رقم عملية الحركة في البنك</h4>
+                                        <p>BANK TRANSACTION REF.</p>
+                                    </div>
+                                    <div class="full-value-group full-value-red">${bankRef}</div>
+                                </div>
+
+                                <div class="full-data-row">
+                                    <div class="full-label-group">
+                                        <h4>رقم العملية في المنصة</h4>
+                                        <p>PLATFORM TRANSACTION ID</p>
+                                    </div>
+                                    <div class="full-value-group full-value-red">${txCode}</div>
+                                </div>
+
+                                <div class="full-data-row">
+                                    <div class="full-label-group">
+                                        <h4>التاريخ</h4>
+                                        <p>DATE</p>
+                                    </div>
+                                    <div class="full-value-group">${date}</div>
+                                </div>
+
+                                <div class="full-data-row">
+                                    <div class="full-label-group">
+                                        <h4>الزمن</h4>
+                                        <p>TIME</p>
+                                    </div>
+                                    <div class="full-value-group">${time}</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="full-footer">
+                            <h2>شكراً لثقتك في منصة بلدنا</h2>
+                            <p>هذا الإيصال صادر إلكترونياً من منصة بلدنا</p>
+                        </div>
+                    </div>
                 </div>
                 
-                ${invHtml}
-
-                <div class="section-label" style="margin: 15px 15px 0;"><i class="fa-solid fa-plus-circle"></i> ابدأ جولة جديدة</div>
-                <div class="invest-cards-container" style="padding-top:10px;">
-                    <div class="invest-card">
-                        <div class="invest-card-content">
-                            <div class="invest-card-header">
-                                <div class="invest-card-title">الجولة القياسية (20%)</div>
-                                <div class="invest-badge">الأكثر طلباً</div>
-                            </div>
-                            <div class="invest-card-subtitle">بداية آمنة ومتاحة برصيد الهدية الترحيبية</div>
-                            <div class="invest-stats-row">
-                                <div class="invest-stat-main"><span class="invest-percentage">0%</span><span class="invest-percentage-label">عائد سنوي تقديري</span></div>
-                                <div class="invest-stat-duration"><span class="invest-duration-months">1 أشهر</span><span class="invest-duration-amount">من SDG 3K</span></div>
-                            </div>
-                            <div class="invest-features-container">
-                                <div class="invest-features-left"><div class="invest-pill">عائد أرباح فوري 18%</div></div>
-                                <div class="invest-features-right">
-                                    <div class="invest-pill">متاحة برصيد الهدية المجاني</div>
-                                    <div class="invest-pill">سحب مباشر بعد الاكتمال</div>
-                                    <div class="invest-pill">حماية كاملة لرأس المال</div>
-                                </div>
-                            </div>
-                            <button class="invest-btn" id="btn-standard">احسب عائدك واشترك <i class="fa-solid fa-calculator"></i></button>
-                        </div>
-                    </div>
-                    <div class="invest-card">
-                        <div class="invest-card-content">
-                            <div class="invest-card-header"><div class="invest-card-title">الجولة الفضية</div></div>
-                            <div class="invest-card-subtitle">نمو متوازن لأصحاب رؤوس الأموال المتوسطة</div>
-                            <div class="invest-stats-row">
-                                <div class="invest-stat-main"><span class="invest-percentage">0%</span><span class="invest-percentage-label">عائد سنوي تقديري</span></div>
-                                <div class="invest-stat-duration"><span class="invest-duration-months">2 أشهر</span><span class="invest-duration-amount">من SDG 20K</span></div>
-                            </div>
-                            <div class="invest-features-container">
-                                <div class="invest-features-left"><div class="invest-pill">إشعارات لحظية</div></div>
-                                <div class="invest-features-right">
-                                    <div class="invest-pill">أولوية في تنفيذ طلبات السحب</div>
-                                    <div class="invest-pill">عوائد تصاعدية 25%</div>
-                                    <div class="invest-pill">تغطية سيولة عبر وكيل معتمد</div>
-                                </div>
-                            </div>
-                            <button class="invest-btn" id="btn-silver">احسب عائدك واشترك <i class="fa-solid fa-calculator"></i></button>
-                        </div>
-                    </div>
-                </div>
-                <div class="bottom-nav">
-                    <a href="#" id="navHome" class="nav-item"><i class="fa-solid fa-house"></i><span>الرئيسية</span></a>
-                    <a href="#" id="navTx" class="nav-item"><i class="fa-regular fa-file-lines"></i><span>المعاملات</span></a>
-                    <a href="#" class="nav-item active"><i class="fa-solid fa-chart-line"></i><span>الاستثمار</span></a>
-                    <a href="#" class="nav-item"><i class="fa-solid fa-receipt"></i><span>الإيصالات</span></a>
-                    <a href="#" class="nav-item"><i class="fa-regular fa-user"></i><span>حسابي</span></a>
+                <div class="receipt-actions">
+                    <button class="btn-thermal" onclick="window.print()">
+                        <i class="fa-solid fa-print"></i> طباعة حرارية
+                    </button>
+                    <button class="btn-save" onclick="saveReceiptImage()">
+                        <i class="fa-solid fa-download"></i> حفظ
+                    </button>
                 </div>
             </div>`;
-
-            document.getElementById('backToDash').addEventListener('click', (e) => { e.preventDefault(); navigate('dashboard'); });
-            document.getElementById('navHome').addEventListener('click', (e) => { e.preventDefault(); navigate('dashboard'); });
-            document.getElementById('navTx').addEventListener('click', (e) => { e.preventDefault(); navigate('transactions'); });
-            
-            document.getElementById('btn-standard').addEventListener('click', () => navigate('calculator', 'standard'));
-            document.getElementById('btn-silver').addEventListener('click', () => navigate('calculator', 'silver'));
         }
 
-        // ---------- صفحة الحاسبة ----------
-        function renderCalculator(round = 'standard') {
-            if (!currentUser) return;
-            const isSilver = round === 'silver';
-            const cfg = isSilver 
-                ? { title:'حاسبة الجولة الفضية', subtitle:'من 20,000 إلى 100,000', min:20000, max:100000, def:20000, minL:'20K', maxL:'100K', round }
-                : { title:'حاسبة الجولة القياسية (20%)', subtitle:'من 3,000 إلى 20,000', min:3000, max:20000, def:3000, minL:'3K', maxL:'20K', round };
+        window.saveReceiptImage = function() {
+            const receiptElement = document.getElementById('receiptScreen');
+            html2canvas(receiptElement, { scale: 2, backgroundColor: '#ffffff' }).then(canvas => {
+                const link = document.createElement('a');
+                link.download = `receipt-${Date.now()}.png`;
+                link.href = canvas.toDataURL('image/png');
+                link.click();
+            });
+        };
 
-            const getBonus = (p) => {
-                if (isSilver) {
-                    return Math.round(3000 + ((p - 20000) / 80000) * 7000);
-                } else {
-                    return Math.round(1000 + ((p - 3000) / 17000) * 4000);
-                }
-            };
+        // ---------- صفحة حسابي (التصميم الجديد) ----------
+        function renderProfile() {
+            if (!currentUser) return;
+            
+            const displayName = currentUser.full_name || currentUser.username;
+            const firstLetter = displayName.charAt(0).toUpperCase();
+            const username = currentUser.username;
+            const accountNumber = currentUser.account_number;
+            const phone = currentUser.phone || '0100000000';
+            
+            const maskedPhone = phone.length > 4 ? phone.substring(0, 3) + '****' + phone.slice(-2) : phone;
 
             appDiv.innerHTML = `
-            <div class="flex flex-col h-full bg-[#f4f4f4] min-h-screen w-full">
-                <div class="invest-header">
-                    <div class="invest-brand"><div class="invest-brand-logo">ب</div><div class="invest-brand-text"><h2>بلدنا</h2><p>للمدفوعات الرقمية</p></div></div>
-                    <a href="#" id="backToInvest" class="invest-back-btn"><i class="fa-solid fa-chevron-right"></i></a>
-                </div>
-                <div class="calc-page-wrapper">
-                    <div class="calc-page-card">
-                        <div class="top-handle"></div>
-                        <h1 class="header-title">${cfg.title}</h1>
-                        <p class="header-subtitle">${cfg.subtitle}</p>
-                        <div class="savings-card">
-                            <div class="card-header">
-                                <div class="card-title"><h2>مبلغ الادخار</h2><span>PRINCIPAL</span></div>
-                                <div class="amount-display" id="amountDisplay">SDG ${cfg.def.toLocaleString()}</div>
+            <div class="profile-page-container">
+                <div class="profile-header-section">
+                    <div class="profile-top-bar">
+                        <div class="profile-brand-area">
+                            <div class="profile-brand-logo">
+                                <i class="fa-solid fa-arrow-up-right-from-square"></i> BLACHA
                             </div>
-                            <input type="range" min="${cfg.min}" max="${cfg.max}" value="${cfg.def}" step="100" id="savingsSlider">
-                            <div class="slider-labels"><span>${cfg.minL}</span><span>${cfg.maxL}</span></div>
+                            <div class="profile-brand-text">MY ACCOUNT</div>
                         </div>
-                        <div class="gradient-box"></div>
-                        <div class="detail-row"><div class="detail-title"><h3>المكافأة الثابتة</h3><span>FIXED BONUS</span></div><div class="detail-value text-green" id="bonusDisplay">+ SDG ${getBonus(cfg.def).toLocaleString()}</div></div>
-                        <div class="detail-row"><div class="detail-title"><h3>مدة الاستحقاق</h3><span>DURATION</span></div><div class="detail-value text-dark">24 ساعة</div></div>
-                        <div class="detail-row"><div class="detail-title"><h3>الإجمالي عند الاستحقاق</h3><span>AT MATURITY</span></div><div class="detail-value text-red" id="totalMaturity">SDG ${(cfg.def + getBonus(cfg.def)).toLocaleString()}</div></div>
-                        <div class="detail-row"><div class="detail-title"><h3>صرف العائد</h3><span>PAYOUT</span></div><div class="detail-value text-dark">تلقائي بعد 24 ساعة</div></div>
+                        <div class="profile-my-account-btn">
+                            حسابي <i class="fa-solid fa-user"></i>
+                        </div>
+                    </div>
+
+                    <div class="profile-info">
+                        <div class="profile-avatar-circle">${firstLetter}</div>
+                        <div class="profile-user-details">
+                            <div class="profile-user-name-row">
+                                <i class="fa-solid fa-circle-check profile-verified-icon"></i>
+                                ${displayName}
+                            </div>
+                            <div class="profile-handle-name">@${username}</div>
+                            <div class="profile-user-handle">حساب برونزي</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="profile-content-area">
+                    <div class="profile-info-card">
+                        <div class="profile-info-row">
+                            <div class="profile-info-label">
+                                رقم الحساب
+                                <span>ACCOUNT NO.</span>
+                            </div>
+                            <div class="profile-info-value">
+                                <div class="profile-icon-box" onclick="copyToClipboard('${accountNumber}')"><i class="fa-regular fa-copy"></i></div>
+                                ${accountNumber}
+                            </div>
+                        </div>
+                        <div class="profile-info-row">
+                            <div class="profile-info-label">
+                                رقم الهاتف
+                                <span>PHONE</span>
+                            </div>
+                            <div class="profile-info-value phone-value" style="direction: ltr; font-family: monospace;">
+                                ${maskedPhone}
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="profile-section-title">الخدمات</div>
+
+                    <div class="profile-services-list">
+                        <a href="#" class="profile-service-item" onclick="event.preventDefault(); alert('قيد التطوير');">
+                            <div class="profile-service-text">المكافآت ودعوة الأصدقاء</div>
+                            <div class="profile-service-icon-wrapper">
+                                <div class="profile-service-icon"><i class="fa-solid fa-gift"></i></div>
+                                <i class="fa-solid fa-chevron-left profile-arrow-icon"></i>
+                            </div>
+                        </a>
                         
-                        <div id="calc-error" class="hidden bg-red-100 text-red-700 p-2 rounded mt-4 text-sm text-center font-bold animate-shake"></div>
-                        <button id="subscribeBtn" class="btn-subscribe mt-4">اشترك الآن</button>
+                        <a href="#" class="profile-service-item" onclick="event.preventDefault(); navigate('receipts');">
+                            <div class="profile-service-text">مركز الإيصالات</div>
+                            <div class="profile-service-icon-wrapper">
+                                <div class="profile-service-icon"><i class="fa-solid fa-file-invoice"></i></div>
+                                <i class="fa-solid fa-chevron-left profile-arrow-icon"></i>
+                            </div>
+                        </a>
+
+                        <a href="#" class="profile-service-item" onclick="event.preventDefault(); alert('قيد التطوير');">
+                            <div class="profile-service-text">الإشعارات</div>
+                            <div class="profile-service-icon-wrapper">
+                                <div class="profile-service-icon"><i class="fa-regular fa-bell"></i></div>
+                                <i class="fa-solid fa-chevron-left profile-arrow-icon"></i>
+                            </div>
+                        </a>
+                    </div>
+
+                    <div class="profile-section-title security-title">الأمان والدعم</div>
+                    <div class="profile-services-list">
+                        <a href="#" class="profile-service-item" onclick="event.preventDefault(); handleLogout();">
+                            <div class="profile-service-text">تسجيل الخروج</div>
+                            <div class="profile-service-icon-wrapper">
+                                <div class="profile-service-icon"><i class="fa-solid fa-right-from-bracket"></i></div>
+                                <i class="fa-solid fa-chevron-left profile-arrow-icon"></i>
+                            </div>
+                        </a>
                     </div>
                 </div>
             </div>`;
-
-            const slider = document.getElementById('savingsSlider');
-            const amtDisplay = document.getElementById('amountDisplay');
-            const totalMat = document.getElementById('totalMaturity');
-            const bonusDisplay = document.getElementById('bonusDisplay');
-            
-            slider.addEventListener('input', () => {
-                const p = parseInt(slider.value);
-                const currentBonus = getBonus(p);
-                amtDisplay.innerText = 'SDG ' + p.toLocaleString();
-                bonusDisplay.innerText = '+ SDG ' + currentBonus.toLocaleString();
-                totalMat.innerText = 'SDG ' + (p + currentBonus).toLocaleString();
-            });
-
-            document.getElementById('backToInvest').addEventListener('click', (e) => { e.preventDefault(); navigate('invest'); });
-
-            document.getElementById('subscribeBtn').addEventListener('click', async function() {
-                const p = parseInt(slider.value);
-                this.disabled = true;
-                this.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> جاري المعالجة...';
-                try {
-                    await submitInvestment(cfg.round, p);
-                } catch (err) {
-                    this.disabled = false;
-                    this.innerText = 'اشترك الآن';
-                }
-            });
         }
+
+        window.copyToClipboard = function(text) {
+            if (navigator.clipboard) {
+                navigator.clipboard.writeText(text).then(() => {
+                    showToast('تم النسخ');
+                });
+            }
+        };
+
+        window.handleLogout = function() {
+            if (confirm('تسجيل الخروج؟')) {
+                localStorage.removeItem('bld_user_id');
+                currentUser = null;
+                cachedTransactions = null;
+                cachedInvestments = null;
+                navigate('login');
+            }
+        };
 
         // ---------------- التشغيل الأولي ----------------
         async function init() {
@@ -2502,4 +3202,4 @@
         init();
     </script>
 </body>
-    </html>
+</html>
