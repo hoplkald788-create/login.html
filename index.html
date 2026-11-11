@@ -12,10 +12,6 @@
 *{margin:0;padding:0;box-sizing:border-box;font-family:'Cairo',sans-serif}
 html,body{width:100%;max-width:100%;overflow-x:hidden;background:#F5F6F9;display:flex;justify-content:center}
 .app-container{width:100%;max-width:100%;min-height:100vh;background:#F5F6F9;position:relative;display:flex;flex-direction:column;overflow-x:hidden}
-
-/* ★ التعديل 4: الهيدر ثابت في كل الشاشات ★ */
-.invest-header,.header-bg,.receipts-header,.details-header,.withdraw-page .header,.rc-header,.profile-header-section{position:sticky;top:0;z-index:100}
-
 .header-bg{background:linear-gradient(180deg,#B71C1C 0%,#E53935 100%);padding:20px 20px 25px 20px;border-bottom-left-radius:25px;border-bottom-right-radius:25px}
 .top-bar{display:flex;justify-content:space-between;align-items:flex-start;color:white;margin-top:10px}
 .top-actions{display:flex;gap:8px}
@@ -68,7 +64,9 @@ html,body{width:100%;max-width:100%;overflow-x:hidden;background:#F5F6F9;display
 .nav-item{display:flex;flex-direction:column;align-items:center;gap:3px;color:#999;text-decoration:none;font-size:9px;cursor:pointer}
 .nav-item i{font-size:16px}
 .nav-item.active{color:#B71C1C;background:#FFEBEE;padding:4px 10px;border-radius:12px}
-.invest-header{background:linear-gradient(180deg,#B71C1C 0%,#E53935 100%);padding:15px 20px;display:flex;align-items:center;justify-content:space-between;color:white;border-bottom-left-radius:20px;border-bottom-right-radius:20px;box-shadow:0 4px 15px rgba(183,28,28,0.25);width:100%}
+
+/* هيدر الاستثمار: ثابت فقط هنا */
+.invest-header{position:sticky;top:0;z-index:100;background:linear-gradient(180deg,#B71C1C 0%,#E53935 100%);padding:15px 20px;display:flex;align-items:center;justify-content:space-between;color:white;border-bottom-left-radius:20px;border-bottom-right-radius:20px;box-shadow:0 4px 15px rgba(183,28,28,0.25);width:100%}
 .invest-brand{display:flex;align-items:center;gap:10px}
 .invest-brand-logo{width:40px;height:40px;background:white;border-radius:10px;display:flex;align-items:center;justify-content:center;color:#B71C1C;font-size:18px;font-weight:800}
 .invest-brand-text h2{font-size:16px;font-weight:800}
@@ -243,7 +241,7 @@ html,body{width:100%;max-width:100%;overflow-x:hidden;background:#F5F6F9;display
 .filter-tab{flex:1;padding:10px;border-radius:10px;border:1px solid #E0E0E0;background:#fff;text-align:center;font-size:13px;font-weight:700;cursor:pointer;color:#777}
 .filter-tab.active{background:#B71C1C;color:#fff;border-color:#B71C1C}
 .withdraw-page{background:#fff;width:100%;padding:10px 15px}
-.withdraw-page .header{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;background:#fff;padding:8px 0}
+.withdraw-page .header{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
 .withdraw-page .header h1{font-size:16px;font-weight:700}
 .withdraw-page .back-btn{width:28px;height:28px;border-radius:50%;border:1px solid #E6E6E6;display:flex;justify-content:center;align-items:center;color:#333;text-decoration:none;font-size:10px}
 .withdraw-page .balance-section{background:#fdfdfd;border:1px solid #E6E6E6;border-radius:8px;padding:8px 12px;display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
@@ -285,7 +283,7 @@ html,body{width:100%;max-width:100%;overflow-x:hidden;background:#F5F6F9;display
 .withdraw-page .not-available-msg{display:none;background:#ffebee;color:#c62828;text-align:center;font-size:10px;padding:5px;border-radius:5px;margin-bottom:10px;font-weight:600}
 .details-page{display:none;width:100%;background:#f8f9fa;padding:15px;min-height:100vh}
 .details-page.active{display:block}
-.details-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;background:#f8f9fa;padding:8px 0}
+.details-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:20px}
 .details-header h1{font-size:16px;font-weight:700;color:#1a1a1a;flex-grow:1;text-align:center}
 .details-back-btn{width:34px;height:34px;border-radius:50%;background:#fff;border:1px solid #e0e0e0;display:flex;justify-content:center;align-items:center;cursor:pointer;color:#1a1a1a;font-size:14px}
 .main-status{display:flex;flex-direction:column;align-items:center;margin-bottom:20px}
@@ -322,8 +320,10 @@ html,body{width:100%;max-width:100%;overflow-x:hidden;background:#F5F6F9;display
 .main-status.status-complete .status-badge::before{background:#5cb881}
 .btn-home-action{display:none;width:100%;padding:12px;background:#1a1a1a;color:white;border-radius:10px;margin-top:20px;font-weight:700;font-size:14px;text-align:center;text-decoration:none}
 .btn-home-action.show{display:block}
+
+/* شاشة الإيصالات: الهيدر ثابت */
 .receipts-page{background:#f7f8fa;min-height:100vh;width:100%}
-.receipts-header{background:#a61a1d;padding:25px 20px 20px 20px;display:flex;justify-content:space-between;align-items:center;position:relative;overflow:hidden;border-bottom:4px solid #1c1c1c}
+.receipts-header{position:sticky;top:0;z-index:100;background:#a61a1d;padding:25px 20px 20px 20px;display:flex;justify-content:space-between;align-items:center;position:relative;overflow:hidden;border-bottom:4px solid #1c1c1c}
 .receipts-header::before{content:'';position:absolute;bottom:0;left:0;width:80px;height:80px;background:#1a6341;clip-path:polygon(0 0, 0% 100%, 100% 100%)}
 .receipts-header-left{z-index:1;text-align:left}
 .receipts-header-left h1{color:#fff;font-size:18px;font-weight:700;margin-bottom:2px}
@@ -352,11 +352,11 @@ html,body{width:100%;max-width:100%;overflow-x:hidden;background:#F5F6F9;display
 .status-approved{background:#e5f5eb;color:#5cb881}
 .status-rejected{background:#ffebee;color:#c62828}
 
-/* ★ التعديل 1: الإيصال - التصميم الأصلي الأنيق مع الحفاظ على الطول ★ */
+/* ★ الإيصال: التصميم الأصلي + الطول + الاسم يمين/القيمة شمال ★ */
 .full-receipt-page{background:#f0f2f5;min-height:100vh;width:100%;display:flex;flex-direction:column;align-items:center;padding:10px}
 .full-receipt-screen{width:100%;max-width:480px;background:#ffffff;display:flex;flex-direction:column;border-radius:8px;overflow:hidden;box-shadow:0 4px 20px rgba(0,0,0,0.08)}
-.full-receipt-header{background:#c8102e;height:85px;padding:0 22px;display:flex;justify-content:space-between;align-items:center;position:relative}
-.full-receipt-header::after{content:'';position:absolute;bottom:0;left:0;width:0;height:0;border-bottom:18px solid #1a5e3a;border-right:18px solid transparent}
+.full-receipt-header{background:#c8102e;height:90px;padding:0 25px;display:flex;justify-content:space-between;align-items:center;position:relative}
+.full-receipt-header::after{content:'';position:absolute;bottom:0;left:0;width:0;height:0;border-bottom:20px solid #1a5e3a;border-right:20px solid transparent}
 .full-receipt-header-right{display:flex;flex-direction:column;align-items:flex-start;justify-content:center;color:white}
 .full-logo-box{display:flex;align-items:center;gap:6px;font-size:22px;font-weight:800;line-height:1}
 .full-logo-icon{position:relative;width:24px;height:24px;display:flex;justify-content:center;align-items:center}
@@ -364,32 +364,32 @@ html,body{width:100%;max-width:100%;overflow-x:hidden;background:#F5F6F9;display
 .full-logo-icon .yellow-dot{position:absolute;bottom:0;left:1px;width:7px;height:7px;background:#f1c40f;border-radius:50%}
 .full-receipt-header-right p{font-size:10px;margin-top:2px;opacity:0.9;line-height:1}
 .full-receipt-header-left{display:flex;flex-direction:column;align-items:flex-end;justify-content:center;color:white}
-.full-receipt-header-left h1{font-size:19px;font-weight:800;line-height:1}
-.full-receipt-header-left p{font-size:9px;letter-spacing:1px;opacity:0.9;margin-top:2px;line-height:1}
-.full-receipt-body{padding:14px 18px 10px 18px;position:relative;z-index:1}
-.full-amount-container{background:#fcfaf7;border:1px solid #e8e8e8;border-radius:25px;padding:7px 16px;display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
-.full-amount-text h2{font-size:13px;color:#222;font-weight:700;line-height:1.2}
-.full-amount-text p{font-size:8px;color:#999;letter-spacing:0.5px;line-height:1}
+.full-receipt-header-left h1{font-size:20px;font-weight:800;line-height:1}
+.full-receipt-header-left p{font-size:10px;letter-spacing:1px;opacity:0.9;margin-top:2px;line-height:1}
+.full-receipt-body{padding:12px 25px 15px 25px;position:relative;z-index:1}
+.full-amount-container{background:#fcfaf7;border:1px solid #e8e8e8;border-radius:25px;padding:6px 15px;display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
+.full-amount-text h2{font-size:12px;color:#222;font-weight:700;line-height:1.2}
+.full-amount-text p{font-size:7px;color:#999;letter-spacing:0.5px;line-height:1}
 .full-amount-number{font-size:22px;font-weight:800;color:#c8102e;display:flex;align-items:center;gap:4px}
-.full-amount-number span{font-size:11px;font-weight:700;color:#222}
+.full-amount-number span{font-size:12px;font-weight:700;color:#222}
 .full-section-header{display:flex;align-items:center;gap:8px;margin-bottom:6px}
-.full-section-header h3{font-size:12px;color:#c8102e;font-weight:700;white-space:nowrap}
+.full-section-header h3{font-size:11px;color:#c8102e;font-weight:700;white-space:nowrap}
 .full-section-header .line{flex:1;height:1px;background:#e0e0e0}
 .full-data-grid{display:flex;flex-direction:column;position:relative;z-index:2;gap:0}
 .full-data-column{display:flex;flex-direction:column;width:100%}
-.full-data-row{display:flex;justify-content:space-between;align-items:center;padding:9px 0;border-bottom:1px dashed #d0d0d0;flex-direction:row-reverse;gap:10px}
+.full-data-row{display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px dashed #d0d0d0;flex-direction:row-reverse;gap:10px}
 .full-data-row:last-child{border-bottom:none}
 .full-label-group{text-align:right;flex-shrink:0}
-.full-label-group h4{font-size:11px;color:#333;font-weight:700;line-height:1.2}
-.full-label-group p{font-size:8px;color:#888;letter-spacing:0.2px;line-height:1}
+.full-label-group h4{font-size:10px;color:#333;font-weight:700;line-height:1.2}
+.full-label-group p{font-size:7px;color:#888;letter-spacing:0.2px;line-height:1}
 .full-value-group{font-size:12px;font-weight:700;color:#222;text-align:left;flex:1;word-break:break-word}
 .full-value-red{color:#c8102e}
 .full-bg-arrow{display:none}
-.full-footer{text-align:center;padding:8px 0 8px 0;border-top:1px solid #c8102e;margin-top:10px;position:relative;z-index:2}
-.full-footer h2{color:#c8102e;font-size:13px;font-weight:800;margin-bottom:2px}
-.full-footer p{color:#888;font-size:9px}
-.receipt-actions{display:flex;gap:10px;padding:12px 16px 16px;width:100%;max-width:480px}
-.btn-thermal,.btn-save{flex:1;padding:13px;border-radius:10px;font-weight:700;font-size:14px;font-family:'Cairo',sans-serif;cursor:pointer;border:none;display:flex;justify-content:center;align-items:center;gap:8px;box-shadow:0 3px 8px rgba(0,0,0,0.1)}
+.full-footer{text-align:center;padding:6px 0 8px 0;border-top:1px solid #c8102e;margin-top:8px;position:relative;z-index:2}
+.full-footer h2{color:#c8102e;font-size:12px;font-weight:800;margin-bottom:0}
+.full-footer p{color:#888;font-size:8px}
+.receipt-actions{display:flex;gap:10px;padding:12px 25px 16px;width:100%;max-width:480px}
+.btn-thermal,.btn-save{flex:1;padding:12px;border-radius:10px;font-weight:700;font-size:14px;font-family:'Cairo',sans-serif;cursor:pointer;border:none;display:flex;justify-content:center;align-items:center;gap:8px}
 .btn-thermal{background:#a61a1d;color:white}
 .btn-save{background:#1a1a1a;color:white}
 
@@ -1001,7 +1001,7 @@ reader.readAsDataURL(receiptFile);
 renderStep();
 }
 
-/* ★ التعديل 3: بطاقات الجولات في الأعلى، جولاتي أسفلها ★ */
+/* ★ التعديل 2: بطاقات الجولات في الأعلى، جولاتي أسفلها ★ */
 async function renderInvest(){
 if(!currentUser)return;
 const invs=await fetchInvestments();
@@ -1047,7 +1047,7 @@ appDiv.innerHTML=`
 </div>
 <div class="invest-title-section"><h1>استثمر أموالك</h1><p>اختر جولتك الاستثمارية وابدأ الأرباح</p></div>
 <div class="invest-cards-container">
-<!-- 1) الجولة القياسية -->
+<!-- 1) الجولة القياسية في الأعلى -->
 <div class="invest-card">
 <div class="invest-card-content">
 <div class="invest-card-header"><div class="invest-card-title">الجولة القياسية</div><div class="invest-badge">قياسي</div></div>
@@ -1057,7 +1057,7 @@ appDiv.innerHTML=`
 <button class="invest-btn" data-round="standard"><i class="fa-solid fa-arrow-left"></i> اشترك الآن</button>
 </div>
 </div>
-<!-- 2) الجولة الفضية -->
+<!-- 2) الجولة الفضية في الأعلى -->
 <div class="invest-card">
 <div class="invest-card-content">
 <div class="invest-card-header"><div class="invest-card-title">الجولة الفضية</div><div class="invest-badge">مميزة</div></div>
@@ -1067,7 +1067,7 @@ appDiv.innerHTML=`
 <button class="invest-btn" data-round="silver"><i class="fa-solid fa-arrow-left"></i> اشترك الآن</button>
 </div>
 </div>
-<!-- 3) جولاتي (أسفل) -->
+<!-- 3) جولاتي في الأسفل -->
 ${myInvHtml}
 </div>
 <div class="bottom-nav">
@@ -1318,7 +1318,7 @@ else if(status==='approved'){selectedTxId=txId;navigate('full_receipt');}
 else{alert('تم رفض هذا الطلب من قبل الإدارة.');}
 };
 
-/* ★ التعديل 1: الإيصال بالطول مع التصميم الأصلي ★ */
+/* ★ التعديل 1: الإيصال بالطول مع التصميم الأصلي والاسم يمين/القيمة شمال ★ */
 async function renderFullReceipt(){
 if(!currentUser)return;
 if(!selectedTxId){navigate('receipts');return;}
