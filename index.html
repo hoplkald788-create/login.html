@@ -1278,6 +1278,275 @@
             renderStep();
         }
 
+        async function renderInvest() {
+            if (!currentUser) return;
+            const invs = await fetchInvestments();
+            
+            let myInvHtml = '';
+            if (invs.length > 0) {
+                myInvHtml = `<div class="my-inv-card">`;
+                invs.slice(0, 3).forEach(inv => {
+                    const isActive = inv.status === 'active';
+                    const startDate = inv.start_date?.toDate?.() || new Date(inv.start_date);
+                    const endDate = inv.end_date?.toDate?.() || new Date(inv.end_date);
+                    const now = new Date();
+                    let progress = 0;
+                    if (isActive) {
+                        const total = endDate - startDate;
+                        const elapsed = now - startDate;
+                        progress = Math.min(100, Math.max(0, (elapsed / total) * 100));
+                    } else {
+                        progress = 100;
+                    }
+                    const remainingMs = endDate - now;
+                    const hoursLeft = Math.max(0, Math.floor(remainingMs / (1000 * 60 * 60)));
+                    const minsLeft = Math.max(0, Math.floor((remainingMs % (1000 * 60 * 60)) / (1000 * 60)));
+
+                    myInvHtml += `
+                    <div class="my-inv-header" style="margin-bottom:10px;">
+                        <div class="my-inv-header-right">
+                            <div class="my-inv-icon-box">
+                                <svg viewBox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
+                            </div>
+                            <div class="my-inv-title-area">
+                                <h2>${inv.round_type === 'silver' ? 'الجولة الفضية' : 'الجولة القياسية'}</h2>
+                                <p>${parseFloat(inv.principal).toLocaleString()} SDG</p>
+                            </div>
+                        </div>
+                        <div class="my-inv-badge ${isActive ? '' : 'completed'}">${isActive ? 'نشط' : 'مكتمل'}</div>
+                    </div>
+                    <div class="my-inv-progress">
+                        <div class="my-inv-progress-labels">
+                            <span class="label">التقدم</span>
+                            <span class="percent">${Math.round(progress)}%</span>
+                        </div>
+                        <div class="my-inv-progress-bar"><div class="my-inv-progress-fill" style="width:${progress}%"></div></div>
+                    </div>
+                    <div class="my-inv-footer">
+                        <div class="my-inv-stat"><span class="label">رأس المال</span><span class="value">${parseFloat(inv.principal).toLocaleString()}</span></div>
+                        <div class="my-inv-stat"><span class="label">المكافأة</span><span class="value green">+${parseFloat(inv.bonus).toLocaleString()}</span></div>
+                        <div class="my-inv-stat"><span class="label">${isActive ? 'متبقي' : 'الحالة'}</span><span class="value">${isActive ? (hoursLeft + 'س ' + minsLeft + 'د') : 'تم'}</span></div>
+                    </div>
+                    ${invs.indexOf(inv) !== Math.min(invs.length, 3) - 1 ? '<div class="divider-dashed" style="margin:15px 0;"></div>' : ''}
+                    `;
+                });
+                myInvHtml += `</div>`;
+            }
+
+            appDiv.innerHTML = `
+            <div class="flex flex-col h-full bg-[#F5F6F9] pb-20 w-full">
+                <div class="invest-header">
+                    <div class="invest-brand">
+                        <div class="invest-brand-logo">ب</div>
+                        <div class="invest-brand-text"><h2>بلدنا</h2><p>منصة الاستثمار</p></div>
+                    </div>
+                    <a href="#" id="backToDash" class="invest-back-btn"><i class="fa-solid fa-chevron-right"></i></a>
+                </div>
+
+                <div class="invest-title-section">
+                    <h1>استثمر أموالك</h1>
+                    <p>اختر جولتك الاستثمارية وابدأ الأرباح</p>
+                </div>
+
+                <div class="invest-cards-container">
+                    <div class="invest-card">
+                        <div class="invest-card-content">
+                            <div class="invest-card-header">
+                                <div class="invest-card-title">الجولة القياسية</div>
+                                <div class="invest-badge">قياسي</div>
+                            </div>
+                            <div class="invest-card-subtitle">للمبتدئين - رأس مال منخفض</div>
+                            <div class="invest-stats-row">
+                                <div>
+                                    <span class="invest-percentage">+23%</span>
+                                    <span class="invest-percentage-label">ربح متوقع</span>
+                                </div>
+                                <div class="invest-stat-duration">
+                                    <span class="invest-duration-months">24 ساعة</span>
+                                    <span class="invest-duration-amount">3,000 - 20,000 SDG</span>
+                                </div>
+                            </div>
+                            <div class="invest-features-container">
+                                <div class="invest-features-left">
+                                    <div class="invest-pill">رأس مال 3,000+</div>
+                                </div>
+                                <div class="invest-features-right">
+                                    <div class="invest-pill">مكافأة حتى 5,000</div>
+                                    <div class="invest-pill">دعم فوري</div>
+                                </div>
+                            </div>
+                            <button class="invest-btn" data-round="standard">
+                                <i class="fa-solid fa-arrow-left"></i> اشترك الآن
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="invest-card">
+                        <div class="invest-card-content">
+                            <div class="invest-card-header">
+                                <div class="invest-card-title">الجولة الفضية</div>
+                                <div class="invest-badge">مميزة</div>
+                            </div>
+                            <div class="invest-card-subtitle">للمستثمرين الجادين - عوائد أعلى</div>
+                            <div class="invest-stats-row">
+                                <div>
+                                    <span class="invest-percentage">+50%</span>
+                                    <span class="invest-percentage-label">ربح متوقع</span>
+                                </div>
+                                <div class="invest-stat-duration">
+                                    <span class="invest-duration-months">24 ساعة</span>
+                                    <span class="invest-duration-amount">20,000 - 100,000 SDG</span>
+                                </div>
+                            </div>
+                            <div class="invest-features-container">
+                                <div class="invest-features-left">
+                                    <div class="invest-pill">رأس مال 20,000+</div>
+                                </div>
+                                <div class="invest-features-right">
+                                    <div class="invest-pill">مكافأة حتى 10,000</div>
+                                    <div class="invest-pill">أولوية دعم</div>
+                                </div>
+                            </div>
+                            <button class="invest-btn" data-round="silver">
+                                <i class="fa-solid fa-arrow-left"></i> اشترك الآن
+                            </button>
+                        </div>
+                    </div>
+
+                    ${myInvHtml}
+                </div>
+
+                <div class="bottom-nav">
+                    <a href="#" id="navHome" class="flex flex-col items-center text-gray-400"><i class="fa-solid fa-house text-lg mb-1"></i><span class="text-[10px]">الرئيسية</span></a>
+                    <a href="#" id="navTx" class="flex flex-col items-center text-gray-400"><i class="fa-regular fa-file-lines text-lg mb-1"></i><span class="text-[10px]">المعاملات</span></a>
+                    <a href="#" class="flex flex-col items-center text-[#B71C1C]"><i class="fa-solid fa-chart-line text-lg mb-1"></i><span class="text-[10px]">الاستثمار</span></a>
+                    <a href="#" id="navReceipts" class="flex flex-col items-center text-gray-400"><i class="fa-solid fa-receipt text-lg mb-1"></i><span class="text-[10px]">الإيصالات</span></a>
+                    <a href="#" id="navProfile" class="flex flex-col items-center text-gray-400"><i class="fa-regular fa-user text-lg mb-1"></i><span class="text-[10px]">حسابي</span></a>
+                </div>
+            </div>`;
+
+            document.getElementById('backToDash').addEventListener('click', (e) => { e.preventDefault(); navigate('dashboard'); });
+            document.getElementById('navHome').addEventListener('click', (e) => { e.preventDefault(); navigate('dashboard'); });
+            document.getElementById('navTx').addEventListener('click', (e) => { e.preventDefault(); navigate('transactions'); });
+            document.getElementById('navReceipts').addEventListener('click', (e) => { e.preventDefault(); navigate('receipts'); });
+            document.getElementById('navProfile').addEventListener('click', (e) => { e.preventDefault(); navigate('profile'); });
+
+            document.querySelectorAll('.invest-btn').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    const round = btn.dataset.round;
+                    navigate('calculator', round);
+                });
+            });
+        }
+
+        function renderCalculator(round) {
+            if (!currentUser) return;
+            const isSilver = round === 'silver';
+            const min = isSilver ? 20000 : 3000;
+            const max = isSilver ? 100000 : 20000;
+            const percentage = isSilver ? 50 : 23;
+            const bonusMin = isSilver ? 3000 : 1000;
+
+            appDiv.innerHTML = `
+            <div class="flex flex-col h-full bg-[#F5F6F9] pb-20 w-full">
+                <div class="invest-header">
+                    <div class="invest-brand">
+                        <div class="invest-brand-logo">ب</div>
+                        <div class="invest-brand-text"><h2>بلدنا</h2><p>منصة الاستثمار</p></div>
+                    </div>
+                    <a href="#" id="backToInvest" class="invest-back-btn"><i class="fa-solid fa-chevron-right"></i></a>
+                </div>
+
+                <div class="calc-page-wrapper">
+                    <div class="calc-page-card">
+                        <div class="top-handle"></div>
+                        <h2 class="header-title">${isSilver ? 'الجولة الفضية' : 'الجولة القياسية'}</h2>
+                        <p class="header-subtitle">حرّك الشريط لاختيار مبلغ الاستثمار</p>
+
+                        <div class="savings-card">
+                            <div class="card-header">
+                                <div class="card-title">
+                                    <h2>مبلغ الاستثمار</h2>
+                                    <span>INVESTMENT AMOUNT</span>
+                                </div>
+                                <div class="amount-display" id="calcAmount">${min.toLocaleString()}</div>
+                            </div>
+                            <input type="range" id="calcRange" min="${min}" max="${max}" value="${min}" step="500">
+                            <div class="slider-labels">
+                                <span>${min.toLocaleString()}</span>
+                                <span>${max.toLocaleString()}</span>
+                            </div>
+                        </div>
+
+                        <div class="gradient-box"></div>
+
+                        <div class="detail-row">
+                            <div class="detail-title"><h3>رأس المال</h3><span>PRINCIPAL</span></div>
+                            <div class="detail-value text-dark" id="calcPrincipal">${min.toLocaleString()} SDG</div>
+                        </div>
+                        <div class="detail-row">
+                            <div class="detail-title"><h3>المكافأة المتوقعة</h3><span>EXPECTED BONUS</span></div>
+                            <div class="detail-value text-green" id="calcBonus">+${bonusMin.toLocaleString()} SDG</div>
+                        </div>
+                        <div class="detail-row">
+                            <div class="detail-title"><h3>العائد الإجمالي</h3><span>TOTAL RETURN</span></div>
+                            <div class="detail-value text-red" id="calcTotal">${(min + bonusMin).toLocaleString()} SDG</div>
+                        </div>
+                        <div class="detail-row">
+                            <div class="detail-title"><h3>المدة</h3><span>DURATION</span></div>
+                            <div class="detail-value text-dark">24 ساعة</div>
+                        </div>
+
+                        <button class="btn-subscribe" id="calcSubscribeBtn">
+                            <i class="fa-solid fa-check"></i> تأكيد الاشتراك
+                        </button>
+                    </div>
+                </div>
+
+                <div class="bottom-nav">
+                    <a href="#" id="navHome" class="flex flex-col items-center text-gray-400"><i class="fa-solid fa-house text-lg mb-1"></i><span class="text-[10px]">الرئيسية</span></a>
+                    <a href="#" id="navInvest" class="flex flex-col items-center text-[#B71C1C]"><i class="fa-solid fa-chart-line text-lg mb-1"></i><span class="text-[10px]">الاستثمار</span></a>
+                </div>
+            </div>`;
+
+            document.getElementById('backToInvest').addEventListener('click', (e) => { e.preventDefault(); navigate('invest'); });
+            document.getElementById('navHome').addEventListener('click', (e) => { e.preventDefault(); navigate('dashboard'); });
+            document.getElementById('navInvest').addEventListener('click', (e) => { e.preventDefault(); navigate('invest'); });
+
+            const range = document.getElementById('calcRange');
+            const updateValues = () => {
+                const val = parseFloat(range.value);
+                let bonus = 0;
+                if (isSilver) {
+                    bonus = 3000 + ((val - 20000) / 80000) * 7000;
+                } else {
+                    bonus = 1000 + ((val - 3000) / 17000) * 4000;
+                }
+                document.getElementById('calcAmount').innerText = val.toLocaleString();
+                document.getElementById('calcPrincipal').innerText = val.toLocaleString() + ' SDG';
+                document.getElementById('calcBonus').innerText = '+' + Math.round(bonus).toLocaleString() + ' SDG';
+                document.getElementById('calcTotal').innerText = (val + Math.round(bonus)).toLocaleString() + ' SDG';
+            };
+            range.addEventListener('input', updateValues);
+
+            document.getElementById('calcSubscribeBtn').addEventListener('click', async function() {
+                const amount = parseFloat(range.value);
+                if (currentUser.balance < amount) {
+                    alert('رصيدك غير كافٍ. يرجى شحن المحفظة أولاً.');
+                    return;
+                }
+                this.disabled = true;
+                this.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> جاري الاشتراك...';
+                try {
+                    await submitInvestment(round, amount);
+                } catch (err) {
+                    alert(err.message);
+                    this.disabled = false;
+                    this.innerHTML = '<i class="fa-solid fa-check"></i> تأكيد الاشتراك';
+                }
+            });
+        }
+
         function renderWithdraw() {
             if (!currentUser) return;
             const balance = currentUser.balance ? parseFloat(currentUser.balance).toLocaleString('en', {minimumFractionDigits: 2}) : '0.00';
