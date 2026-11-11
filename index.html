@@ -108,6 +108,30 @@
         .invest-features-right .invest-pill{width:fit-content}
         .invest-btn{width:100%;background-color:#fff;color:#8c1d1f;border:none;border-radius:25px;padding:13px;font-size:15px;font-weight:800;font-family:'Cairo',sans-serif;display:flex;justify-content:center;align-items:center;gap:10px;cursor:pointer;transition:transform 0.2s ease}
         
+        /* تصميم بطاقة الاستثمار النشطة */
+        .my-inv-card{background:#fff;border-radius:16px;padding:16px;box-shadow:0 6px 20px rgba(0,0,0,.04);border:1px solid #f0f0f0;width:100%;margin-bottom:15px}
+        .my-inv-header{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:20px}
+        .my-inv-header-right{display:flex;align-items:center;gap:12px}
+        .my-inv-icon-box{background:#9f2727;width:48px;height:48px;border-radius:12px;display:flex;justify-content:center;align-items:center;flex-shrink:0}
+        .my-inv-icon-box svg{width:24px;height:24px;fill:none;stroke:#fff;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+        .my-inv-title-area h2{font-size:15px;color:#111;font-weight:700;margin-bottom:2px}
+        .my-inv-title-area p{font-size:11px;color:#888;font-weight:500}
+        .my-inv-badge{background:#e5f5ee;color:#1e8a57;padding:6px 10px;border-radius:14px;font-size:11px;font-weight:700;display:flex;align-items:center;gap:6px;white-space:nowrap}
+        .my-inv-badge::before{content:'';display:inline-block;width:6px;height:6px;background:#1e8a57;border-radius:50%}
+        .my-inv-badge.completed{background:#e8e8e8;color:#666}
+        .my-inv-badge.completed::before{background:#666}
+        .my-inv-progress{margin-bottom:20px}
+        .my-inv-progress-labels{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
+        .my-inv-progress-labels .label{color:#888;font-size:13px;font-weight:500}
+        .my-inv-progress-labels .percent{color:#9f2727;font-size:16px;font-weight:800}
+        .my-inv-progress-bar{width:100%;height:10px;background:#e5e3df;border-radius:8px;overflow:hidden}
+        .my-inv-progress-fill{height:100%;background:#9f2727;border-radius:8px;transition:width 1s linear}
+        .my-inv-footer{display:flex;justify-content:space-between;align-items:center;text-align:center;border-top:1px solid #f0f0f0;padding-top:14px}
+        .my-inv-stat{display:flex;flex-direction:column;gap:4px}
+        .my-inv-stat .label{color:#888;font-size:12px;font-weight:500}
+        .my-inv-stat .value{color:#111;font-size:15px;font-weight:800}
+        .my-inv-stat .value.green{color:#4cb08b}
+        
         /* الحاسبة */
         .calc-page-wrapper{padding:20px 15px 30px;display:flex;justify-content:center;flex:1;background:#f4f4f4;width:100%}
         .calc-page-card{background-color:#ffffff;width:100%;border-radius:24px;padding:16px 14px;box-shadow:0 10px 25px rgba(0,0,0,0.08);position:relative}
@@ -429,6 +453,21 @@
             }
         }
 
+        // ---------------- جلب الاستثمارات ----------------
+        async function fetchInvestments() {
+            if (!currentUser) return [];
+            try {
+                const invRef = collection(db, "investments");
+                const q = query(invRef, where("user_id", "==", currentUser.id));
+                const snapshot = await getDocs(q);
+                let invs = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+                invs.sort((a, b) => (b.start_date?.toDate?.() || new Date(b.start_date)) - (a.start_date?.toDate?.() || new Date(a.start_date)));
+                return invs;
+            } catch (error) {
+                return [];
+            }
+        }
+
         // ---------------- جلب المعاملات ----------------
         async function fetchTransactions() {
             if (!currentUser) return [];
@@ -660,9 +699,9 @@
                 <div class="main-content">
                     <div class="services-box">
                         <a href="#" id="goToRecharge" class="service-item"><div class="service-icon bg-green"><i class="fa-solid fa-download"></i></div><span>شحن رصيد</span></a>
-                        <div class="service-item"><div class="service-icon bg-red"><i class="fa-solid fa-upload"></i></div><span>سحب</span></div>
-                        <div class="service-item"><div class="service-icon bg-blue"><i class="fa-solid fa-arrow-right-arrow-left"></i></div><span>تحويل</span></div>
-                        <div class="service-item"><div class="service-icon bg-orange"><i class="fa-solid fa-file-invoice"></i></div><span>سداد خدمات</span></div>
+                        <div class="service-item" onclick="alert('قيد التطوير')"><div class="service-icon bg-red"><i class="fa-solid fa-upload"></i></div><span>سحب</span></div>
+                        <div class="service-item" onclick="alert('قيد التطوير')"><div class="service-icon bg-blue"><i class="fa-solid fa-arrow-right-arrow-left"></i></div><span>تحويل</span></div>
+                        <div class="service-item" onclick="alert('قيد التطوير')"><div class="service-icon bg-orange"><i class="fa-solid fa-file-invoice"></i></div><span>سداد خدمات</span></div>
                     </div>
                     <div class="stats-row">
                         <div class="stat-card"><div class="stat-icon bg-red"><i class="fa-solid fa-arrow-up"></i></div><p>المدفوعات</p><h4>0</h4></div>
@@ -907,6 +946,48 @@
 
         // ---------------- صفحة الاستثمار ----------------
         async function renderInvest() {
+            const invs = await fetchInvestments();
+            let invHtml = '';
+            
+            if (invs.length > 0) {
+                invHtml += `<div class="section-label" style="margin: 15px 15px 0;"><i class="fa-solid fa-briefcase"></i> استثماراتي (${invs.length})</div>
+                <div class="invest-cards-container" style="padding-bottom:15px;">`;
+                invs.forEach(inv => {
+                    const isDone = inv.status === 'completed';
+                    const title = inv.round_type === 'silver' ? 'الجولة الفضية' : 'الجولة القياسية (20%)';
+                    
+                    const start = inv.start_date?.toDate?.() || new Date(inv.start_date);
+                    const end = inv.end_date?.toDate?.() || new Date(inv.end_date);
+                    const now = new Date();
+                    
+                    const totalSec = Math.max(1, (end - start) / 1000);
+                    const elapsedSec = Math.max(0, (now - start) / 1000);
+                    const progress = isDone ? 100 : Math.min(100, Math.max(1, Math.round((elapsedSec / totalSec) * 100)));
+                    const earned = Math.round(inv.bonus * progress / 100);
+
+                    invHtml += `
+                    <div class="my-inv-card">
+                        <div class="my-inv-header">
+                            <div class="my-inv-header-right">
+                                <div class="my-inv-icon-box"><svg viewBox="0 0 24 24"><path d="M3 3v18h18"/><path d="M7 14l4-4 3 3 5-6"/><path d="M15 6h4v4"/></svg></div>
+                                <div class="my-inv-title-area"><h2>${title}</h2><p>بدأت ${formatDate(inv.start_date)}</p></div>
+                            </div>
+                            <div class="my-inv-badge ${isDone?'completed':''}">${isDone?'مكتملة ✓':'نشطة'}</div>
+                        </div>
+                        <div class="my-inv-progress">
+                            <div class="my-inv-progress-labels"><span class="label">نسبة الإنجاز</span><span class="percent">${progress}%</span></div>
+                            <div class="my-inv-progress-bar"><div class="my-inv-progress-fill" style="width:${progress}%"></div></div>
+                        </div>
+                        <div class="my-inv-footer">
+                            <div class="my-inv-stat"><span class="label">المبلغ</span><span class="value">SDG ${parseFloat(inv.principal).toLocaleString()}</span></div>
+                            <div class="my-inv-stat"><span class="label">المكتسب</span><span class="value green">+ ${earned.toLocaleString()}</span></div>
+                            <div class="my-inv-stat"><span class="label">المكافأة</span><span class="value">${parseFloat(inv.bonus).toLocaleString()}</span></div>
+                        </div>
+                    </div>`;
+                });
+                invHtml += `</div>`;
+            }
+
             appDiv.innerHTML = `
             <div class="flex flex-col h-full bg-[#F5F6F9] pb-20 w-full">
                 <div class="invest-header">
@@ -917,7 +998,11 @@
                     <h1>الاستثمار</h1>
                     <p>اختر الجولة المناسبة وابدأ رحلتك الاستثمارية</p>
                 </div>
-                <div class="invest-cards-container">
+                
+                ${invHtml}
+
+                <div class="section-label" style="margin: 15px 15px 0;"><i class="fa-solid fa-plus-circle"></i> ابدأ جولة جديدة</div>
+                <div class="invest-cards-container" style="padding-top:10px;">
                     <div class="invest-card">
                         <div class="invest-card-content">
                             <div class="invest-card-header">
