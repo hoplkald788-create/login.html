@@ -1,442 +1,1514 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>إيصال سحب - منصة بلدنا</title>
-    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&display=swap" rel="stylesheet">
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Cairo', sans-serif;
-        }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>بلدنا - المحفظة والاستثمار</title>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:'Cairo',sans-serif}
+html,body{width:100%;max-width:100%;overflow-x:hidden;background:#F5F6F9;display:flex;justify-content:center}
+.app-container{width:100%;max-width:100%;min-height:100vh;background:#F5F6F9;position:relative;display:flex;flex-direction:column;overflow-x:hidden}
+.header-bg{background:linear-gradient(180deg,#B71C1C 0%,#E53935 100%);padding:20px 20px 25px 20px;border-bottom-left-radius:25px;border-bottom-right-radius:25px}
+.top-bar{display:flex;justify-content:space-between;align-items:flex-start;color:white;margin-top:10px}
+.top-actions{display:flex;gap:8px}
+.notification-icon{width:38px;height:38px;border:1px solid rgba(255,255,255,0.3);border-radius:50%;display:flex;justify-content:center;align-items:center;font-size:16px;cursor:pointer;text-decoration:none;color:white}
+.user-info{display:flex;align-items:center;gap:10px}
+.user-text{text-align:right}
+.user-text p{font-size:12px;color:rgba(255,255,255,0.8)}
+.user-text h3{font-size:15px;display:flex;align-items:center;justify-content:flex-end;gap:4px}
+.user-text h3 i{color:#FFCA28;font-size:13px}
+.avatar{width:42px;height:42px;background-color:#FFCA28;border-radius:50%;display:flex;justify-content:center;align-items:center;color:#000;font-weight:bold;font-size:18px}
+.bank-card-wrapper{padding:0 20px;margin-top:-15px;z-index:10}
+.bank-card{background:linear-gradient(135deg,#B71C1C 0%,#8E0000 100%);border-radius:18px;padding:15px;color:white;box-shadow:0 8px 15px rgba(183,28,28,0.3);position:relative;overflow:hidden;display:flex;flex-direction:column;gap:15px}
+.bank-card::before{content:'';position:absolute;width:150px;height:150px;border-radius:50%;background:rgba(255,255,255,0.05);top:-40px;right:-40px}
+.card-top-row{display:flex;justify-content:space-between;align-items:center;z-index:1;width:100%;flex-direction:row-reverse}
+.account-type{background:rgba(255,202,40,0.2);border:1px solid rgba(255,202,40,0.5);padding:3px 10px;border-radius:12px;font-size:10px;display:flex;align-items:center;gap:4px}
+.balance-label-left{display:flex;align-items:center;gap:5px;font-size:10px;color:rgba(255,255,255,0.8)}
+.eye-icon{cursor:pointer;font-size:12px}
+.card-middle{display:flex;justify-content:flex-end;align-items:center;z-index:1;margin-top:-5px;gap:10px}
+.chip{width:35px;height:25px;background-color:#FFCA28;border-radius:5px}
+.contactless{font-size:16px;color:rgba(255,255,255,0.5)}
+.card-bottom{z-index:1;display:flex;flex-direction:column;align-items:flex-start;width:100%}
+.balance-amount{display:flex;justify-content:flex-start;align-items:baseline;gap:5px;margin-bottom:10px}
+.balance-amount span.currency{color:#FFCA28;font-size:14px;font-weight:bold}
+.balance-amount span.number{font-size:24px;font-weight:800;letter-spacing:1px}
+.card-footer{display:flex;justify-content:space-between;align-items:center;font-size:11px;width:100%;flex-direction:row-reverse}
+.card-name{display:flex;align-items:center;gap:4px}
+.card-name i{color:#FFCA28}
+.main-content{padding:15px;flex:1;padding-bottom:90px;width:100%}
+.services-box{background:white;border-radius:18px;padding:12px 5px;display:flex;justify-content:space-between;box-shadow:0 4px 10px rgba(0,0,0,0.03);margin-bottom:15px;width:100%}
+.service-item{display:flex;flex-direction:column;align-items:center;gap:5px;cursor:pointer;flex:1;text-decoration:none;color:inherit}
+.service-icon{width:42px;height:42px;border-radius:12px;display:flex;justify-content:center;align-items:center;font-size:16px}
+.service-item span{font-size:10px;font-weight:700;color:#333}
+.bg-green{background:#E8F5E9;color:#4CAF50}.bg-red{background:#FFEBEE;color:#F44336}.bg-blue{background:#E3F2FD;color:#2196F3}.bg-orange{background:#FFF8E1;color:#FF9800}
+.stats-row{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:15px;width:100%}
+.stat-card{background:white;border-radius:14px;padding:10px 5px;display:flex;flex-direction:column;align-items:center;box-shadow:0 4px 10px rgba(0,0,0,0.03)}
+.stat-icon{width:30px;height:30px;border-radius:50%;display:flex;justify-content:center;align-items:center;font-size:13px;margin-bottom:6px}
+.stat-card p{font-size:9px;color:#777;margin-bottom:2px;text-align:center}
+.stat-card h4{font-size:14px;color:#000;font-weight:800}
+.promo-banner{background:linear-gradient(to left,#B71C1C,#8E0000);border-radius:16px;padding:15px;display:flex;justify-content:space-between;align-items:center;position:relative;overflow:hidden;margin-bottom:15px;width:100%}
+.promo-text{color:white;z-index:1}
+.promo-text h3{font-size:15px;margin-bottom:3px}
+.promo-text p{font-size:10px;color:rgba(255,255,255,0.8);margin-bottom:10px}
+.promo-btn{background:white;color:#B71C1C;border:none;padding:4px 12px;border-radius:15px;font-weight:bold;font-size:10px;cursor:pointer;font-family:'Cairo',sans-serif}
+.promo-graphic{position:relative;width:60px;height:70px;display:flex;align-items:flex-end;justify-content:center}
+.phone-shape{width:40px;height:60px;background:white;border-radius:6px;border:2px solid #000;position:relative;z-index:2;display:flex;flex-direction:column;align-items:center;padding-top:15px;gap:4px}
+.phone-shape div{width:70%;height:4px;background:#eee;border-radius:2px}
+.phone-shape .btn{width:60%;height:8px;background:#4CAF50;border-radius:3px;margin-top:5px}
+.coins{position:absolute;left:-5px;bottom:0;color:#FFCA28;font-size:22px;z-index:1}
+.bottom-nav{position:fixed;bottom:0;left:0;width:100%;background:white;display:flex;justify-content:space-around;padding:8px 0;box-shadow:0 -4px 10px rgba(0,0,0,0.05);border-top:1px solid #eee;z-index:20}
+.nav-item{display:flex;flex-direction:column;align-items:center;gap:3px;color:#999;text-decoration:none;font-size:9px;cursor:pointer}
+.nav-item i{font-size:16px}
+.nav-item.active{color:#B71C1C;background:#FFEBEE;padding:4px 10px;border-radius:12px}
+.invest-header{position:sticky;top:0;z-index:100;background:linear-gradient(180deg,#B71C1C 0%,#E53935 100%);padding:15px 20px;display:flex;align-items:center;justify-content:space-between;color:white;border-bottom-left-radius:20px;border-bottom-right-radius:20px;box-shadow:0 4px 15px rgba(183,28,28,0.25);width:100%}
+.invest-brand{display:flex;align-items:center;gap:10px}
+.invest-brand-logo{width:40px;height:40px;background:white;border-radius:10px;display:flex;align-items:center;justify-content:center;color:#B71C1C;font-size:18px;font-weight:800}
+.invest-brand-text h2{font-size:16px;font-weight:800}
+.invest-brand-text p{font-size:10px;color:rgba(255,255,255,0.85)}
+.invest-back-btn{width:38px;height:38px;background:rgba(255,255,255,0.2);border:1px solid rgba(255,255,255,0.3);border-radius:50%;display:flex;align-items:center;justify-content:center;color:white;font-size:14px;text-decoration:none}
+.invest-title-section{padding:20px 20px 10px;text-align:center;width:100%}
+.invest-title-section h1{font-size:22px;font-weight:800;color:#1a1a1a;margin-bottom:4px}
+.invest-title-section p{font-size:13px;color:#777}
+.invest-cards-container{padding:10px 15px 100px;display:flex;flex-direction:column;gap:18px;width:100%}
+.invest-card{background:linear-gradient(145deg,#8c1d1f,#731214);border-radius:24px;padding:22px 20px;color:#fff;position:relative;overflow:hidden;box-shadow:0 10px 20px rgba(0,0,0,0.12);width:100%}
+.invest-card::before{content:'';position:absolute;bottom:-50px;left:20%;width:150px;height:150px;background:rgba(255,255,255,0.05);border-radius:30px;transform:rotate(45deg);z-index:1}
+.invest-card-content{position:relative;z-index:2}
+.invest-card-header{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:5px}
+.invest-card-title{font-size:18px;font-weight:800}
+.invest-badge{background:#1a1a1a;color:#d4af37;padding:4px 12px;border-radius:20px;font-size:11px;font-weight:700}
+.invest-card-subtitle{font-size:12px;color:#e0c2c2;margin-bottom:20px}
+.invest-stats-row{display:flex;justify-content:space-between;align-items:center;margin-bottom:18px}
+.invest-percentage{font-size:44px;font-weight:800;line-height:1;display:block}
+.invest-percentage-label{font-size:11px;color:#e0c2c2}
+.invest-stat-duration{text-align:left}
+.invest-duration-months{font-size:15px;font-weight:700;display:block}
+.invest-duration-amount{font-size:12px;color:#e0c2c2}
+.invest-features-container{display:flex;justify-content:space-between;margin-bottom:22px;gap:10px}
+.invest-features-left{display:flex;flex-direction:column;justify-content:center}
+.invest-features-right{display:flex;flex-direction:column;gap:8px;align-items:flex-end;flex-grow:1}
+.invest-pill{background:rgba(255,255,255,0.15);padding:6px 14px;border-radius:20px;font-size:11px;font-weight:500;white-space:nowrap}
+.invest-features-right .invest-pill{width:fit-content}
+.invest-btn{width:100%;background:#fff;color:#8c1d1f;border:none;border-radius:25px;padding:13px;font-size:15px;font-weight:800;font-family:'Cairo',sans-serif;display:flex;justify-content:center;align-items:center;gap:10px;cursor:pointer}
+.my-inv-card{background:#fff;border-radius:16px;padding:16px;box-shadow:0 6px 20px rgba(0,0,0,.04);border:1px solid #f0f0f0;width:100%;margin-bottom:15px}
+.my-inv-header{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:20px}
+.my-inv-header-right{display:flex;align-items:center;gap:12px}
+.my-inv-icon-box{background:#9f2727;width:48px;height:48px;border-radius:12px;display:flex;justify-content:center;align-items:center;flex-shrink:0}
+.my-inv-icon-box svg{width:24px;height:24px;fill:none;stroke:#fff;stroke-width:2}
+.my-inv-title-area h2{font-size:15px;color:#111;font-weight:700;margin-bottom:2px}
+.my-inv-title-area p{font-size:11px;color:#888}
+.my-inv-badge{background:#e5f5ee;color:#1e8a57;padding:6px 10px;border-radius:14px;font-size:11px;font-weight:700;display:flex;align-items:center;gap:6px}
+.my-inv-badge::before{content:'';display:inline-block;width:6px;height:6px;background:#1e8a57;border-radius:50%}
+.my-inv-badge.completed{background:#e8e8e8;color:#666}
+.my-inv-badge.completed::before{background:#666}
+.my-inv-progress{margin-bottom:20px}
+.my-inv-progress-labels{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
+.my-inv-progress-labels .label{color:#888;font-size:13px}
+.my-inv-progress-labels .percent{color:#9f2727;font-size:16px;font-weight:800}
+.my-inv-progress-bar{width:100%;height:10px;background:#e5e3df;border-radius:8px;overflow:hidden}
+.my-inv-progress-fill{height:100%;background:#9f2727;border-radius:8px}
+.my-inv-footer{display:flex;justify-content:space-between;align-items:center;text-align:center;border-top:1px solid #f0f0f0;padding-top:14px}
+.my-inv-stat{display:flex;flex-direction:column;gap:4px}
+.my-inv-stat .label{color:#888;font-size:12px}
+.my-inv-stat .value{color:#111;font-size:15px;font-weight:800}
+.my-inv-stat .value.green{color:#4cb08b}
+.calc-page-wrapper{padding:20px 15px 30px;display:flex;justify-content:center;flex:1;background:#f4f4f4;width:100%}
+.calc-page-card{background:#fff;width:100%;border-radius:24px;padding:16px 14px;box-shadow:0 10px 25px rgba(0,0,0,0.08)}
+.calc-page-card .top-handle{width:36px;height:4px;background:#5A5A5A;border-radius:10px;margin:0 auto 12px auto}
+.calc-page-card .header-title{font-size:18px;font-weight:700;color:#1E1E1E;text-align:center;margin-bottom:4px}
+.calc-page-card .header-subtitle{font-size:12px;color:#888;text-align:center;margin-bottom:16px}
+.calc-page-card .savings-card{background:#F9F7F2;border:1px solid #E0E0E0;border-radius:12px;padding:12px 16px;margin-bottom:14px}
+.calc-page-card .card-header{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:12px}
+.calc-page-card .card-title h2{font-size:14px;font-weight:700;color:#1E1E1E;margin-bottom:2px}
+.calc-page-card .card-title span{font-size:9px;color:#888;letter-spacing:1.5px}
+.calc-page-card .amount-display{font-size:22px;font-weight:700;color:#A32829}
+.calc-page-card input[type=range]{-webkit-appearance:none;width:100%;background:transparent;margin:5px 0}
+.calc-page-card input[type=range]::-webkit-slider-runnable-track{width:100%;height:4px;background:#D3D3D3;border-radius:2px}
+.calc-page-card input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;height:18px;width:18px;border-radius:50%;background:#A32829;cursor:pointer;margin-top:-7px}
+.calc-page-card .slider-labels{display:flex;justify-content:space-between;color:#888;font-size:12px;margin-top:4px}
+.calc-page-card .gradient-box{height:60px;width:100%;border-radius:10px;background:linear-gradient(to bottom,#C33232,#EAA3A3);margin-bottom:16px}
+.calc-page-card .detail-row{display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px dashed #E0E0E0}
+.calc-page-card .detail-row:last-child{border-bottom:none;padding-bottom:0}
+.calc-page-card .detail-title h3{font-size:14px;font-weight:700;color:#1E1E1E;margin-bottom:2px}
+.calc-page-card .detail-title span{font-size:9px;color:#888;letter-spacing:1px}
+.calc-page-card .detail-value{font-size:14px;font-weight:700}
+.calc-page-card .text-green{color:#2E8B57}
+.calc-page-card .text-red{color:#A32829}
+.calc-page-card .text-dark{color:#1E1E1E}
+.calc-page-card .btn-subscribe{background:#A32829;color:white;border:none;border-radius:10px;padding:12px;font-size:16px;font-weight:700;font-family:inherit;cursor:pointer;width:100%;margin-top:16px}
+.recharge-page{padding:10px 15px 30px;width:100%}
+.rc-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;margin-top:5px}
+.rc-header h1{font-size:16px;color:#111;font-weight:700}
+.rc-back-btn{width:30px;height:30px;border-radius:50%;border:1px solid #E0E0E0;background:transparent;display:flex;justify-content:center;align-items:center;cursor:pointer;color:#111;font-size:11px}
+.progress-section{margin-bottom:15px}
+.progress-bar{display:flex;gap:5px;margin-bottom:6px}
+.progress-bar div{height:3px;border-radius:2px;flex:1;background:#E0E0E0}
+.progress-bar div.active{background:#B71C1C}
+.progress-text{display:flex;justify-content:space-between;font-size:10px;font-weight:600}
+.progress-text span:first-child{color:#777}
+.progress-text span:last-child{color:#B71C1C}
+.intro-text{text-align:center;margin-bottom:15px}
+.intro-text h2{font-size:16px;color:#111;margin-bottom:4px;font-weight:800}
+.intro-text p{font-size:11px;color:#666}
+.grid-container{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:15px;width:100%}
+.rc-card{background:#fff;border-radius:12px;padding:10px 5px;display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;border:1.5px solid transparent;box-shadow:0 2px 6px rgba(0,0,0,0.02);position:relative;height:90px}
+.rc-card.active-card{border-color:#B71C1C}
+.rc-icon-box{width:34px;height:34px;border-radius:9px;display:flex;justify-content:center;align-items:center;margin-bottom:6px;color:white;font-size:15px}
+.rc-card span.name{font-size:10px;font-weight:700;color:#111}
+.bg-bank{background:linear-gradient(135deg,#C13A3A,#8A1C1C)}
+.bg-mycashy{background:linear-gradient(135deg,#8E44AD,#5E2C73)}
+.bg-okash{background:linear-gradient(135deg,#E67E22,#B85914)}
+.check-mark{display:none;position:absolute;top:4px;left:4px;color:#4CAF50;font-size:12px}
+.rc-card.active-card .check-mark{display:block}
+.info-box{background:#FCF9F2;border:1px solid #F0E6DF;border-radius:8px;padding:8px 10px;display:flex;align-items:center;gap:8px;margin-bottom:10px;width:100%}
+.info-box i{color:#4CAF50;font-size:14px}
+.info-box p{font-size:9px;color:#333;line-height:1.4;font-weight:600}
+.bottom-spacer{flex:1}
+.submit-btn{width:100%;padding:12px;background:#DFA6A6;color:white;border:none;border-radius:10px;font-size:14px;font-weight:700;cursor:not-allowed;margin-top:10px;margin-bottom:15px;display:flex;justify-content:center;align-items:center;gap:8px}
+.submit-btn.active{background:#B71C1C;cursor:pointer}
+.bank-header{display:flex;justify-content:center;align-items:center;margin-bottom:15px}
+.bank-header h2{font-size:18px;font-weight:800;color:#111}
+.input-label{font-size:11px;font-weight:700;color:#333;margin-bottom:6px;align-self:flex-end;margin-right:5px}
+.amount-input-container{background:#FCF9F2;border:1px solid #EAE3D9;border-radius:12px;padding:10px 15px;display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;width:100%}
+.amount-input-container input{border:none;background:transparent;font-size:20px;font-weight:700;color:#111;text-align:center;width:100%;outline:none}
+.currency-label{font-size:13px;font-weight:800;color:#555}
+.quick-amounts{display:flex;gap:6px;justify-content:space-between;margin-bottom:20px;width:100%}
+.quick-btn{flex:1;padding:6px 0;background:#fff;border:1px solid #E0E0E0;border-radius:15px;font-size:10px;font-weight:700;color:#111;cursor:pointer}
+.fee-section,.min-limit-section{display:flex;justify-content:space-between;align-items:flex-start;padding:0 5px;margin-bottom:10px}
+.fee-title,.min-title{display:flex;flex-direction:column;align-items:flex-end}
+.fee-title h4,.min-title h4{font-size:13px;font-weight:800;color:#111}
+.fee-title span,.min-title span{font-size:8px;color:#888;letter-spacing:1px}
+.fee-value{font-size:13px;font-weight:800;color:#4CAF50}
+.min-value{font-size:13px;font-weight:800;color:#111}
+.divider-dashed{border-top:1px dashed #D0D0D0;margin:8px 0}
+.amount-box{background:#FCF9F2;border:1px solid #EAE3D9;border-radius:10px;padding:8px 12px;display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;margin-top:5px;width:100%}
+.amount-box-title h4{font-size:12px;font-weight:800;color:#111;margin-bottom:1px}
+.amount-box-title span{font-size:7px;color:#888}
+.amount-box-value{font-size:14px;font-weight:800;color:#B71C1C}
+.amount-box-value span{font-size:9px;color:#555;margin-right:2px}
+.section-title-container{display:flex;align-items:center;gap:8px;margin-bottom:6px}
+.section-title-container h3{font-size:13px;font-weight:800;color:#B71C1C;white-space:nowrap}
+.section-line{flex:1;height:1px;background:#E0E0E0}
+.instruction-text{font-size:9px;color:#555;margin-bottom:8px;text-align:right}
+.bank-card-container{border:1.5px solid #B71C1C;border-radius:10px;padding:10px;background:#fff;margin-bottom:8px;width:100%}
+.bank-card-header{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px}
+.bank-card-logo{width:32px;height:32px;background:#8E44AD;border-radius:8px;display:flex;justify-content:center;align-items:center;color:white;font-size:14px}
+.bank-card-header-text{text-align:right;flex:1;padding-left:10px}
+.bank-card-header-text h4{font-size:12px;font-weight:800;color:#111}
+.bank-card-header-text p{font-size:9px;color:#4CAF50;font-weight:700}
+.card-divider{border-top:1px dashed #E0E0E0;margin:6px 0}
+.data-row{display:flex;justify-content:space-between;align-items:center}
+.data-label h5{font-size:11px;font-weight:800;color:#111}
+.data-label span{font-size:7px;color:#888}
+.data-value{display:flex;align-items:center;gap:6px;font-size:12px;font-weight:700;color:#111}
+.copy-icon{width:24px;height:24px;background:#FCF5F5;border-radius:6px;display:flex;justify-content:center;align-items:center;color:#B71C1C;font-size:10px;cursor:pointer}
+.account-number-value{color:#B71C1C;font-weight:800;font-size:13px}
+.privacy-note{display:flex;align-items:center;gap:4px;font-size:8px;color:#888;margin-bottom:8px}
+.input-group-outline{position:relative;margin-bottom:10px;margin-top:5px;width:100%}
+.input-group-outline input{width:100%;padding:10px;border:1px solid #E0E0E0;border-radius:8px;font-size:12px;font-weight:700;color:#111;outline:none;background:#fff}
+.input-group-outline label{position:absolute;top:-6px;right:10px;background:#F8F9FA;padding:0 4px;font-size:9px;color:#666;font-weight:600}
+.receipt-header{text-align:center;margin-bottom:15px}
+.receipt-header h2{font-size:18px;font-weight:800;color:#111;margin-bottom:4px}
+.receipt-header p{font-size:11px;color:#555}
+.upload-box{border:2px dashed #DFA6A6;border-radius:16px;background:#FCF9F2;padding:20px 15px;display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;margin-bottom:20px;text-align:center;position:relative;overflow:hidden;width:100%}
+.upload-icon-circle{width:45px;height:45px;background:#F7E8E8;border-radius:12px;display:flex;justify-content:center;align-items:center;color:#B71C1C;font-size:20px;margin-bottom:12px}
+.upload-box h3{font-size:15px;font-weight:800;color:#111;margin-bottom:4px}
+.upload-box p{font-size:10px;color:#888}
+.upload-box.uploaded{border-color:#4CAF50;background:#F1F8E9;padding:10px}
+.upload-box.uploaded .upload-icon-circle{background:#C8E6C9;color:#2E7D32;margin-bottom:8px}
+.preview-img{display:none;width:100%;max-height:120px;object-fit:contain;border-radius:8px;margin-bottom:8px}
+.upload-box.uploaded .preview-img{display:block}
+.summary-row{display:flex;justify-content:space-between;align-items:center;padding:10px 0}
+.summary-label{display:flex;flex-direction:column;align-items:flex-end}
+.summary-label h5{font-size:13px;font-weight:800;color:#111;margin-bottom:2px}
+.summary-label span{font-size:8px;color:#888;letter-spacing:1px}
+.summary-value{font-size:13px;font-weight:700;color:#111}
+.summary-value.amount{font-size:14px;font-weight:800;color:#B71C1C}
+.input-group{position:relative;margin-bottom:20px;width:100%}
+.input-group input{width:100%;padding:16px;border:1px solid #d1d5db;border-radius:12px;font-size:15px;background:transparent;color:#111;outline:none}
+.input-group input:focus{border-color:#b3262b}
+.input-group label{position:absolute;right:16px;top:50%;transform:translateY(-50%);color:#9ca3af;font-size:15px;pointer-events:none;background:#fff;padding:0 4px;transition:0.2s}
+.input-group input:focus ~ label,.input-group input:not(:placeholder-shown) ~ label{top:0;font-size:11px;color:#b3262b;font-weight:700}
+.btn-color{background:#b3262b}
+@keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-6px)}75%{transform:translateX(6px)}}
+.animate-shake{animation:shake .4s}
+.filter-tabs{display:flex;gap:8px;margin-bottom:15px;padding:0 15px;width:100%}
+.filter-tab{flex:1;padding:10px;border-radius:10px;border:1px solid #E0E0E0;background:#fff;text-align:center;font-size:13px;font-weight:700;cursor:pointer;color:#777}
+.filter-tab.active{background:#B71C1C;color:#fff;border-color:#B71C1C}
+.withdraw-page{background:#fff;width:100%;padding:10px 15px}
+.withdraw-page .header{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
+.withdraw-page .header h1{font-size:16px;font-weight:700}
+.withdraw-page .back-btn{width:28px;height:28px;border-radius:50%;border:1px solid #E6E6E6;display:flex;justify-content:center;align-items:center;color:#333;text-decoration:none;font-size:10px}
+.withdraw-page .balance-section{background:#fdfdfd;border:1px solid #E6E6E6;border-radius:8px;padding:8px 12px;display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
+.withdraw-page .balance-info h3{font-size:12px;color:#333}
+.withdraw-page .balance-info span{font-size:8px;color:#888}
+.withdraw-page .balance-amount{font-size:16px;font-weight:700;color:#a81c1c;direction:ltr}
+.withdraw-page .balance-amount small{font-size:9px}
+.withdraw-page .alert-box{background:#fdf6e3;border:1px solid #e8d5a5;border-radius:6px;padding:6px 10px;display:flex;align-items:center;gap:6px;margin-bottom:10px;font-size:10px;color:#554a30;line-height:1.3}
+.withdraw-page .alert-box i{font-size:14px;color:#c99a3a}
+.withdraw-page .section-title{font-size:11px;font-weight:700;color:#a81c1c;margin-bottom:6px;display:flex;align-items:center;gap:8px}
+.withdraw-page .section-title::after{content:'';flex:1;height:1px;background:#E6E6E6}
+.withdraw-page .tabs{display:flex;border:1px solid #E6E6E6;border-radius:15px;padding:2px;margin-bottom:10px}
+.withdraw-page .tab{flex:1;padding:5px;text-align:center;border-radius:13px;font-size:11px;font-weight:600;cursor:pointer;display:flex;justify-content:center;align-items:center;gap:5px;color:#333;border:none;background:none}
+.withdraw-page .tab.active{background:#a81c1c;color:white}
+.withdraw-page .methods-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-bottom:10px}
+.withdraw-page .method-card{border:1px solid #E6E6E6;border-radius:10px;padding:8px 4px;display:flex;flex-direction:column;align-items:center;gap:4px;cursor:pointer;position:relative}
+.withdraw-page .method-card.active{border-color:#a81c1c;background:#fdf5f5}
+.withdraw-page .method-card .icon-box{width:32px;height:32px;border-radius:8px;display:flex;justify-content:center;align-items:center;font-size:14px;color:white}
+.withdraw-page .method-card:nth-child(1) .icon-box{background:#2c3e50}
+.withdraw-page .method-card:nth-child(2) .icon-box{background:#e67e22}
+.withdraw-page .method-card.active .icon-box{background:#a81c1c}
+.withdraw-page .method-card span{font-size:10px;font-weight:600}
+.withdraw-page .check-icon{position:absolute;top:4px;right:4px;color:#a81c1c;font-size:14px;display:none}
+.withdraw-page .method-card.active .check-icon{display:block}
+.withdraw-page .input-group{margin-bottom:8px;position:relative}
+.withdraw-page .floating-field{position:relative;display:flex;align-items:center;border:1px solid #E6E6E6;border-radius:8px;background:#fff;padding:0 10px;height:42px}
+.withdraw-page .floating-field:focus-within{border-color:#a81c1c}
+.withdraw-page .floating-field i{color:#888;font-size:14px;margin-left:8px}
+.withdraw-page .floating-field input{width:100%;height:100%;border:none;outline:none;background:transparent;font-family:'Cairo',sans-serif;font-size:12px;color:#333;padding-top:14px}
+.withdraw-page .floating-field label{position:absolute;right:32px;top:50%;transform:translateY(-50%);color:#888;font-size:11px;pointer-events:none;transition:all 0.2s}
+.withdraw-page .floating-field input:focus ~ label,.withdraw-page .floating-field input:not(:placeholder-shown) ~ label{top:10px;font-size:9px;font-weight:600}
+.withdraw-page .amount-container{background:#fdfdfd;border:1px solid #E6E6E6;border-radius:8px;padding:6px 12px;display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;height:45px}
+.withdraw-page .amount-container span.currency{font-size:12px;font-weight:700;color:#888}
+.withdraw-page .amount-container input{border:none;outline:none;background:transparent;font-size:18px;font-weight:700;text-align:center;width:70%;font-family:'Cairo',sans-serif;color:#333}
+.withdraw-page .quick-amounts{display:flex;justify-content:space-between;gap:6px;margin-bottom:10px}
+.withdraw-page .quick-btn{flex:1;padding:5px 0;border:1px solid #E6E6E6;border-radius:12px;background:#fff;font-family:'Cairo',sans-serif;font-size:10px;font-weight:700;cursor:pointer}
+.withdraw-page .quick-btn.active-btn{background:#fdf5f5;border-color:#a81c1c;color:#a81c1c}
+.withdraw-page .submit-btn{width:100%;padding:10px;background:#a81c1c;color:white;border:none;border-radius:8px;font-size:13px;font-weight:700;font-family:'Cairo',sans-serif;cursor:pointer;margin-top:10px}
+.withdraw-page .not-available-msg{display:none;background:#ffebee;color:#c62828;text-align:center;font-size:10px;padding:5px;border-radius:5px;margin-bottom:10px;font-weight:600}
+.details-page{display:none;width:100%;background:#f8f9fa;padding:15px;min-height:100vh}
+.details-page.active{display:block}
+.details-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:20px}
+.details-header h1{font-size:16px;font-weight:700;color:#1a1a1a;flex-grow:1;text-align:center}
+.details-back-btn{width:34px;height:34px;border-radius:50%;background:#fff;border:1px solid #e0e0e0;display:flex;justify-content:center;align-items:center;cursor:pointer;color:#1a1a1a;font-size:14px}
+.main-status{display:flex;flex-direction:column;align-items:center;margin-bottom:20px}
+.check-icon-wrapper{position:relative;width:85px;height:85px;background:#fef5e7;border-radius:50%;display:flex;justify-content:center;align-items:center;margin-bottom:15px}
+.main-check-icon{width:60px;height:60px;background:#f39c12;border-radius:50%;display:flex;justify-content:center;align-items:center;color:white;font-size:24px}
+.dot-yellow{position:absolute;top:8px;right:8px;width:10px;height:10px;background:#d4a34b;border-radius:50%}
+.dot-red{position:absolute;bottom:12px;left:5px;width:7px;height:7px;background:#b33a3a;border-radius:50%}
+.main-status h2{font-size:18px;font-weight:700;color:#f39c12;margin-bottom:5px}
+.details-page .amount{font-size:22px;font-weight:800;color:#a12b2b;direction:ltr}
+.details-card{background:#fff;border-radius:20px;padding:20px;box-shadow:0 4px 15px rgba(0,0,0,0.03)}
+.card-header-details{display:flex;justify-content:space-between;align-items:center;margin-bottom:20px}
+.card-header-details h3{font-size:15px;font-weight:700;color:#1a1a1a}
+.status-badge{padding:4px 10px;border-radius:20px;font-size:12px;font-weight:700;display:flex;align-items:center;gap:5px;background:#fef5e7;color:#f39c12}
+.status-badge::before{content:'';width:5px;height:5px;border-radius:50%;background:#f39c12}
+.timeline{position:relative;display:flex;flex-direction:column;gap:20px}
+.timeline::before{content:'';position:absolute;top:15px;bottom:15px;right:13px;width:2px;background:#e0e0e0;z-index:1}
+.timeline-progress{position:absolute;top:15px;right:13px;width:2px;height:0%;background:#5cb881;z-index:1;transition:height 0.8s ease-in-out}
+.timeline-item{display:flex;justify-content:space-between;align-items:flex-start;position:relative;z-index:2}
+.item-content{text-align:right;flex-grow:1;padding-right:38px}
+.item-title{font-size:14px;font-weight:700;color:#1a1a1a;margin-bottom:2px}
+.item-desc{font-size:12px;color:#8c8c8c;line-height:1.4}
+.item-time{font-size:12px;color:#8c8c8c;min-width:40px;text-align:left;margin-top:2px}
+.timeline-icon{position:absolute;right:0;top:0;width:28px;height:28px;background:#e0e0e0;border-radius:50%;display:flex;justify-content:center;align-items:center;color:white;font-size:12px;border:2px solid #fff;transition:all 0.5s}
+.timeline-icon.active{background:#e74c3c;animation:spin 1s linear infinite}
+.timeline-icon.done{background:#5cb881;animation:none}
+.timeline-icon i{display:none}
+.timeline-icon.done i.fa-check{display:block}
+.timeline-icon.active i.fa-spinner{display:block}
+@keyframes spin{0%{transform:rotate(0deg)}100%{transform:rotate(360deg)}}
+.main-status.status-complete .check-icon-wrapper{background:#e5f5eb}
+.main-status.status-complete .main-check-icon{background:#5cb881}
+.main-status.status-complete h2{color:#1a1a1a}
+.main-status.status-complete .status-badge{background:#e5f5eb;color:#5cb881}
+.main-status.status-complete .status-badge::before{background:#5cb881}
+.btn-home-action{display:none;width:100%;padding:12px;background:#1a1a1a;color:white;border-radius:10px;margin-top:20px;font-weight:700;font-size:14px;text-align:center;text-decoration:none}
+.btn-home-action.show{display:block}
+.receipts-page{background:#f7f8fa;min-height:100vh;width:100%}
+.receipts-header{background:#a61a1d;padding:25px 20px 20px 20px;display:flex;justify-content:space-between;align-items:center;position:relative;overflow:hidden;border-bottom:4px solid #1c1c1c}
+.receipts-header::before{content:'';position:absolute;bottom:0;left:0;width:80px;height:80px;background:#1a6341;clip-path:polygon(0 0, 0% 100%, 100% 100%)}
+.receipts-header-left{z-index:1;text-align:left}
+.receipts-header-left h1{color:#fff;font-size:18px;font-weight:700;margin-bottom:2px}
+.receipts-header-left p{color:#e0e0e0;font-size:10px;letter-spacing:1px}
+.receipts-header-right{z-index:1;display:flex;flex-direction:column;align-items:flex-end}
+.receipts-brand-name{color:#fff;font-size:28px;font-weight:800;line-height:1}
+.receipts-header-subtitle{color:#e0e0e0;font-size:11px;margin-top:5px}
+.receipts-list{padding:20px 15px;display:flex;flex-direction:column;gap:15px}
+.receipt-card{background:#fff;border-radius:12px;box-shadow:0 4px 10px rgba(0,0,0,0.05);overflow:hidden}
+.receipt-card-header{background:#a61a1d;padding:12px 15px;display:flex;justify-content:space-between;align-items:center;position:relative;border-bottom:3px solid #1c1c1c}
+.receipt-card-header::before{content:'';position:absolute;bottom:0;right:0;width:25px;height:25px;background:#1a6341;clip-path:polygon(100% 0, 0% 100%, 100% 100%)}
+.receipt-card-header-title{color:#fff;font-size:14px;font-weight:700;z-index:1}
+.receipt-card-brand-name{color:#fff;font-size:18px;font-weight:800;z-index:1}
+.receipt-card-body{display:flex;justify-content:space-between;align-items:center;padding:20px 15px}
+.receipt-card-info{text-align:right}
+.receipt-card-info h3{color:#1c1c1c;font-size:16px;font-weight:700;margin-bottom:4px}
+.receipt-card-info .transaction-id{color:#a61a1d;font-size:12px;font-weight:700;margin-bottom:4px;font-family:sans-serif;direction:ltr;text-align:right}
+.receipt-card-info .date{color:#888;font-size:12px;font-family:sans-serif;direction:ltr;text-align:right}
+.receipt-card-amount{display:flex;align-items:center;gap:10px}
+.receipt-card-amount .arrow{color:#b0b0b0;font-size:18px;font-weight:bold}
+.amount-details{text-align:left;direction:ltr}
+.amount-details h2{color:#a61a1d;font-size:20px;font-weight:800;margin-bottom:2px}
+.amount-details p{color:#999;font-size:12px;text-align:left}
+.receipt-status-badge{position:absolute;top:12px;left:15px;font-size:10px;padding:2px 8px;border-radius:10px;font-weight:700;z-index:2}
+.status-pending{background:#fef5e7;color:#f39c12}
+.status-approved{background:#e5f5eb;color:#5cb881}
+.status-rejected{background:#ffebee;color:#c62828}
 
-        /* خلفية التطبيق */
-        body {
-            background-color: #f0f2f5;
-            display: flex;
-            justify-content: center;
-            align-items: flex-start;
-            min-height: 100vh;
-            padding: 0;
-        }
+/* ★★★ الإيصال — التصميم الأصلي الذي أرسلته، بالحرف الواحد ★★★ */
+.full-receipt-page{background:#f0f2f5;min-height:100vh;width:100%;display:flex;justify-content:center;align-items:flex-start;padding:0}
+.full-receipt-screen{width:100%;max-width:1200px;background:#fff;display:flex;flex-direction:column}
+.full-receipt-header{background:#c8102e;height:90px;padding:0 30px;display:flex;justify-content:space-between;align-items:center;position:relative}
+.full-receipt-header::after{content:'';position:absolute;bottom:0;left:0;width:0;height:0;border-bottom:20px solid #1a5e3a;border-right:20px solid transparent}
+.full-receipt-header-right{display:flex;flex-direction:column;align-items:flex-start;justify-content:center;color:#fff}
+.full-logo-box{display:flex;align-items:center;gap:6px;font-size:22px;font-weight:800;line-height:1}
+.full-logo-icon{position:relative;width:24px;height:24px;display:flex;justify-content:center;align-items:center}
+.full-logo-icon svg{width:100%;height:100%;fill:#fff}
+.full-logo-icon .yellow-dot{position:absolute;bottom:0;left:1px;width:7px;height:7px;background:#f1c40f;border-radius:50%}
+.full-receipt-header-right p{font-size:10px;margin-top:2px;opacity:0.9;line-height:1}
+.full-receipt-header-left{display:flex;flex-direction:column;align-items:flex-end;justify-content:center;color:#fff}
+.full-receipt-header-left h1{font-size:20px;font-weight:800;line-height:1}
+.full-receipt-header-left p{font-size:10px;letter-spacing:1px;opacity:0.9;margin-top:2px;line-height:1}
+.full-receipt-body{padding:10px 25px 15px 25px;position:relative;z-index:1}
+.full-amount-container{background:#fcfaf7;border:1px solid #e8e8e8;border-radius:25px;padding:4px 15px;display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
+.full-amount-text h2{font-size:12px;color:#222;font-weight:700;line-height:1.2}
+.full-amount-text p{font-size:7px;color:#999;letter-spacing:0.5px;line-height:1}
+.full-amount-number{font-size:22px;font-weight:800;color:#c8102e;display:flex;align-items:center;gap:4px}
+.full-amount-number span{font-size:12px;font-weight:700;color:#222}
+.full-section-header{display:flex;align-items:center;gap:8px;margin-bottom:4px}
+.full-section-header h3{font-size:11px;color:#c8102e;font-weight:700;white-space:nowrap}
+.full-section-header .line{flex:1;height:1px;background:#e0e0e0}
+.full-data-grid{display:grid;grid-template-columns:1fr 1fr;column-gap:25px;position:relative;z-index:2}
+.full-data-column{display:flex;flex-direction:column}
+.full-data-row{display:flex;justify-content:space-between;align-items:center;padding:3px 0;border-bottom:1px dashed #d0d0d0}
+.full-data-row:last-child{border-bottom:none}
+.full-label-group h4{font-size:10px;color:#333;font-weight:700;line-height:1.1}
+.full-label-group p{font-size:7px;color:#888;letter-spacing:0.2px;line-height:1}
+.full-value-group{font-size:12px;font-weight:700;color:#222;direction:ltr;text-align:left;white-space:nowrap}
+.full-value-red{color:#c8102e}
+.full-bg-arrow{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:200px;opacity:0.03;z-index:0;pointer-events:none}
+.full-footer{text-align:center;padding:5px 0 10px 0;border-top:1px solid #c8102e;margin-top:5px;position:relative;z-index:2}
+.full-footer h2{color:#c8102e;font-size:12px;font-weight:800;margin-bottom:0}
+.full-footer p{color:#888;font-size:8px}
+.receipt-actions{display:flex;gap:10px;padding:15px 25px 20px;width:100%;max-width:1200px;background:#fff}
+.btn-thermal,.btn-save{flex:1;padding:12px;border-radius:10px;font-weight:700;font-size:14px;font-family:'Cairo',sans-serif;cursor:pointer;border:none;display:flex;justify-content:center;align-items:center;gap:8px}
+.btn-thermal{background:#a61a1d;color:#fff}
+.btn-save{background:#1a1a1a;color:#fff}
+@media (max-width:768px){
+.full-receipt-header{padding:0 15px;height:75px}
+.full-logo-box{font-size:18px}
+.full-receipt-header-left h1{font-size:16px}
+.full-amount-container{padding:4px 10px}
+.full-amount-number{font-size:18px}
+.full-data-grid{grid-template-columns:1fr;column-gap:0}
+.full-receipt-body{padding:8px 15px}
+.receipt-actions{padding:12px 15px 16px}
+}
 
-        /* شاشة التطبيق (بدون بطاقة، بدون مساحات فارغة) */
-        .app-screen {
-            width: 100%;
-            max-width: 1200px;
-            background-color: #ffffff;
-            display: flex;
-            flex-direction: column;
-        }
-
-        /* ================= الهيدر (الشريط الأحمر) - تم تعديل طوله هنا ================= */
-        .header {
-            background-color: #c8102e;
-            height: 90px; /* زيادة الطول (كان 50px) */
-            padding: 0 30px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            position: relative;
-        }
-
-        .header::after {
-            content: '';
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            width: 0;
-            height: 0;
-            border-bottom: 20px solid #1a5e3a; /* تكبير المثلث قليلاً ليناسب الطول */
-            border-right: 20px solid transparent;
-        }
-
-        /* الحاوية اليمنى */
-        .header-right {
-            display: flex;
-            flex-direction: column;
-            align-items: flex-start;
-            justify-content: center;
-            color: white;
-        }
-
-        .logo-box {
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            font-size: 22px; /* تكبير الخط قليلاً ليناسب الطول */
-            font-weight: 800;
-            line-height: 1;
-        }
-
-        .logo-icon {
-            position: relative;
-            width: 24px;
-            height: 24px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-
-        .logo-icon svg {
-            width: 100%;
-            height: 100%;
-            fill: white;
-        }
-
-        .logo-icon .yellow-dot {
-            position: absolute;
-            bottom: 0px;
-            left: 1px;
-            width: 7px;
-            height: 7px;
-            background-color: #f1c40f;
-            border-radius: 50%;
-        }
-
-        .header-right p {
-            font-size: 10px;
-            margin-top: 2px;
-            opacity: 0.9;
-            line-height: 1;
-        }
-
-        /* الحاوية اليسرى */
-        .header-left {
-            display: flex;
-            flex-direction: column;
-            align-items: flex-end;
-            justify-content: center;
-            color: white;
-        }
-
-        .header-left h1 {
-            font-size: 20px; /* تكبير الخط قليلاً */
-            font-weight: 800;
-            line-height: 1;
-        }
-
-        .header-left p {
-            font-size: 10px;
-            letter-spacing: 1px;
-            opacity: 0.9;
-            margin-top: 2px;
-            line-height: 1;
-        }
-
-        /* ================= محتوى الإيصال (كما هو تماماً) ================= */
-        .receipt-body {
-            padding: 10px 25px 15px 25px;
-            position: relative;
-            z-index: 1;
-        }
-
-        /* صندوق المبلغ */
-        .amount-container {
-            background-color: #fcfaf7;
-            border: 1px solid #e8e8e8;
-            border-radius: 25px;
-            padding: 4px 15px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 8px;
-        }
-
-        .amount-text h2 {
-            font-size: 12px;
-            color: #222;
-            font-weight: 700;
-            line-height: 1.2;
-        }
-
-        .amount-text p {
-            font-size: 7px;
-            color: #999;
-            letter-spacing: 0.5px;
-            line-height: 1;
-        }
-
-        .amount-number {
-            font-size: 22px;
-            font-weight: 800;
-            color: #c8102e;
-            display: flex;
-            align-items: center;
-            gap: 4px;
-        }
-
-        .amount-number span {
-            font-size: 12px;
-            font-weight: 700;
-            color: #222;
-        }
-
-        /* عنوان البيانات */
-        .section-header {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            margin-bottom: 4px;
-        }
-
-        .section-header h3 {
-            font-size: 11px;
-            color: #c8102e;
-            font-weight: 700;
-            white-space: nowrap;
-        }
-
-        .section-header .line {
-            flex: 1;
-            height: 1px;
-            background-color: #e0e0e0;
-        }
-
-        /* شبكة البيانات */
-        .data-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            column-gap: 25px;
-            position: relative;
-            z-index: 2;
-        }
-
-        .data-column {
-            display: flex;
-            flex-direction: column;
-        }
-
-        /* الصف الأفقي */
-        .data-row {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 3px 0;
-            border-bottom: 1px dashed #d0d0d0;
-        }
-
-        .data-row:last-child {
-            border-bottom: none;
-        }
-
-        .label-group h4 {
-            font-size: 10px;
-            color: #333;
-            font-weight: 700;
-            line-height: 1.1;
-        }
-
-        .label-group p {
-            font-size: 7px;
-            color: #888;
-            letter-spacing: 0.2px;
-            line-height: 1;
-        }
-
-        .value-group {
-            font-size: 12px;
-            font-weight: 700;
-            color: #222;
-            direction: ltr;
-            text-align: left;
-            white-space: nowrap;
-        }
-
-        .value-red {
-            color: #c8102e;
-        }
-
-        /* السهم الباهت في المنتصف تماماً */
-        .bg-arrow {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            width: 200px;
-            opacity: 0.03;
-            z-index: 0;
-            pointer-events: none;
-        }
-
-        /* ================= التذييل ================= */
-        .footer {
-            text-align: center;
-            padding: 5px 0 10px 0;
-            border-top: 1px solid #c8102e;
-            margin-top: 5px;
-            position: relative;
-            z-index: 2;
-        }
-
-        .footer h2 {
-            color: #c8102e;
-            font-size: 12px;
-            font-weight: 800;
-            margin-bottom: 0px;
-        }
-
-        .footer p {
-            color: #888;
-            font-size: 8px;
-        }
-
-        /* التجاوب للموبايل */
-        @media (max-width: 768px) {
-            .header { padding: 0 15px; height: 75px; }
-            .logo-box { font-size: 18px; }
-            .header-left h1 { font-size: 16px; }
-            .amount-container { padding: 4px 10px; }
-            .amount-number { font-size: 18px; }
-            .data-grid { grid-template-columns: 1fr; column-gap: 0; }
-            .receipt-body { padding: 8px 15px; }
-        }
-    </style>
+.profile-page-container{background:#f4f6f9;width:100%;min-height:100vh;position:relative;overflow:hidden}
+.profile-header-section{background:linear-gradient(135deg,#b71c1c 0%,#d32f2f 100%);color:white;padding:20px 20px 40px 20px;position:relative;border-bottom-left-radius:20px;border-bottom-right-radius:20px;overflow:hidden}
+.profile-header-section::before{content:'';position:absolute;left:-50px;top:-50px;width:200px;height:200px;background:rgba(255,255,255,0.05);border-radius:50%;z-index:1}
+.profile-header-section::after{content:'';position:absolute;left:20px;bottom:-20px;width:80px;height:80px;background:rgba(255,255,255,0.05);border-radius:50%;z-index:1}
+.profile-top-bar{display:flex;justify-content:space-between;align-items:flex-start;position:relative;z-index:2;margin-bottom:25px}
+.profile-brand-area{text-align:left;direction:ltr}
+.profile-brand-logo{font-size:24px;font-weight:800;display:flex;align-items:center;gap:5px}
+.profile-brand-logo i{font-size:20px}
+.profile-brand-text{font-size:9px;letter-spacing:1px;text-transform:uppercase;opacity:0.8;margin-top:2px}
+.profile-my-account-btn{font-size:14px;font-weight:500;opacity:0.9;display:flex;align-items:center;gap:5px}
+.profile-info{display:flex;justify-content:space-between;align-items:center;position:relative;z-index:2}
+.profile-user-details{display:flex;flex-direction:column;align-items:flex-end;gap:5px}
+.profile-user-name-row{display:flex;align-items:center;gap:5px;font-size:22px;font-weight:700}
+.profile-verified-icon{color:#ffca28;font-size:18px}
+.profile-handle-name{font-size:13px;color:rgba(255,255,255,0.8);font-family:monospace;direction:ltr}
+.profile-user-handle{background:#e5ca62;color:#4a3b00;padding:2px 12px;border-radius:20px;font-size:12px;font-weight:700;display:inline-block;margin-top:5px;margin-right:25px}
+.profile-avatar-circle{width:75px;height:75px;background:#d4af37;border-radius:50%;display:flex;justify-content:center;align-items:center;font-size:32px;font-weight:700;color:#333;border:3px solid rgba(255,255,255,0.3)}
+.profile-content-area{padding:20px;margin-top:-25px;position:relative;z-index:3}
+.profile-info-card{background:white;border-radius:15px;padding:20px;box-shadow:0 4px 15px rgba(0,0,0,0.05);margin-bottom:25px}
+.profile-info-row{display:flex;justify-content:space-between;align-items:center;padding:12px 0}
+.profile-info-row:first-child{border-bottom:1px dashed #e0e0e0}
+.profile-info-label{text-align:right;color:#333;font-weight:700;font-size:15px;display:flex;flex-direction:column}
+.profile-info-label span:last-child{font-size:10px;color:#888;font-weight:500;letter-spacing:0.5px}
+.profile-info-value{display:flex;align-items:center;gap:10px;font-size:18px;font-weight:700;color:#b71c1c;direction:ltr}
+.profile-info-value .profile-icon-box{background:#fce4ec;color:#b71c1c;width:30px;height:30px;display:flex;justify-content:center;align-items:center;border-radius:8px;font-size:16px}
+.profile-info-value.phone-value{color:#333}
+.profile-section-title{text-align:right;color:#b71c1c;font-size:14px;font-weight:700;margin-bottom:15px}
+.profile-services-list{background:white;border-radius:15px;overflow:hidden;box-shadow:0 4px 15px rgba(0,0,0,0.05);margin-bottom:25px}
+.profile-service-item{display:flex;justify-content:space-between;align-items:center;padding:18px 20px;border-bottom:1px solid #f0f0f0;text-decoration:none;color:inherit;cursor:pointer}
+.profile-service-item:last-child{border-bottom:none}
+.profile-service-text{font-weight:500;font-size:15px;color:#333}
+.profile-service-icon-wrapper{display:flex;align-items:center;gap:15px}
+.profile-service-icon{background:#fce4ec;color:#b71c1c;width:40px;height:40px;display:flex;justify-content:center;align-items:center;border-radius:10px;font-size:20px}
+.profile-arrow-icon{color:#ccc;font-size:18px;transform:scaleX(-1)}
+.profile-section-title.security-title{margin-top:10px}
+</style>
 </head>
-<body>
+<body class="flex justify-center min-h-screen">
+<div id="app" class="app-container"></div><script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+import { getFirestore, doc, getDoc, collection, addDoc, query, where, getDocs, updateDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
-    <div class="app-screen">
-        
-        <!-- الشريط العلوي (تم تعديل طوله فقط) -->
-        <div class="header">
-            <!-- الجهة اليمنى: شعار بلدنا -->
-            <div class="header-right">
-                <div class="logo-box">
-                    <div class="logo-icon">
-                        <svg viewBox="0 0 24 24"><path d="M12 3L3 12H8V21H16V12H21L12 3Z" /></svg>
-                        <div class="yellow-dot"></div>
-                    </div>
-                    بلدنا
-                </div>
-                <p>منصة التداول والاستثمار</p>
-            </div>
+const firebaseConfig = {
+apiKey: "AIzaSyCdV3qgXHHxz4e8mf1c-2TrZujXqY-LuQc",
+authDomain: "black-9deb2.firebaseapp.com",
+projectId: "black-9deb2",
+storageBucket: "black-9deb2.firebasestorage.app",
+messagingSenderId: "725901940218",
+appId: "1:725901940218:web:bc10585da68be02dc14043"
+};
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
 
-            <!-- الجهة اليسرى: إيصال سحب -->
-            <div class="header-left">
-                <h1>إيصال سحب</h1>
-                <p>WITHDRAWAL RECEIPT</p>
-            </div>
-        </div>
+let currentUser = null;
+let currentPage = 'login';
+let currentCalcRound = 'standard';
+let currentFilter = 'all';
+let selectedTxId = null;
+let cachedTransactions = null;
+let cachedInvestments = null;
+let cacheTime = 0;
+const CACHE_DURATION = 5000;
+const appDiv = document.getElementById('app');
 
-        <!-- المحتوى (كما هو تماماً) -->
-        <div class="receipt-body">
-            
-            <!-- صندوق المبلغ -->
-            <div class="amount-container">
-                <div class="amount-text">
-                    <h2>المبلغ المسحوب</h2>
-                    <p>AMOUNT WITHDRAWN</p>
-                </div>
-                <div class="amount-number">
-                    5,500.00 <span>SDG</span>
-                </div>
-            </div>
+function formatDate(dateStr){if(!dateStr)return '—';const d=dateStr.toDate?dateStr.toDate():new Date(dateStr);const m=['يناير','فبراير','مارس','أبريل','مايو','يونيو','يوليو','أغسطس','سبتمبر','أكتوبر','نوفمبر','ديسمبر'];return `${d.getDate()} ${m[d.getMonth()]} ${d.getFullYear()} - ${String(d.getHours()).padStart(2,'0')}:${String(d.getMinutes()).padStart(2,'0')}`;}
+function formatShortDate(dateStr){if(!dateStr)return '—';const d=dateStr.toDate?dateStr.toDate():new Date(dateStr);return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;}
+function formatShortTime(dateStr){if(!dateStr)return '—';const d=dateStr.toDate?dateStr.toDate():new Date(dateStr);return `${String(d.getHours()).padStart(2,'0')}:${String(d.getMinutes()).padStart(2,'0')}:${String(d.getSeconds()).padStart(2,'0')}`;}
 
-            <!-- عنوان البيانات -->
-            <div class="section-header">
-                <h3>بيانات العملية</h3>
-                <div class="line"></div>
-            </div>
+function navigate(page, round='standard'){currentPage=page;currentCalcRound=round;render();}
+window.navigate = navigate;
 
-            <!-- السهم الباهت -->
-            <svg class="bg-arrow" viewBox="0 0 100 100" fill="#c8102e">
-                <path d="M50 0 L100 50 L70 50 L70 100 L30 100 L30 50 L0 50 Z" />
-            </svg>
+async function login(identifier, password){
+const usersRef=collection(db,"users");
+const q1=query(usersRef,where("account_number","==",identifier));
+const q2=query(usersRef,where("username","==",identifier));
+let snapshot=await getDocs(q1);
+if(snapshot.empty)snapshot=await getDocs(q2);
+if(snapshot.empty)throw new Error("رقم الحساب أو اسم المستخدم غير موجود");
+const userDoc=snapshot.docs[0];const userData=userDoc.data();
+if(userData.password!==password)throw new Error("كلمة المرور خاطئة");
+if(userData.status==='banned')throw new Error("حسابك محظور");
+currentUser={id:userDoc.id,...userData};
+localStorage.setItem('bld_user_id',userDoc.id);
+cachedTransactions=null;cachedInvestments=null;
+navigate('dashboard');
+}
 
-            <!-- شبكة البيانات -->
-            <div class="data-grid">
-                
-                <!-- العمود الأيمن -->
-                <div class="data-column">
-                    <div class="data-row">
-                        <div class="label-group">
-                            <h4>رقم حساب المستخدم</h4>
-                            <p>USER ACCOUNT NO.</p>
-                        </div>
-                        <div class="value-group">8518026</div>
-                    </div>
+async function register(username,password,extra={}){
+return new Promise(async(resolve,reject)=>{
+const timer=setTimeout(()=>reject(new Error('انتهت المهلة')),10000);
+try{
+const usersRef=collection(db,"users");
+const qUser=query(usersRef,where("username","==",username));
+const userSnap=await getDocs(qUser);
+if(!userSnap.empty){clearTimeout(timer);reject(new Error("اسم المستخدم مسجل بالفعل"));return;}
+const randomPart=Math.floor(100+Math.random()*900);
+const timePart=Math.floor(Date.now()/1000).toString().slice(-4);
+const accountNumber=timePart+randomPart;
+const newUser={account_number:accountNumber,username,password,full_name:extra.full_name_ar||username,full_name_en:extra.full_name_en||'',phone:extra.phone||'0100000000',balance:0,status:'active',role:'user',created_at:new Date()};
+await addDoc(usersRef,newUser);
+clearTimeout(timer);
+sessionStorage.setItem('new_account_number',accountNumber);
+resolve();
+}catch(error){clearTimeout(timer);reject(error);}
+});
+}
 
-                    <div class="data-row">
-                        <div class="label-group">
-                            <h4>طريقة التحويل</h4>
-                            <p>TRANSFER METHOD</p>
-                        </div>
-                        <div class="value-group">ماي كاشي</div>
-                    </div>
+async function submitRecharge(amount,method,senderName,senderAccount,receiptBase64){
+const txData={user_id:currentUser.id,type:'deposit',amount:parseFloat(amount),status:'pending',method,sender_name:senderName,sender_account:senderAccount,receipt_url:receiptBase64||null,created_at:new Date()};
+await addDoc(collection(db,"transactions"),txData);
+cachedTransactions=null;
+navigate('transactions');
+}
 
-                    <div class="data-row">
-                        <div class="label-group">
-                            <h4>البنك المستهدف</h4>
-                            <p>DESTINATION BANK</p>
-                        </div>
-                        <div class="value-group">ماي كاشي</div>
-                    </div>
+async function submitWithdrawal(amount,method,beneficiaryName,beneficiaryAccount){
+const txData={user_id:currentUser.id,type:'withdrawal',amount:parseFloat(amount),status:'pending',method,beneficiary_name:beneficiaryName,beneficiary_account:beneficiaryAccount,created_at:new Date()};
+await addDoc(collection(db,"transactions"),txData);
+cachedTransactions=null;
+navigate('withdraw_details');
+}
 
-                    <div class="data-row">
-                        <div class="label-group">
-                            <h4>اسم المستفيد</h4>
-                            <p>BENEFICIARY NAME</p>
-                        </div>
-                        <div class="value-group">عبود |***</div>
-                    </div>
+async function submitInvestment(round,amount){
+const principal=parseFloat(amount);
+let bonus=0;
+if(round==='silver'){bonus=3000+((principal-20000)/80000)*7000;}else{bonus=1000+((principal-3000)/17000)*4000;}
+if(currentUser.balance<principal)throw new Error("رصيدك غير كافٍ");
+const userRef=doc(db,"users",currentUser.id);
+const newBalance=currentUser.balance-principal;
+await updateDoc(userRef,{balance:newBalance});
+currentUser.balance=newBalance;
+const startDate=new Date();
+const endDate=new Date(startDate.getTime()+24*60*60*1000);
+const invData={user_id:currentUser.id,round_type:round,principal,bonus,total_return:principal+bonus,start_date:startDate,end_date:endDate,status:'active'};
+await addDoc(collection(db,"investments"),invData);
+cachedInvestments=null;
+navigate('invest');
+}
 
-                    <div class="data-row">
-                        <div class="label-group">
-                            <h4>رقم حساب المستفيد</h4>
-                            <p>BENEFICIARY ACCOUNT NO.</p>
-                        </div>
-                        <div class="value-group">400700704</div>
-                    </div>
-                </div>
+async function fetchInvestments(force=false){
+if(!currentUser)return [];
+if(!force&&cachedInvestments&&(Date.now()-cacheTime<CACHE_DURATION))return cachedInvestments;
+const invRef=collection(db,"investments");
+const q=query(invRef,where("user_id","==",currentUser.id));
+const snapshot=await getDocs(q);
+let invs=snapshot.docs.map(doc=>({id:doc.id,...doc.data()}));
+const now=new Date();let addedBalance=false;let newBalance=currentUser.balance;
+for(let inv of invs){
+const endDate=inv.end_date?.toDate?.()||new Date(inv.end_date);
+if(inv.status==='active'&&now>=endDate){
+newBalance+=inv.principal+inv.bonus;inv.status='completed';
+await updateDoc(doc(db,"investments",inv.id),{status:'completed'});
+addedBalance=true;
+}
+}
+if(addedBalance){
+const userRef=doc(db,"users",currentUser.id);
+await updateDoc(userRef,{balance:newBalance});
+currentUser.balance=newBalance;
+}
+invs.sort((a,b)=>(b.start_date?.toDate?.()||new Date(b.start_date))-(a.start_date?.toDate?.()||new Date(a.start_date)));
+cachedInvestments=invs;cacheTime=Date.now();
+return invs;
+}
 
-                <!-- العمود الأيسر -->
-                <div class="data-column">
-                    <div class="data-row">
-                        <div class="label-group">
-                            <h4>رقم عملية الحركة في البنك</h4>
-                            <p>BANK TRANSACTION REF.</p>
-                        </div>
-                        <div class="value-group value-red">FT86647686</div>
-                    </div>
+async function fetchTransactions(force=false){
+if(!currentUser)return [];
+if(!force&&cachedTransactions&&(Date.now()-cacheTime<CACHE_DURATION))return cachedTransactions;
+const txRef=collection(db,"transactions");
+const q=query(txRef,where("user_id","==",currentUser.id));
+const snapshot=await getDocs(q);
+let txs=snapshot.docs.map(doc=>({id:doc.id,...doc.data()}));
+txs.sort((a,b)=>(b.created_at?.toDate?.()||new Date(b.created_at))-(a.created_at?.toDate?.()||new Date(a.created_at)));
+cachedTransactions=txs;cacheTime=Date.now();
+return txs;
+}
 
-                    <div class="data-row">
-                        <div class="label-group">
-                            <h4>رقم العملية في المنصة</h4>
-                            <p>PLATFORM TRANSACTION ID</p>
-                        </div>
-                        <div class="value-group value-red">WTH-035552EF4E66</div>
-                    </div>
+async function fetchReceipts(){
+if(!currentUser)return [];
+const txRef=collection(db,"transactions");
+const q=query(txRef,where("user_id","==",currentUser.id),where("type","==","withdrawal"));
+const snapshot=await getDocs(q);
+let txs=snapshot.docs.map(doc=>({id:doc.id,...doc.data()}));
+txs.sort((a,b)=>(b.created_at?.toDate?.()||new Date(b.created_at))-(a.created_at?.toDate?.()||new Date(a.created_at)));
+return txs;
+}
 
-                    <div class="data-row">
-                        <div class="label-group">
-                            <h4>التاريخ</h4>
-                            <p>DATE</p>
-                        </div>
-                        <div class="value-group">2026-11-03</div>
-                    </div>
+function render(){
+if(currentUser){
+if(currentPage==='login'||currentPage==='register'||currentPage==='success')currentPage='dashboard';
+}else{
+if(currentPage!=='login'&&currentPage!=='register'&&currentPage!=='success')currentPage='login';
+}
+switch(currentPage){
+case 'login': renderLogin(); break;
+case 'register': renderRegister(); break;
+case 'success': renderSuccess(); break;
+case 'dashboard': renderDashboard(); break;
+case 'transactions': renderTransactions(); break;
+case 'recharge': renderRecharge(); break;
+case 'invest': renderInvest(); break;
+case 'calculator': renderCalculator(currentCalcRound); break;
+case 'withdraw': renderWithdraw(); break;
+case 'withdraw_details': renderWithdrawDetails(); break;
+case 'receipts': renderReceipts(); break;
+case 'full_receipt': renderFullReceipt(); break;
+case 'profile': renderProfile(); break;
+}
+}
 
-                    <div class="data-row">
-                        <div class="label-group">
-                            <h4>الزمن</h4>
-                            <p>TIME</p>
-                        </div>
-                        <div class="value-group">08:17:27</div>
-                    </div>
-                </div>
+function renderLogin(){
+appDiv.innerHTML=`
+<div class="flex flex-col h-full bg-white w-full">
+<div class="header-bg text-white pt-10 pb-8 px-6 relative rounded-b-[20px] text-center w-full">
+<div class="flex flex-col items-center mt-2">
+<img src="https://i.ibb.co/8gSqTySf/256398-removebg-preview.png" class="h-16 object-contain mb-3">
+<p class="text-sm font-medium mb-4">بلدنا للمدفوعات الرقمية</p>
+<h1 class="text-2xl font-bold mb-1">مرحباً بعودتك</h1>
+<p class="text-sm font-medium opacity-90 mb-4">سجّل الدخول لإدارة محفظتك</p>
+</div>
+<div class="absolute bottom-0 left-0 w-0 h-0 border-l-[50px] border-l-transparent border-b-[40px] border-b-[#2e7d32]"></div>
+</div>
+<div class="px-6 py-8 flex-1 flex flex-col w-full">
+<div id="login-error" class="hidden bg-red-50 border border-red-300 text-red-700 text-sm font-medium rounded-xl p-3 mb-4 animate-shake"></div>
+<form id="loginForm" class="flex flex-col w-full">
+<div class="input-group"><input type="text" name="identifier" id="identifier" placeholder=" " required><label for="identifier">رقم الحساب أو اسم المستخدم</label></div>
+<div class="input-group"><input type="password" name="password" id="password" placeholder=" " required inputmode="numeric" maxlength="4"><label for="password">كلمة المرور</label></div>
+<div class="flex items-center justify-between mb-6 mt-2"><label class="flex items-center gap-2 cursor-pointer"><input type="checkbox" id="rememberMe" class="w-4 h-4 text-[#b3262b] rounded border-gray-300 focus:ring-[#b3262b]"><span class="text-sm text-gray-600 font-medium">تذكر بيانات الدخول</span></label></div>
+<button type="submit" id="loginBtn" class="btn-color text-white font-bold text-lg py-3.5 rounded-xl transition hover:opacity-90 w-full">تسجيل الدخول</button>
+</form>
+<div class="text-center mt-6 text-sm text-gray-600">ليس لديك حساب؟ <a href="#" id="goToRegister" class="text-[#b3262b] font-bold">أنشئ حساباً</a></div>
+<div class="flex items-center justify-center gap-2 text-xs text-gray-500 bg-gray-100 px-4 py-1.5 rounded-full mt-4 w-fit mx-auto"><i class="fa-solid fa-shield-halved text-[#4CAF50]"></i> اتصال مشفّر وبيانات محمية</div>
+</div>
+</div>`;
+const identifierInput=document.getElementById('identifier');
+const rememberCheckbox=document.getElementById('rememberMe');
+const savedIdentifier=localStorage.getItem('bld_saved_account');
+if(savedIdentifier){identifierInput.value=savedIdentifier;rememberCheckbox.checked=true;}
+document.getElementById('goToRegister').addEventListener('click',(e)=>{e.preventDefault();navigate('register');});
+document.getElementById('loginForm').addEventListener('submit',async(e)=>{
+e.preventDefault();
+const identifier=identifierInput.value.trim();
+const password=document.getElementById('password').value.trim();
+const errorDiv=document.getElementById('login-error');
+const btn=document.getElementById('loginBtn');
+btn.disabled=true;btn.innerHTML='<i class="fa-solid fa-spinner fa-spin"></i> جاري التحقق...';
+errorDiv.classList.add('hidden');
+try{
+if(rememberCheckbox.checked)localStorage.setItem('bld_saved_account',identifier);
+else localStorage.removeItem('bld_saved_account');
+await login(identifier,password);
+}catch(err){
+errorDiv.textContent='⚠️ '+err.message;errorDiv.classList.remove('hidden');
+btn.disabled=false;btn.innerHTML='تسجيل الدخول';
+}
+});
+}
 
-            </div>
+function renderRegister(){
+appDiv.innerHTML=`
+<div class="flex flex-col h-full bg-white w-full">
+<div class="header-bg text-white pt-6 pb-4 px-6 relative rounded-b-[20px] w-full">
+<a href="#" id="backToLogin" class="absolute top-5 right-6 w-9 h-9 bg-white/20 rounded-full flex items-center justify-center"><i class="fa-solid fa-chevron-left"></i></a>
+<div class="flex flex-col items-center mt-1">
+<img src="https://i.ibb.co/8gSqTySf/256398-removebg-preview.png" class="h-12 object-contain mb-1">
+<p class="text-xs font-medium mb-2">بلدنا للمدفوعات الرقمية</p>
+<h1 class="text-lg font-bold mb-1">إنشاء حساب جديد</h1>
+<p class="text-xs font-medium">افتح محفظتك الآن</p>
+</div>
+</div>
+<div class="px-5 py-4 flex-1 flex flex-col justify-center w-full" style="transform:scale(0.95);transform-origin:top center;">
+<div id="register-error" class="hidden bg-red-50 border border-red-300 text-red-700 text-xs font-medium rounded-xl p-2 mb-3 animate-shake"></div>
+<form id="registerForm" class="flex flex-col w-full" style="gap:8px;">
+<div class="input-group" style="margin-bottom:6px;"><input type="text" id="full_name_ar" placeholder=" " required style="padding:12px;"><label for="full_name_ar" style="font-size:13px;">الاسم الرباعي بالعربية</label></div>
+<div class="input-group" style="margin-bottom:6px;"><input type="text" id="full_name_en" placeholder=" " required style="padding:12px;direction:ltr;text-align:right;"><label for="full_name_en" style="font-size:13px;">الاسم الرباعي بالإنجليزية</label></div>
+<div class="input-group" style="margin-bottom:6px;"><input type="tel" id="phone" placeholder=" " required inputmode="numeric" style="padding:12px;"><label for="phone" style="font-size:13px;">رقم الموبايل</label></div>
+<div class="input-group" style="margin-bottom:6px;"><input type="text" id="username" placeholder=" " required style="padding:12px;"><label for="username" style="font-size:13px;">اسم المستخدم</label></div>
+<div class="input-group" style="margin-bottom:6px;"><input type="password" id="password" placeholder=" " required inputmode="numeric" maxlength="4" style="padding:12px;"><label for="password" style="font-size:13px;">كلمة المرور (4 أرقام)</label></div>
+<div class="input-group" style="margin-bottom:6px;"><input type="password" id="confirm_password" placeholder=" " required inputmode="numeric" maxlength="4" style="padding:12px;"><label for="confirm_password" style="font-size:13px;">تأكيد كلمة المرور</label></div>
+<button type="submit" id="registerBtn" class="btn-color text-white font-bold text-base py-3 rounded-xl mt-2 hover:opacity-90 transition w-full">إنشاء حساب</button>
+</form>
+</div>
+</div>`;
+document.getElementById('backToLogin').addEventListener('click',(e)=>{e.preventDefault();navigate('login');});
+document.getElementById('registerForm').addEventListener('submit',async(e)=>{
+e.preventDefault();
+const fullNameAr=document.getElementById('full_name_ar').value.trim();
+const fullNameEn=document.getElementById('full_name_en').value.trim();
+const phone=document.getElementById('phone').value.trim();
+const username=document.getElementById('username').value.trim();
+const password=document.getElementById('password').value.trim();
+const confirm=document.getElementById('confirm_password').value.trim();
+const errorDiv=document.getElementById('register-error');
+const btn=document.getElementById('registerBtn');
+if(!/^\d{4}$/.test(password)){errorDiv.textContent='⚠️ كلمة المرور يجب أن تكون 4 أرقام';errorDiv.classList.remove('hidden');return;}
+if(password!==confirm){errorDiv.textContent='⚠️ كلمتا المرور غير متطابقتين';errorDiv.classList.remove('hidden');return;}
+if(!fullNameAr||!fullNameEn||!phone){errorDiv.textContent='⚠️ يرجى تعبئة جميع الحقول';errorDiv.classList.remove('hidden');return;}
+btn.disabled=true;btn.innerHTML='<i class="fa-solid fa-spinner fa-spin"></i> جاري الإنشاء...';
+errorDiv.classList.add('hidden');
+try{
+await register(username,password,{full_name_ar:fullNameAr,full_name_en:fullNameEn,phone});
+currentPage='success';render();
+}catch(err){
+errorDiv.textContent='⚠️ '+err.message;errorDiv.classList.remove('hidden');
+btn.disabled=false;btn.innerHTML='إنشاء حساب';
+}
+});
+}
 
-            <!-- التذييل -->
-            <div class="footer">
-                <h2>شكراً لثقتك في منصة بلدنا</h2>
-                <p>هذا الإيصال صادر إلكترونياً من منصة بلدنا</p>
-            </div>
+function renderSuccess(){
+const accountNumber=sessionStorage.getItem('new_account_number');
+if(!accountNumber){navigate('login');return;}
+appDiv.innerHTML=`
+<div class="flex flex-col h-full bg-white w-full">
+<div class="header-bg text-white pt-12 pb-10 px-6 relative rounded-b-[20px] text-center w-full">
+<div class="flex flex-col items-center mt-2">
+<img src="https://i.ibb.co/8gSqTySf/256398-removebg-preview.png" class="h-20 object-contain mb-4">
+<p class="text-sm font-medium mb-6">بلدنا للمدفوعات الرقمية</p>
+<div class="w-24 h-24 bg-white/20 rounded-full flex items-center justify-center mb-6"><i class="fa-solid fa-check text-5xl text-white"></i></div>
+<h1 class="text-2xl font-extrabold mb-3 text-center">مبروك! 🎉</h1>
+<p class="text-base font-medium text-center">تم إنشاء حسابك بنجاح</p>
+</div>
+<div class="absolute bottom-0 left-0 w-0 h-0 border-l-[50px] border-l-transparent border-b-[40px] border-b-[#2e7d32]"></div>
+</div>
+<div class="px-6 py-8 flex-1 flex flex-col justify-center w-full">
+<div class="bg-red-50 border-2 border-red-200 rounded-2xl p-6 shadow-sm w-full">
+<div class="flex items-center justify-center gap-2 mb-4"><div class="w-9 h-9 bg-[#b3262b] rounded-lg flex items-center justify-center"><i class="fa-solid fa-hashtag text-white text-sm"></i></div><div class="text-sm font-bold text-[#b3262b]">رقم الحساب الخاص بك</div></div>
+<div class="text-4xl font-extrabold text-[#b3262b] tracking-widest font-mono text-center py-3" style="direction:ltr">${accountNumber}</div>
+<button type="button" id="copyBtn" class="w-full mt-4 py-3 bg-[#b3262b] text-white rounded-xl font-bold flex justify-center items-center gap-2 shadow-lg"><i class="fa-regular fa-copy"></i> نسخ رقم الحساب</button>
+<button type="button" id="goToLoginBtn" class="w-full mt-3 py-3 bg-white border-2 border-[#b3262b] text-[#b3262b] rounded-xl font-bold flex justify-center items-center gap-2"><i class="fa-solid fa-right-to-bracket"></i> تسجيل الدخول</button>
+</div>
+</div>
+</div>`;
+document.getElementById('copyBtn').addEventListener('click',()=>navigator.clipboard.writeText(accountNumber).then(()=>alert('تم النسخ')));
+document.getElementById('goToLoginBtn').addEventListener('click',()=>{sessionStorage.removeItem('new_account_number');navigate('login');});
+}
 
-        </div>
-    </div>
+async function renderDashboard(){
+if(!currentUser)return;
+const firstLetter=currentUser.username?currentUser.username.charAt(0):'م';
+const balance=currentUser.balance?parseFloat(currentUser.balance).toLocaleString('en',{minimumFractionDigits:2}):'0.00';
+const txs=await fetchTransactions();
+const pendingCount=txs.filter(t=>t.status==='pending').length;
+appDiv.innerHTML=`
+<div class="flex flex-col h-full bg-[#F5F6F9] pb-20 w-full">
+<div class="header-bg">
+<div class="top-bar">
+<div class="user-info">
+<div class="user-text"><p>طاب يومك</p><h3>${currentUser.username} <i class="fa-solid fa-circle-check"></i></h3></div>
+<div class="avatar">${firstLetter}</div>
+</div>
+<div class="top-actions"><a href="#" id="logoutBtn" class="notification-icon"><i class="fa-solid fa-right-from-bracket"></i></a><div class="notification-icon"><i class="fa-regular fa-bell"></i></div></div>
+</div>
+</div>
+<div class="bank-card-wrapper">
+<div class="bank-card">
+<div class="card-top-row"><div class="account-type">حساب برونزي <i class="fa-regular fa-star"></i></div><div class="balance-label-left"><i class="fa-regular fa-eye eye-icon" id="toggleBalance"></i><span>الرصيد المتاح</span></div></div>
+<div class="card-middle"><div class="chip"></div><i class="fa-solid fa-wifi contactless"></i></div>
+<div class="card-bottom">
+<div class="balance-amount"><span class="currency">SDG</span><span class="number" id="balanceAmount">${balance}</span></div>
+<div class="card-footer"><div class="card-name"><i class="fa-solid fa-circle-check"></i> ${currentUser.username}</div><span>BLD-${currentUser.account_number?.slice(0,4)}-${currentUser.account_number?.slice(4)}</span></div>
+</div>
+</div>
+</div>
+<div class="main-content">
+<div class="services-box">
+<a href="#" id="goToRecharge" class="service-item"><div class="service-icon bg-green"><i class="fa-solid fa-download"></i></div><span>شحن رصيد</span></a>
+<div class="service-item" id="goToWithdraw"><div class="service-icon bg-red"><i class="fa-solid fa-upload"></i></div><span>سحب</span></div>
+<div class="service-item" onclick="alert('قيد التطوير')"><div class="service-icon bg-blue"><i class="fa-solid fa-arrow-right-arrow-left"></i></div><span>تحويل</span></div>
+<div class="service-item" onclick="alert('قيد التطوير')"><div class="service-icon bg-orange"><i class="fa-solid fa-file-invoice"></i></div><span>سداد خدمات</span></div>
+</div>
+<div class="stats-row">
+<div class="stat-card"><div class="stat-icon bg-red"><i class="fa-solid fa-arrow-up"></i></div><p>المدفوعات</p><h4>0</h4></div>
+<div class="stat-card"><div class="stat-icon bg-orange"><i class="fa-regular fa-clock"></i></div><p>معاملات معلقة</p><h4>${pendingCount}</h4></div>
+<div class="stat-card"><div class="stat-icon" style="background:#FFF3E0;color:#D4A373"><i class="fa-solid fa-gift"></i></div><p>المكافآت</p><h4>0</h4></div>
+</div>
+<div class="promo-banner">
+<div class="promo-text"><h3>اشحن محفظتك في<br>دقائق</h3><p>من بنكك أو فوري أو عبر وكيل<br>معتمد</p><button class="promo-btn" id="bannerRechargeBtn">ابدأ الآن</button></div>
+<div class="promo-graphic"><i class="fa-solid fa-coins coins"></i><div class="phone-shape"><div></div><div></div><div class="btn"></div></div></div>
+</div>
+</div>
+<div class="bottom-nav">
+<a href="#" class="nav-item active"><i class="fa-solid fa-house"></i><span>الرئيسية</span></a>
+<a href="#" id="goToTransactions" class="nav-item"><i class="fa-regular fa-file-lines"></i><span>المعاملات</span></a>
+<a href="#" id="goToInvest" class="nav-item"><i class="fa-solid fa-chart-line"></i><span>الاستثمار</span></a>
+<a href="#" id="goToReceipts" class="nav-item"><i class="fa-solid fa-receipt"></i><span>الإيصالات</span></a>
+<a href="#" id="goToProfile" class="nav-item"><i class="fa-regular fa-user"></i><span>حسابي</span></a>
+</div>
+</div>`;
+document.getElementById('logoutBtn').addEventListener('click',(e)=>{e.preventDefault();if(confirm('تسجيل الخروج؟')){localStorage.removeItem('bld_user_id');currentUser=null;cachedTransactions=null;cachedInvestments=null;navigate('login');}});
+document.getElementById('toggleBalance').addEventListener('click',function(){const b=document.getElementById('balanceAmount');if(b.innerText==='*****'){b.innerText=balance;this.classList.remove('fa-eye-slash');this.classList.add('fa-eye');}else{b.innerText='*****';this.classList.remove('fa-eye');this.classList.add('fa-eye-slash');}});
+const goRec=(e)=>{e.preventDefault();navigate('recharge');};
+document.getElementById('goToRecharge').addEventListener('click',goRec);
+document.getElementById('bannerRechargeBtn').addEventListener('click',goRec);
+document.getElementById('goToTransactions').addEventListener('click',(e)=>{e.preventDefault();navigate('transactions');});
+document.getElementById('goToInvest').addEventListener('click',(e)=>{e.preventDefault();navigate('invest');});
+document.getElementById('goToWithdraw').addEventListener('click',(e)=>{e.preventDefault();navigate('withdraw');});
+document.getElementById('goToReceipts').addEventListener('click',(e)=>{e.preventDefault();navigate('receipts');});
+document.getElementById('goToProfile').addEventListener('click',(e)=>{e.preventDefault();navigate('profile');});
+}
 
+async function renderTransactions(){
+if(!currentUser)return;
+const txs=await fetchTransactions();
+let filteredTxs=txs;
+if(currentFilter==='in')filteredTxs=txs.filter(t=>t.type==='deposit');
+else if(currentFilter==='out')filteredTxs=txs.filter(t=>t.type!=='deposit');
+let txHtml='';
+if(filteredTxs.length===0){txHtml=`<p class="text-center text-gray-500 mt-10">لا توجد معاملات لعرضها</p>`;}
+else{
+filteredTxs.forEach(tx=>{
+const isPending=tx.status==='pending';
+const isApproved=tx.status==='approved';
+const statusColor=isPending?'bg-yellow-100 text-yellow-700':(isApproved?'bg-green-100 text-green-700':'bg-red-100 text-red-700');
+const statusText=isPending?'قيد الانتظار':(isApproved?'مكتمل':'مرفوض');
+const dateStr=formatDate(tx.created_at);
+const isIncoming=tx.type==='deposit';
+const iconClass=isIncoming?'fa-arrow-down':'fa-arrow-up';
+const iconBg=isIncoming?'bg-green-100 text-green-600':'bg-red-100 text-red-600';
+const amountColor=isIncoming?'text-green-600':'text-red-600';
+const amountSign=isIncoming?'+':'-';
+const titleText=isIncoming?'شحن رصيد المحفظة':'سحب أرباح';
+txHtml+=`
+<div class="bg-white p-3 rounded-xl shadow-sm flex items-center gap-3 border border-gray-100 w-full">
+<div class="w-10 h-10 ${iconBg} rounded-lg flex justify-center items-center"><i class="fa-solid ${iconClass}"></i></div>
+<div class="flex-1"><h4 class="font-bold text-sm">${titleText}</h4><p class="text-xs text-gray-400">${dateStr}</p></div>
+<div class="text-left"><div class="${amountColor} font-bold text-sm" dir="ltr">${amountSign} ${parseFloat(tx.amount).toLocaleString()}</div><div class="text-[10px] px-2 py-0.5 rounded mt-1 ${statusColor}">${statusText}</div></div>
+</div>`;
+});
+}
+appDiv.innerHTML=`
+<div class="flex flex-col h-full bg-[#F5F6F9] pb-20 w-full">
+<div class="bg-[#B71C1C] text-white p-4 flex items-center justify-between w-full">
+<a href="#" id="backToDash" class="w-8 h-8 bg-white/20 rounded-full flex justify-center items-center"><i class="fa-solid fa-chevron-right"></i></a>
+<h2 class="font-bold">عرض كشف الحساب</h2><div class="w-8"></div>
+</div>
+<div class="filter-tabs">
+<button class="filter-tab ${currentFilter==='all'?'active':''}" onclick="window.changeFilter('all')">الكل</button>
+<button class="filter-tab ${currentFilter==='in'?'active':''}" onclick="window.changeFilter('in')">واردة</button>
+<button class="filter-tab ${currentFilter==='out'?'active':''}" onclick="window.changeFilter('out')">صادرة</button>
+</div>
+<div class="p-4 flex flex-col gap-3 w-full">${txHtml}</div>
+<div class="bottom-nav">
+<a href="#" id="navHome" class="flex flex-col items-center text-gray-400"><i class="fa-solid fa-house text-lg mb-1"></i><span class="text-[10px]">الرئيسية</span></a>
+<a href="#" class="flex flex-col items-center text-[#B71C1C]"><i class="fa-regular fa-file-lines text-lg mb-1"></i><span class="text-[10px]">المعاملات</span></a>
+</div>
+</div>`;
+document.getElementById('backToDash').addEventListener('click',(e)=>{e.preventDefault();navigate('dashboard');});
+document.getElementById('navHome').addEventListener('click',(e)=>{e.preventDefault();navigate('dashboard');});
+}
+window.changeFilter=function(filter){currentFilter=filter;renderTransactions();};
+
+function renderRecharge(){
+if(!currentUser)return;
+let step=1,selectedMethod='',receiptFile=null,amountVal='',senderNameVal='',senderAccVal='';
+const renderStep=()=>{
+let content='';
+if(step===1){
+content=`
+<div class="rc-header"><button class="rc-back-btn" id="backBtn"><i class="fa-solid fa-chevron-left"></i></button><h1>شحن المحفظة</h1><div style="width:30px"></div></div>
+<div class="progress-section"><div class="progress-bar"><div class="active"></div><div></div><div></div><div></div></div><div class="progress-text"><span>الخطوة 1 من 4</span><span>وسيلة الشحن</span></div></div>
+<div class="intro-text"><h2>كيف تريد شحن محفظتك؟</h2><p>اختر حساب وكيل معتمد أو التحويل المباشر</p></div>
+<div class="grid-container">
+<div class="method-card rc-card" data-method="ماي كاشي"><i class="fa-solid fa-check check-mark"></i><div class="rc-icon-box bg-mycashy"><i class="fa-solid fa-wallet"></i></div><span class="name">ماي كاشي</span></div>
+<div class="method-card rc-card" data-method="بنكك" onclick="alert('غير متوفر حالياً')"><i class="fa-solid fa-check check-mark"></i><div class="rc-icon-box bg-bank"><i class="fa-solid fa-building-columns"></i></div><span class="name">بنكك</span></div>
+<div class="method-card rc-card" data-method="أوكاش" onclick="alert('غير متوفر حالياً')"><i class="fa-solid fa-check check-mark"></i><div class="rc-icon-box bg-okash"><i class="fa-solid fa-dollar-sign"></i></div><span class="name">أوكاش</span></div>
+</div>
+<div class="info-box"><i class="fa-solid fa-shield-halved"></i><p>الشحن عبر الوكيل المعتمد هو الأسرع، ويُنفذ عادة خلال أقل من 10 دقائق.</p></div>
+<div class="bottom-spacer"></div>
+<button class="submit-btn" id="nextBtn1" disabled>متابعة</button>`;
+}else if(step===2){
+content=`
+<div class="rc-header"><button class="rc-back-btn" id="backBtn"><i class="fa-solid fa-chevron-left"></i></button><h1>شحن المحفظة</h1><div style="width:30px"></div></div>
+<div class="progress-section"><div class="progress-bar"><div class="active"></div><div class="active"></div><div></div><div></div></div><div class="progress-text"><span>الخطوة 2 من 4</span><span>المبلغ</span></div></div>
+<div class="bank-header"><h2>الشحن عبر ${selectedMethod}</h2></div>
+<span class="input-label">أدخل مبلغ الشحن</span>
+<div class="amount-input-container"><span class="currency-label">SDG</span><input type="text" placeholder="0" id="amount-input" value="${amountVal}"></div>
+<div class="quick-amounts">
+<button class="quick-btn" data-amount="250000">250,000</button>
+<button class="quick-btn" data-amount="100000">100,000</button>
+<button class="quick-btn" data-amount="50000">50,000</button>
+<button class="quick-btn" data-amount="10000">10,000</button>
+</div>
+<div class="fee-section"><div class="fee-title"><h4>رسوم الشحن</h4><span>TOP-UP FEE</span></div><div class="fee-value">مجاناً</div></div>
+<div class="divider-dashed"></div>
+<div class="min-limit-section"><div class="min-title"><h4>الحد الأدنى</h4><span>MINIMUM</span></div><div class="min-value">SDG 1,000</div></div>
+<div class="bottom-spacer"></div>
+<button class="submit-btn" id="nextBtn2">متابعة</button>`;
+}else if(step===3){
+content=`
+<div class="rc-header"><button class="rc-back-btn" id="backBtn"><i class="fa-solid fa-chevron-left"></i></button><h1>شحن المحفظة</h1><div style="width:30px"></div></div>
+<div class="progress-section"><div class="progress-bar"><div class="active"></div><div class="active"></div><div class="active"></div><div></div></div><div class="progress-text"><span>الخطوة 3 من 4</span><span>بيانات الإيداع</span></div></div>
+<div class="amount-box"><div class="amount-box-title"><h4>المبلغ المطلوب تحويله</h4><span>AMOUNT TO TRANSFER</span></div><div class="amount-box-value"><span>${amountVal}.00</span> <span>SDG</span></div></div>
+<div class="section-title-container"><h3>حساب الإيداع</h3><div class="section-line"></div></div>
+<p class="instruction-text">حوّل المبلغ إلى الحساب التالي ثم أرفق الإشعار في الخطوة القادمة.</p>
+<div class="bank-card-container">
+<div class="bank-card-header"><div class="bank-card-logo"><i class="fa-solid fa-wallet"></i></div><div class="bank-card-header-text"><h4>منصة بلدنا الاستثمارية الزكي</h4><p>حساب المنصة الرسمي المعتمد</p></div></div>
+<div class="card-divider"></div>
+<div class="data-row"><div class="data-label"><h5>اسم الحساب</h5><span>ACCOUNT NAME</span></div><div class="data-value"><div class="copy-icon" onclick="navigator.clipboard.writeText('منصة بلدنا الاستثمارية الزكي')"><i class="fa-regular fa-copy"></i></div><span>منصة بلدنا الاستثمارية الزكي</span></div></div>
+<div class="card-divider"></div>
+<div class="data-row"><div class="data-label"><h5>البنك</h5><span>BANK</span></div><div class="data-value"><span>ماي كاشي (الحساب المركزي)</span></div></div>
+<div class="card-divider"></div>
+<div class="data-row"><div class="data-label"><h5>رقم الحساب</h5><span>ACCOUNT NO.</span></div><div class="data-value account-number-value"><div class="copy-icon" onclick="navigator.clipboard.writeText('403096952')"><i class="fa-regular fa-copy"></i></div><span>403096952</span></div></div>
+</div>
+<div class="privacy-note"><i class="fa-solid fa-lock"></i><span>لا نعرض أرقام هواتف شخصية للوكلاء حفاظاً على الخصوصية.</span></div>
+<div class="section-title-container"><h3>بيانات المحوّل</h3><div class="section-line"></div></div>
+<div class="input-group-outline"><label>اسم صاحب الحساب المحوّل</label><input type="text" id="sender-name-input" value="${senderNameVal||currentUser.username}"></div>
+<div class="input-group-outline"><label>رقم حساب المرسل</label><input type="text" id="sender-account-input" value="${senderAccVal||currentUser.account_number}"></div>
+<div class="input-group-outline"><label>رقم العملية (اختياري)</label><input type="text" placeholder="رقم العملية..."></div>
+<div class="bottom-spacer"></div>
+<button class="submit-btn active" id="nextBtn3">متابعة</button>`;
+}else if(step===4){
+content=`
+<div class="rc-header"><button class="rc-back-btn" id="backBtn"><i class="fa-solid fa-chevron-left"></i></button><h1>شحن المحفظة</h1><div style="width:30px"></div></div>
+<div class="progress-section"><div class="progress-bar"><div class="active"></div><div class="active"></div><div class="active"></div><div class="active"></div></div><div class="progress-text"><span>الخطوة 4 من 4</span><span>إرفاق الإشعار</span></div></div>
+<div class="receipt-header"><h2>أرفق إشعار التحويل</h2><p>سيتحقق الوكيل من الإشعار ويضيف الرصيد لمحفظتك فوراً.</p></div>
+<input type="file" id="file-input" accept="image/*" style="display:none">
+<div class="upload-box" id="upload-box">
+<img id="image-preview" class="preview-img" src="">
+<div class="upload-icon-circle" id="upload-icon"><i class="fa-solid fa-arrow-up-from-bracket"></i></div>
+<h3 id="upload-title">إرفاق إشعار التحويل</h3>
+<p id="upload-desc">اضغط هنا لاختيار صورة من المعرض</p>
+</div>
+<div class="section-title-container"><div class="section-line"></div><h3>ملخص الطلب</h3></div>
+<div class="summary-row"><div class="summary-label"><h5>وسيلة الشحن</h5><span>METHOD</span></div><div class="summary-value">${selectedMethod}</div></div>
+<div class="divider-dashed"></div>
+<div class="summary-row"><div class="summary-label"><h5>المبلغ</h5><span>AMOUNT</span></div><div class="summary-value amount">SDG ${amountVal}.00</div></div>
+<div class="divider-dashed"></div>
+<div class="summary-row"><div class="summary-label"><h5>اسم المحوّل</h5><span>SENDER</span></div><div class="summary-value">${senderNameVal}</div></div>
+<div class="bottom-spacer"></div>
+<button class="submit-btn active" id="submitBtn"><i class="fa-solid fa-paper-plane"></i> <span>إرسال طلب الشحن</span></button>`;
+}
+appDiv.innerHTML=`<div class="recharge-page flex flex-col h-full min-h-screen">${content}</div>`;
+document.getElementById('backBtn').addEventListener('click',(e)=>{e.preventDefault();if(step===1)navigate('dashboard');else{step--;renderStep();}});
+if(step===1){
+document.querySelectorAll('.method-card').forEach(card=>{
+if(card.dataset.method==='ماي كاشي'){
+card.addEventListener('click',function(){
+document.querySelectorAll('.method-card').forEach(c=>c.classList.remove('active-card'));
+this.classList.add('active-card');
+selectedMethod=this.dataset.method;
+const btn=document.getElementById('nextBtn1');
+btn.disabled=false;btn.classList.add('active');
+});
+}
+});
+document.getElementById('nextBtn1').addEventListener('click',()=>{step++;renderStep();});
+}else if(step===2){
+const amtInput=document.getElementById('amount-input');
+const next2=document.getElementById('nextBtn2');
+amtInput.addEventListener('input',function(){
+this.value=this.value.replace(/,/g,'').replace(/[^\d]/g,'');
+if(parseInt(this.value)>=1000){next2.classList.add('active');}else{next2.classList.remove('active');}
+});
+document.querySelectorAll('.quick-btn').forEach(btn=>{
+btn.addEventListener('click',function(){
+amtInput.value=parseInt(this.dataset.amount).toLocaleString('en-US');
+if(parseInt(this.dataset.amount)>=1000)next2.classList.add('active');
+});
+});
+next2.addEventListener('click',()=>{
+amountVal=amtInput.value;
+if(!amountVal||parseFloat(amountVal.replace(/,/g,''))<1000)return;
+step++;renderStep();
+});
+}else if(step===3){
+document.getElementById('nextBtn3').addEventListener('click',()=>{
+senderNameVal=document.getElementById('sender-name-input').value;
+senderAccVal=document.getElementById('sender-account-input').value;
+if(!senderNameVal)return;
+step++;renderStep();
+});
+}else if(step===4){
+const fileInput=document.getElementById('file-input');
+const uploadBox=document.getElementById('upload-box');
+const previewImg=document.getElementById('image-preview');
+const uploadIcon=document.getElementById('upload-icon');
+uploadBox.addEventListener('click',()=>fileInput.click());
+fileInput.addEventListener('change',(e)=>{
+if(e.target.files&&e.target.files[0]){
+receiptFile=e.target.files[0];
+const reader=new FileReader();
+reader.onload=(ev)=>{
+previewImg.src=ev.target.result;
+previewImg.style.display='block';
+uploadBox.classList.add('uploaded');
+document.getElementById('upload-title').innerText='تم إرفاق الصورة!';
+document.getElementById('upload-desc').innerText='اضغط لتغيير الصورة';
+uploadIcon.innerHTML='<i class="fa-solid fa-check"></i>';
+};
+reader.readAsDataURL(receiptFile);
+}
+});
+document.getElementById('submitBtn').addEventListener('click',async function(){
+if(!receiptFile)return;
+this.innerHTML='<i class="fa-solid fa-spinner fa-spin"></i> جاري الإرسال...';
+this.disabled=true;
+const reader=new FileReader();
+reader.onload=async(ev)=>{
+const base64Img=ev.target.result;
+try{await submitRecharge(amountVal.replace(/,/g,''),selectedMethod,senderNameVal,senderAccVal,base64Img);}catch(err){}
+};
+reader.readAsDataURL(receiptFile);
+});
+}
+};
+renderStep();
+}
+
+/* ★ بطاقات الاستثمار في الأعلى ← ثم جولاتي في الأسفل ★ */
+async function renderInvest(){
+if(!currentUser)return;
+const invs=await fetchInvestments();
+let myInvHtml='';
+if(invs.length>0){
+myInvHtml=`<div class="my-inv-card">`;
+invs.slice(0,3).forEach((inv,idx)=>{
+const isActive=inv.status==='active';
+const startDate=inv.start_date?.toDate?.()||new Date(inv.start_date);
+const endDate=inv.end_date?.toDate?.()||new Date(inv.end_date);
+const now=new Date();
+let progress=0;
+if(isActive){const total=endDate-startDate;const elapsed=now-startDate;progress=Math.min(100,Math.max(0,(elapsed/total)*100));}else{progress=100;}
+const remainingMs=endDate-now;
+const hoursLeft=Math.max(0,Math.floor(remainingMs/(1000*60*60)));
+const minsLeft=Math.max(0,Math.floor((remainingMs%(1000*60*60))/(1000*60)));
+myInvHtml+=`
+<div class="my-inv-header" style="margin-bottom:10px;">
+<div class="my-inv-header-right">
+<div class="my-inv-icon-box"><svg viewBox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg></div>
+<div class="my-inv-title-area"><h2>${inv.round_type==='silver'?'الجولة الفضية':'الجولة القياسية'}</h2><p>${parseFloat(inv.principal).toLocaleString()} SDG</p></div>
+</div>
+<div class="my-inv-badge ${isActive?'':'completed'}">${isActive?'نشط':'مكتمل'}</div>
+</div>
+<div class="my-inv-progress">
+<div class="my-inv-progress-labels"><span class="label">التقدم</span><span class="percent">${Math.round(progress)}%</span></div>
+<div class="my-inv-progress-bar"><div class="my-inv-progress-fill" style="width:${progress}%"></div></div>
+</div>
+<div class="my-inv-footer">
+<div class="my-inv-stat"><span class="label">رأس المال</span><span class="value">${parseFloat(inv.principal).toLocaleString()}</span></div>
+<div class="my-inv-stat"><span class="label">المكافأة</span><span class="value green">+${parseFloat(inv.bonus).toLocaleString()}</span></div>
+<div class="my-inv-stat"><span class="label">${isActive?'متبقي':'الحالة'}</span><span class="value">${isActive?(hoursLeft+'س '+minsLeft+'د'):'تم'}</span></div>
+</div>
+${idx!==Math.min(invs.length,3)-1?'<div class="divider-dashed" style="margin:15px 0;"></div>':''}`;
+});
+myInvHtml+=`</div>`;
+}
+appDiv.innerHTML=`
+<div class="flex flex-col h-full bg-[#F5F6F9] pb-20 w-full">
+<div class="invest-header">
+<div class="invest-brand"><div class="invest-brand-logo">ب</div><div class="invest-brand-text"><h2>بلدنا</h2><p>منصة الاستثمار</p></div></div>
+<a href="#" id="backToDash" class="invest-back-btn"><i class="fa-solid fa-chevron-right"></i></a>
+</div>
+<div class="invest-title-section"><h1>استثمر أموالك</h1><p>اختر جولتك الاستثمارية وابدأ الأرباح</p></div>
+<div class="invest-cards-container">
+<!-- 1) الجولة القياسية أولاً -->
+<div class="invest-card">
+<div class="invest-card-content">
+<div class="invest-card-header"><div class="invest-card-title">الجولة القياسية</div><div class="invest-badge">قياسي</div></div>
+<div class="invest-card-subtitle">للمبتدئين - رأس مال منخفض</div>
+<div class="invest-stats-row"><div><span class="invest-percentage">+23%</span><span class="invest-percentage-label">ربح متوقع</span></div><div class="invest-stat-duration"><span class="invest-duration-months">24 ساعة</span><span class="invest-duration-amount">3,000 - 20,000 SDG</span></div></div>
+<div class="invest-features-container"><div class="invest-features-left"><div class="invest-pill">رأس مال 3,000+</div></div><div class="invest-features-right"><div class="invest-pill">مكافأة حتى 5,000</div><div class="invest-pill">دعم فوري</div></div></div>
+<button class="invest-btn" data-round="standard"><i class="fa-solid fa-arrow-left"></i> اشترك الآن</button>
+</div>
+</div>
+<!-- 2) الجولة الفضية ثانياً -->
+<div class="invest-card">
+<div class="invest-card-content">
+<div class="invest-card-header"><div class="invest-card-title">الجولة الفضية</div><div class="invest-badge">مميزة</div></div>
+<div class="invest-card-subtitle">للمستثمرين الجادين - عوائد أعلى</div>
+<div class="invest-stats-row"><div><span class="invest-percentage">+50%</span><span class="invest-percentage-label">ربح متوقع</span></div><div class="invest-stat-duration"><span class="invest-duration-months">24 ساعة</span><span class="invest-duration-amount">20,000 - 100,000 SDG</span></div></div>
+<div class="invest-features-container"><div class="invest-features-left"><div class="invest-pill">رأس مال 20,000+</div></div><div class="invest-features-right"><div class="invest-pill">مكافأة حتى 10,000</div><div class="invest-pill">أولوية دعم</div></div></div>
+<button class="invest-btn" data-round="silver"><i class="fa-solid fa-arrow-left"></i> اشترك الآن</button>
+</div>
+</div>
+<!-- 3) جولاتي في الأسفل -->
+${myInvHtml}
+</div>
+<div class="bottom-nav">
+<a href="#" id="navHome" class="flex flex-col items-center text-gray-400"><i class="fa-solid fa-house text-lg mb-1"></i><span class="text-[10px]">الرئيسية</span></a>
+<a href="#" id="navTx" class="flex flex-col items-center text-gray-400"><i class="fa-regular fa-file-lines text-lg mb-1"></i><span class="text-[10px]">المعاملات</span></a>
+<a href="#" class="flex flex-col items-center text-[#B71C1C]"><i class="fa-solid fa-chart-line text-lg mb-1"></i><span class="text-[10px]">الاستثمار</span></a>
+<a href="#" id="navReceipts" class="flex flex-col items-center text-gray-400"><i class="fa-solid fa-receipt text-lg mb-1"></i><span class="text-[10px]">الإيصالات</span></a>
+<a href="#" id="navProfile" class="flex flex-col items-center text-gray-400"><i class="fa-regular fa-user text-lg mb-1"></i><span class="text-[10px]">حسابي</span></a>
+</div>
+</div>`;
+document.getElementById('backToDash').addEventListener('click',(e)=>{e.preventDefault();navigate('dashboard');});
+document.getElementById('navHome').addEventListener('click',(e)=>{e.preventDefault();navigate('dashboard');});
+document.getElementById('navTx').addEventListener('click',(e)=>{e.preventDefault();navigate('transactions');});
+document.getElementById('navReceipts').addEventListener('click',(e)=>{e.preventDefault();navigate('receipts');});
+document.getElementById('navProfile').addEventListener('click',(e)=>{e.preventDefault();navigate('profile');});
+document.querySelectorAll('.invest-btn').forEach(btn=>{
+btn.addEventListener('click',()=>{navigate('calculator',btn.dataset.round);});
+});
+}
+
+function renderCalculator(round){
+if(!currentUser)return;
+const isSilver=round==='silver';
+const min=isSilver?20000:3000;
+const max=isSilver?100000:20000;
+const bonusMin=isSilver?3000:1000;
+appDiv.innerHTML=`
+<div class="flex flex-col h-full bg-[#F5F6F9] pb-20 w-full">
+<div class="invest-header">
+<div class="invest-brand"><div class="invest-brand-logo">ب</div><div class="invest-brand-text"><h2>بلدنا</h2><p>منصة الاستثمار</p></div></div>
+<a href="#" id="backToInvest" class="invest-back-btn"><i class="fa-solid fa-chevron-right"></i></a>
+</div>
+<div class="calc-page-wrapper">
+<div class="calc-page-card">
+<div class="top-handle"></div>
+<h2 class="header-title">${isSilver?'الجولة الفضية':'الجولة القياسية'}</h2>
+<p class="header-subtitle">حرّك الشريط لاختيار مبلغ الاستثمار</p>
+<div class="savings-card">
+<div class="card-header"><div class="card-title"><h2>مبلغ الاستثمار</h2><span>INVESTMENT AMOUNT</span></div><div class="amount-display" id="calcAmount">${min.toLocaleString()}</div></div>
+<input type="range" id="calcRange" min="${min}" max="${max}" value="${min}" step="500">
+<div class="slider-labels"><span>${min.toLocaleString()}</span><span>${max.toLocaleString()}</span></div>
+</div>
+<div class="gradient-box"></div>
+<div class="detail-row"><div class="detail-title"><h3>رأس المال</h3><span>PRINCIPAL</span></div><div class="detail-value text-dark" id="calcPrincipal">${min.toLocaleString()} SDG</div></div>
+<div class="detail-row"><div class="detail-title"><h3>المكافأة المتوقعة</h3><span>EXPECTED BONUS</span></div><div class="detail-value text-green" id="calcBonus">+${bonusMin.toLocaleString()} SDG</div></div>
+<div class="detail-row"><div class="detail-title"><h3>العائد الإجمالي</h3><span>TOTAL RETURN</span></div><div class="detail-value text-red" id="calcTotal">${(min+bonusMin).toLocaleString()} SDG</div></div>
+<div class="detail-row"><div class="detail-title"><h3>المدة</h3><span>DURATION</span></div><div class="detail-value text-dark">24 ساعة</div></div>
+<button class="btn-subscribe" id="calcSubscribeBtn"><i class="fa-solid fa-check"></i> تأكيد الاشتراك</button>
+</div>
+</div>
+<div class="bottom-nav">
+<a href="#" id="navHome" class="flex flex-col items-center text-gray-400"><i class="fa-solid fa-house text-lg mb-1"></i><span class="text-[10px]">الرئيسية</span></a>
+<a href="#" id="navInvest" class="flex flex-col items-center text-[#B71C1C]"><i class="fa-solid fa-chart-line text-lg mb-1"></i><span class="text-[10px]">الاستثمار</span></a>
+</div>
+</div>`;
+document.getElementById('backToInvest').addEventListener('click',(e)=>{e.preventDefault();navigate('invest');});
+document.getElementById('navHome').addEventListener('click',(e)=>{e.preventDefault();navigate('dashboard');});
+document.getElementById('navInvest').addEventListener('click',(e)=>{e.preventDefault();navigate('invest');});
+const range=document.getElementById('calcRange');
+const updateValues=()=>{
+const val=parseFloat(range.value);
+let bonus=0;
+if(isSilver){bonus=3000+((val-20000)/80000)*7000;}else{bonus=1000+((val-3000)/17000)*4000;}
+document.getElementById('calcAmount').innerText=val.toLocaleString();
+document.getElementById('calcPrincipal').innerText=val.toLocaleString()+' SDG';
+document.getElementById('calcBonus').innerText='+'+Math.round(bonus).toLocaleString()+' SDG';
+document.getElementById('calcTotal').innerText=(val+Math.round(bonus)).toLocaleString()+' SDG';
+};
+range.addEventListener('input',updateValues);
+document.getElementById('calcSubscribeBtn').addEventListener('click',async function(){
+const amount=parseFloat(range.value);
+if(currentUser.balance<amount){alert('رصيدك غير كافٍ. يرجى شحن المحفظة أولاً.');return;}
+this.disabled=true;
+this.innerHTML='<i class="fa-solid fa-spinner fa-spin"></i> جاري الاشتراك...';
+try{await submitInvestment(round,amount);}
+catch(err){alert(err.message);this.disabled=false;this.innerHTML='<i class="fa-solid fa-check"></i> تأكيد الاشتراك';}
+});
+}function renderWithdraw(){
+if(!currentUser)return;
+const balance=currentUser.balance?parseFloat(currentUser.balance).toLocaleString('en',{minimumFractionDigits:2}):'0.00';
+appDiv.innerHTML=`
+<div class="withdraw-page flex flex-col h-full min-h-screen">
+<div class="header"><h1>سحب إلى حساب بنكي</h1><a href="#" id="backToDash" class="back-btn"><i class="fa-solid fa-chevron-right"></i></a></div>
+<div class="balance-section"><div class="balance-info"><h3>الرصيد المتاح</h3><span>AVAILABLE BALANCE</span></div><div class="balance-amount"><small>SDG</small> ${balance}</div></div>
+<div class="alert-box"><i class="fa-solid fa-circle-exclamation"></i><div>شرط السحب: يجب اكتمال جولة استثمارية واحدة على الأقل للتمكن من سحب الأرباح ورأس المال.</div></div>
+<div class="section-title">وسيلة الاستلام</div>
+<div class="tabs"><button class="tab active"><i class="fa-solid fa-building-columns"></i> حساب بنكي</button><button class="tab"><i class="fa-solid fa-wallet"></i> محفظة إلكترونية</button></div>
+<div class="methods-grid">
+<div class="method-card" id="bankTransferBtn"><i class="fa-solid fa-circle-check check-icon"></i><div class="icon-box"><i class="fa-solid fa-building-columns"></i></div><span>تحويل بنكي</span></div>
+<div class="method-card" id="myCashBtn"><i class="fa-solid fa-circle-check check-icon"></i><div class="icon-box"><i class="fa-solid fa-money-bill-wave"></i></div><span>ماي كاش</span></div>
+<div class="method-card active" id="bankakBtn"><i class="fa-solid fa-circle-check check-icon"></i><div class="icon-box"><i class="fa-solid fa-mobile-screen"></i></div><span>بنكك</span></div>
+</div>
+<div class="not-available-msg" id="notAvailableMsg"><i class="fa-solid fa-triangle-exclamation"></i> خدمة التحويل البنكي غير متوفرة حالياً.</div>
+<div class="section-title">بيانات المستفيد</div>
+<div class="input-group"><div class="floating-field"><i class="fa-solid fa-building-columns"></i><input type="text" id="accountNumber" placeholder=" "><label for="accountNumber">رقم الحساب البنكي</label></div></div>
+<div class="input-group"><div class="floating-field"><i class="fa-solid fa-user"></i><input type="text" id="beneficiaryName" placeholder=" "><label for="beneficiaryName">اسم المستفيد كما في البنك</label></div></div>
+<div class="section-title">المبلغ</div>
+<div class="amount-container"><span class="currency">SDG</span><input type="text" id="amountInput" placeholder="0" inputmode="decimal"></div>
+<div class="quick-amounts"><button class="quick-btn" data-amount="5000">5,000</button><button class="quick-btn" data-amount="10000">10,000</button><button class="quick-btn" data-amount="25000">25,000</button><button class="quick-btn" data-amount="50000">50,000</button></div>
+<div class="input-group"><div class="floating-field"><i class="fa-solid fa-pen"></i><input type="text" id="noteInput" placeholder=" "><label for="noteInput">ملاحظة للمستفيد (اختياري)</label></div></div>
+<button type="submit" class="submit-btn" id="proceedBtn">متابعة</button>
+</div>`;
+document.getElementById('backToDash').addEventListener('click',(e)=>{e.preventDefault();navigate('dashboard');});
+const methodCards=document.querySelectorAll(".method-card");
+const notAvailableMsg=document.getElementById("notAvailableMsg");
+const amountInput=document.getElementById("amountInput");
+const quickBtns=document.querySelectorAll(".quick-btn");
+const proceedBtn=document.getElementById("proceedBtn");
+methodCards.forEach(card=>{
+card.addEventListener("click",function(){
+methodCards.forEach(c=>c.classList.remove("active"));
+this.classList.add("active");
+if(this.id==="bankTransferBtn"){notAvailableMsg.style.display="block";}else{notAvailableMsg.style.display="none";}
+});
+});
+function formatNumber(value){
+let rawValue=value.replace(/,/g,'');
+if(!/^\d*\.?\d*$/.test(rawValue))return value;
+let parts=rawValue.split('.');
+parts[0]=parts[0].replace(/\B(?=(\d{3})+(?!\d))/g,",");
+return parts.join('.');
+}
+amountInput.addEventListener("input",function(){
+quickBtns.forEach(btn=>btn.classList.remove('active-btn'));
+this.value=formatNumber(this.value);
+});
+quickBtns.forEach(btn=>{
+btn.addEventListener("click",function(){
+quickBtns.forEach(b=>b.classList.remove('active-btn'));
+this.classList.add('active-btn');
+amountInput.value=formatNumber(this.getAttribute("data-amount"));
+});
+});
+proceedBtn.addEventListener("click",async function(){
+const amount=amountInput.value.replace(/,/g,'');
+const accNumber=document.getElementById('accountNumber').value;
+const bName=document.getElementById('beneficiaryName').value;
+const method=document.querySelector('.method-card.active span').innerText;
+if(!amount||!accNumber||!bName){alert('يرجى إدخال البيانات كاملة');return;}
+if(parseFloat(amount)>currentUser.balance){alert('المبلغ أكبر من رصيدك المتاح');return;}
+this.disabled=true;this.innerHTML='<i class="fa-solid fa-spinner fa-spin"></i> جاري الإرسال...';
+try{await submitWithdrawal(amount,method,bName,accNumber);}
+catch(err){alert('حدث خطأ');this.disabled=false;this.innerText='متابعة';}
+});
+}
+
+function renderWithdrawDetails(){
+appDiv.innerHTML=`
+<div class="details-page active">
+<header class="details-header"><button class="details-back-btn" onclick="window.navigate('dashboard')"><i class="fa-solid fa-chevron-right"></i></button><h1>تفاصيل المعاملة</h1><div style="width:34px;"></div></header>
+<div class="main-status" id="mainStatus">
+<div class="check-icon-wrapper"><div class="dot-yellow"></div><div class="main-check-icon" id="mainIcon"><i class="fa-solid fa-clock"></i></div><div class="dot-red"></div></div>
+<h2 id="mainTitle">قيد الإجراء...</h2>
+<div class="amount" id="displayAmount">- SDG 0</div>
+</div>
+<div class="details-card">
+<div class="card-header-details"><h3>حالة المعاملة</h3><div class="status-badge" id="statusBadge">قيد الإجراء</div></div>
+<div class="timeline">
+<div class="timeline-progress" id="timelineProgress"></div>
+<div class="timeline-item"><div class="timeline-icon" id="icon1"><i class="fa-solid fa-check"></i></div><div class="item-content"><div class="item-title" id="title1">تم الإرسال</div><div class="item-desc">تم تسجيل الطلب</div></div><div class="item-time">07:07</div></div>
+<div class="timeline-item"><div class="timeline-icon" id="icon2"><i class="fa-solid fa-spinner"></i><i class="fa-solid fa-check"></i></div><div class="item-content"><div class="item-title" id="title2">قيد المراجعة</div><div class="item-desc">التحقق من البيانات والإشعار</div></div><div class="item-time"></div></div>
+<div class="timeline-item"><div class="timeline-icon" id="icon3"><i class="fa-solid fa-spinner"></i><i class="fa-solid fa-check"></i></div><div class="item-content"><div class="item-title" id="title3">جاري التنفيذ</div><div class="item-desc">وكيل معتمد ينفذ العملية الآن</div></div><div class="item-time"></div></div>
+<div class="timeline-item"><div class="timeline-icon" id="icon4"><i class="fa-solid fa-check"></i></div><div class="item-content"><div class="item-title" id="title4">قيد الإجراء</div><div class="item-desc">بانتظار الموافقة</div></div><div class="item-time">07:07</div></div>
+</div>
+</div>
+<a href="#" onclick="event.preventDefault(); window.navigate('dashboard');" class="btn-home-action" id="btnHome">العودة للصفحة الرئيسية</a>
+</div>`;
+const sleep=(ms)=>new Promise(resolve=>setTimeout(resolve,ms));
+async function startAnimation(){
+const icon1=document.getElementById('icon1');
+const icon2=document.getElementById('icon2');
+const icon3=document.getElementById('icon3');
+const icon4=document.getElementById('icon4');
+const timelineProgress=document.getElementById('timelineProgress');
+const mainStatus=document.getElementById('mainStatus');
+const mainTitle=document.getElementById('mainTitle');
+const statusBadge=document.getElementById('statusBadge');
+const btnHome=document.getElementById('btnHome');
+await sleep(500);icon1.classList.add('done');
+await sleep(1000);icon2.classList.add('active');document.getElementById('title2').style.color='#e74c3c';timelineProgress.style.height='33%';
+await sleep(1000);icon2.classList.remove('active');icon2.classList.add('done');document.getElementById('title2').style.color='#1a1a1a';
+icon3.classList.add('active');document.getElementById('title3').style.color='#e74c3c';timelineProgress.style.height='66%';
+await sleep(1000);icon3.classList.remove('active');icon3.classList.add('done');document.getElementById('title3').style.color='#1a1a1a';
+icon4.classList.add('done');timelineProgress.style.height='100%';
+mainStatus.classList.add('status-complete');
+mainTitle.innerText='قيد الإجراء';
+document.getElementById('mainIcon').innerHTML='<i class="fa-solid fa-clock"></i>';
+statusBadge.innerText='قيد الإجراء';
+statusBadge.style.backgroundColor='#fef5e7';
+statusBadge.style.color='#f39c12';
+btnHome.classList.add('show');
+}
+startAnimation();
+}
+
+async function renderReceipts(){
+if(!currentUser)return;
+const txs=await fetchReceipts();
+let receiptHtml='';
+if(txs.length===0){receiptHtml=`<p class="text-center text-gray-500 mt-10">لا توجد إيصالات لعرضها</p>`;}
+else{
+txs.forEach(tx=>{
+const isPending=tx.status==='pending';
+const isApproved=tx.status==='approved';
+const isRejected=tx.status==='rejected';
+let statusClass='status-pending',statusText='قيد الإجراء';
+if(isApproved){statusClass='status-approved';statusText='نجاح';}
+if(isRejected){statusClass='status-rejected';statusText='مرفوض';}
+const txId=`PAY-RND-${tx.id?tx.id.slice(-6).toUpperCase():'000000'}`;
+const dateStr=formatShortDate(tx.created_at);
+receiptHtml+=`
+<div class="receipt-card" onclick="window.handleReceiptClick('${tx.status}','${tx.id}')">
+<div class="receipt-card-header">
+<div class="receipt-status-badge ${statusClass}">${statusText}</div>
+<div class="receipt-card-header-title">إيصال سحب</div>
+<div class="receipt-card-brand-name">بلدنا</div>
+</div>
+<div class="receipt-card-body">
+<div class="receipt-card-info"><h3>طلب سحب أرباح</h3><div class="transaction-id">${txId}</div><div class="date">${dateStr}</div></div>
+<div class="receipt-card-amount"><div class="arrow">&lt;</div><div class="amount-details"><h2>${parseFloat(tx.amount).toLocaleString('en',{minimumFractionDigits:2})}</h2><p>SDG</p></div></div>
+</div>
+</div>`;
+});
+}
+appDiv.innerHTML=`
+<div class="receipts-page">
+<div class="receipts-header">
+<div class="receipts-header-left"><h1>مركز الإيصالات</h1><p>RECEIPTS & INVOICES</p></div>
+<div class="receipts-header-right"><div class="receipts-brand-name">بلدنا</div><div class="receipts-header-subtitle">بلدنا للمدفوعات الرقمية</div></div>
+</div>
+<div class="receipts-list">${receiptHtml}</div>
+<div class="bottom-nav">
+<a href="#" id="navHome" class="flex flex-col items-center text-gray-400"><i class="fa-solid fa-house text-lg mb-1"></i><span class="text-[10px]">الرئيسية</span></a>
+<a href="#" id="navTx" class="flex flex-col items-center text-gray-400"><i class="fa-regular fa-file-lines text-lg mb-1"></i><span class="text-[10px]">المعاملات</span></a>
+<a href="#" class="flex flex-col items-center text-[#B71C1C]"><i class="fa-solid fa-receipt text-lg mb-1"></i><span class="text-[10px]">الإيصالات</span></a>
+<a href="#" id="navWithdraw" class="flex flex-col items-center text-gray-400"><i class="fa-solid fa-upload text-lg mb-1"></i><span class="text-[10px]">سحب</span></a>
+<a href="#" id="navProfile" class="flex flex-col items-center text-gray-400"><i class="fa-regular fa-user text-lg mb-1"></i><span class="text-[10px]">حسابي</span></a>
+</div>
+</div>`;
+document.getElementById('navHome').addEventListener('click',(e)=>{e.preventDefault();navigate('dashboard');});
+document.getElementById('navTx').addEventListener('click',(e)=>{e.preventDefault();navigate('transactions');});
+document.getElementById('navWithdraw').addEventListener('click',(e)=>{e.preventDefault();navigate('withdraw');});
+document.getElementById('navProfile').addEventListener('click',(e)=>{e.preventDefault();navigate('profile');});
+}
+window.handleReceiptClick=function(status,txId){
+if(status==='pending'){alert('يجب الموافقة من الإدارة أولاً، وسوف يتم فتح الإيصال بعد الموافقة.');}
+else if(status==='approved'){selectedTxId=txId;navigate('full_receipt');}
+else{alert('تم رفض هذا الطلب من قبل الإدارة.');}
+};
+
+/* ★★★ الإيصال الكامل — تصميمك الأصلي بالحرف الواحد (عمودان) ★★★ */
+async function renderFullReceipt(){
+if(!currentUser)return;
+if(!selectedTxId){navigate('receipts');return;}
+let tx=null;
+try{
+const docRef=doc(db,"transactions",selectedTxId);
+const docSnap=await getDoc(docRef);
+if(docSnap.exists()){tx={id:docSnap.id,...docSnap.data()};}
+}catch(e){console.error(e);}
+if(!tx){navigate('receipts');return;}
+const txCode=`WTH-${tx.id?tx.id.slice(-10).toUpperCase():'0000000000'}`;
+const bankRef=tx.bank_ref||`FT${Math.floor(Math.random()*90000000+10000000)}`;
+const methodName=tx.method||'ماي كاشي';
+const beneficiaryName=tx.beneficiary_name||'—';
+const beneficiaryAccount=tx.beneficiary_account||'—';
+const userAccount=currentUser.account_number;
+const amount=parseFloat(tx.amount).toLocaleString('en',{minimumFractionDigits:2});
+const date=formatShortDate(tx.created_at);
+const time=formatShortTime(tx.created_at);
+
+appDiv.innerHTML=`
+<div class="full-receipt-page">
+<div class="full-receipt-screen" id="receiptScreen">
+<div class="full-receipt-header">
+<div class="full-receipt-header-right">
+<div class="full-logo-box">
+<div class="full-logo-icon">
+<svg viewBox="0 0 24 24"><path d="M12 3L3 12H8V21H16V12H21L12 3Z"/></svg>
+<div class="yellow-dot"></div>
+</div>
+بلدنا
+</div>
+<p>منصة التداول والاستثمار</p>
+</div>
+<div class="full-receipt-header-left">
+<h1>إيصال سحب</h1>
+<p>WITHDRAWAL RECEIPT</p>
+</div>
+</div>
+<div class="full-receipt-body">
+<div class="full-amount-container">
+<div class="full-amount-text">
+<h2>المبلغ المسحوب</h2>
+<p>AMOUNT WITHDRAWN</p>
+</div>
+<div class="full-amount-number">
+${amount} <span>SDG</span>
+</div>
+</div>
+<div class="full-section-header">
+<h3>بيانات العملية</h3>
+<div class="line"></div>
+</div>
+<svg class="full-bg-arrow" viewBox="0 0 100 100" fill="#c8102e">
+<path d="M50 0 L100 50 L70 50 L70 100 L30 100 L30 50 L0 50 Z"/>
+</svg>
+<div class="full-data-grid">
+<div class="full-data-column">
+<div class="full-data-row">
+<div class="full-label-group"><h4>رقم حساب المستخدم</h4><p>USER ACCOUNT NO.</p></div>
+<div class="full-value-group">${userAccount}</div>
+</div>
+<div class="full-data-row">
+<div class="full-label-group"><h4>طريقة التحويل</h4><p>TRANSFER METHOD</p></div>
+<div class="full-value-group">${methodName}</div>
+</div>
+<div class="full-data-row">
+<div class="full-label-group"><h4>البنك المستهدف</h4><p>DESTINATION BANK</p></div>
+<div class="full-value-group">${methodName}</div>
+</div>
+<div class="full-data-row">
+<div class="full-label-group"><h4>اسم المستفيد</h4><p>BENEFICIARY NAME</p></div>
+<div class="full-value-group">${beneficiaryName}</div>
+</div>
+<div class="full-data-row">
+<div class="full-label-group"><h4>رقم حساب المستفيد</h4><p>BENEFICIARY ACCOUNT NO.</p></div>
+<div class="full-value-group">${beneficiaryAccount}</div>
+</div>
+</div>
+<div class="full-data-column">
+<div class="full-data-row">
+<div class="full-label-group"><h4>رقم عملية الحركة في البنك</h4><p>BANK TRANSACTION REF.</p></div>
+<div class="full-value-group full-value-red">${bankRef}</div>
+</div>
+<div class="full-data-row">
+<div class="full-label-group"><h4>رقم العملية في المنصة</h4><p>PLATFORM TRANSACTION ID</p></div>
+<div class="full-value-group full-value-red">${txCode}</div>
+</div>
+<div class="full-data-row">
+<div class="full-label-group"><h4>التاريخ</h4><p>DATE</p></div>
+<div class="full-value-group">${date}</div>
+</div>
+<div class="full-data-row">
+<div class="full-label-group"><h4>الزمن</h4><p>TIME</p></div>
+<div class="full-value-group">${time}</div>
+</div>
+</div>
+</div>
+<div class="full-footer">
+<h2>شكراً لثقتك في منصة بلدنا</h2>
+<p>هذا الإيصال صادر إلكترونياً من منصة بلدنا</p>
+</div>
+</div>
+</div>
+<div class="receipt-actions">
+<button class="btn-save" onclick="window.saveReceiptImage()"><i class="fa-solid fa-download"></i> حفظ</button>
+<button class="btn-thermal" onclick="window.print()"><i class="fa-solid fa-print"></i> طباعة حرارية</button>
+</div>
+</div>`;
+}
+window.saveReceiptImage=function(){
+const receiptElement=document.getElementById('receiptScreen');
+html2canvas(receiptElement,{scale:2,backgroundColor:'#ffffff',width:receiptElement.offsetWidth,height:receiptElement.offsetHeight}).then(canvas=>{
+const link=document.createElement('a');
+link.download=`receipt-${Date.now()}.png`;
+link.href=canvas.toDataURL('image/png');
+link.click();
+});
+};
+
+function renderProfile(){
+if(!currentUser)return;
+const displayName=currentUser.full_name||currentUser.username;
+const firstLetter=displayName.charAt(0).toUpperCase();
+const username=currentUser.username;
+const accountNumber=currentUser.account_number;
+const phone=currentUser.phone||'0100000000';
+const maskedPhone=phone.length>4?phone.substring(0,3)+'****'+phone.slice(-2):phone;
+appDiv.innerHTML=`
+<div class="profile-page-container" style="transform:scale(0.92);transform-origin:top center;width:108%;margin-right:-4%;">
+<div class="profile-header-section">
+<div style="display:flex;justify-content:flex-start;margin-bottom:10px;position:relative;z-index:5;">
+<a href="#" onclick="event.preventDefault(); window.navigate('dashboard'); return false;" style="width:34px;height:34px;background:rgba(255,255,255,0.2);border:1px solid rgba(255,255,255,0.3);border-radius:50%;display:flex;align-items:center;justify-content:center;color:white;font-size:14px;text-decoration:none;"><i class="fa-solid fa-chevron-right"></i></a>
+</div>
+<div class="profile-top-bar">
+<div class="profile-brand-area"><div class="profile-brand-logo"><i class="fa-solid fa-arrow-up-right-from-square"></i> BLACHA</div><div class="profile-brand-text">MY ACCOUNT</div></div>
+<div class="profile-my-account-btn">حسابي <i class="fa-solid fa-user"></i></div>
+</div>
+<div class="profile-info">
+<div class="profile-avatar-circle">${firstLetter}</div>
+<div class="profile-user-details">
+<div class="profile-user-name-row"><i class="fa-solid fa-circle-check profile-verified-icon"></i>${displayName}</div>
+<div class="profile-handle-name">@${username}</div>
+<div class="profile-user-handle">حساب برونزي</div>
+</div>
+</div>
+</div>
+<div class="profile-content-area">
+<div class="profile-info-card">
+<div class="profile-info-row"><div class="profile-info-label">رقم الحساب<span>ACCOUNT NO.</span></div><div class="profile-info-value"><div class="profile-icon-box" onclick="window.copyToClipboard('${accountNumber}')"><i class="fa-regular fa-copy"></i></div>${accountNumber}</div></div>
+<div class="profile-info-row"><div class="profile-info-label">رقم الهاتف<span>PHONE</span></div><div class="profile-info-value phone-value" style="direction:ltr;font-family:monospace;">${maskedPhone}</div></div>
+</div>
+<div class="profile-section-title">الخدمات</div>
+<div class="profile-services-list">
+<a href="#" class="profile-service-item" onclick="event.preventDefault(); alert('قيد التطوير');"><div class="profile-service-text">المكافآت ودعوة الأصدقاء</div><div class="profile-service-icon-wrapper"><div class="profile-service-icon"><i class="fa-solid fa-gift"></i></div><i class="fa-solid fa-chevron-left profile-arrow-icon"></i></div></a>
+<a href="#" class="profile-service-item" onclick="event.preventDefault(); window.navigate('receipts');"><div class="profile-service-text">مركز الإيصالات</div><div class="profile-service-icon-wrapper"><div class="profile-service-icon"><i class="fa-solid fa-file-invoice"></i></div><i class="fa-solid fa-chevron-left profile-arrow-icon"></i></div></a>
+<a href="#" class="profile-service-item" onclick="event.preventDefault(); alert('قيد التطوير');"><div class="profile-service-text">الإشعارات</div><div class="profile-service-icon-wrapper"><div class="profile-service-icon"><i class="fa-regular fa-bell"></i></div><i class="fa-solid fa-chevron-left profile-arrow-icon"></i></div></a>
+</div>
+<div class="profile-section-title security-title">الأمان والدعم</div>
+<div class="profile-services-list">
+<a href="#" class="profile-service-item" onclick="event.preventDefault(); window.handleLogout();"><div class="profile-service-text">تسجيل الخروج</div><div class="profile-service-icon-wrapper"><div class="profile-service-icon"><i class="fa-solid fa-right-from-bracket"></i></div><i class="fa-solid fa-chevron-left profile-arrow-icon"></i></div></a>
+</div>
+</div>
+</div>`;
+}
+window.copyToClipboard=function(text){if(navigator.clipboard){navigator.clipboard.writeText(text).then(()=>{});}};
+window.handleLogout=function(){
+if(confirm('تسجيل الخروج؟')){
+localStorage.removeItem('bld_user_id');
+currentUser=null;cachedTransactions=null;cachedInvestments=null;
+navigate('login');
+}
+};
+
+async function init(){
+const savedUserId=localStorage.getItem('bld_user_id');
+if(savedUserId){
+try{
+const userDoc=await getDoc(doc(db,"users",savedUserId));
+if(userDoc.exists()){currentUser={id:userDoc.id,...userDoc.data()};currentPage='dashboard';}
+}catch(e){console.error(e);}
+}
+render();
+}
+init();
+</script>
 </body>
 </html>
