@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>الاستثمار - بلدنا</title>
+<title>اختبار الاستثمار - بلدنا</title>
 <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 <style>
@@ -11,7 +11,7 @@
 body{background:#F5F6F9;min-height:100vh;display:flex;justify-content:center}
 .app{width:100%;max-width:100%;min-height:100vh;background:#F5F6F9;display:flex;flex-direction:column;padding-bottom:80px}
 
-/* هيدر الاستثمار - ثابت */
+/* هيدر الاستثمار */
 .invest-header{position:sticky;top:0;z-index:100;background:linear-gradient(180deg,#B71C1C 0%,#E53935 100%);padding:15px 20px;display:flex;align-items:center;justify-content:space-between;color:#fff;border-bottom-left-radius:20px;border-bottom-right-radius:20px;box-shadow:0 4px 15px rgba(183,28,28,0.25);width:100%}
 .invest-brand{display:flex;align-items:center;gap:10px}
 .invest-brand-logo{width:40px;height:40px;background:#fff;border-radius:10px;display:flex;align-items:center;justify-content:center;color:#B71C1C;font-size:18px;font-weight:800}
@@ -19,16 +19,16 @@ body{background:#F5F6F9;min-height:100vh;display:flex;justify-content:center}
 .invest-brand-text p{font-size:10px;color:rgba(255,255,255,0.85)}
 .invest-back-btn{width:38px;height:38px;background:rgba(255,255,255,0.2);border:1px solid rgba(255,255,255,0.3);border-radius:50%;display:flex;align-items:center;justify-content:center;color:#fff;font-size:14px;text-decoration:none}
 
-/* عنوان الصفحة */
+/* عنوان */
 .invest-title-section{padding:20px 20px 10px;text-align:center}
 .invest-title-section h1{font-size:22px;font-weight:800;color:#1a1a1a;margin-bottom:4px}
 .invest-title-section p{font-size:13px;color:#777}
 
-/* حاوية البطاقات */
-.invest-cards-container{padding:10px 15px 40px;display:flex;flex-direction:column;gap:18px;width:100%}
+/* ★★★ حاوية البطاقات — مسافات كبيرة بين كل بطاقة ★★★ */
+.invest-cards-container{padding:15px;display:flex;flex-direction:column;gap:25px;width:100%}
 
-/* ★ بطاقات الجولات (في الأعلى) ★ */
-.invest-card{background:linear-gradient(145deg,#8c1d1f,#731214);border-radius:24px;padding:22px 20px;color:#fff;position:relative;overflow:hidden;box-shadow:0 10px 20px rgba(0,0,0,0.12);width:100%}
+/* ★★★ بطاقات الجولات (في الأعلى) ★★★ */
+.invest-card{background:linear-gradient(145deg,#8c1d1f,#731214);border-radius:24px;padding:22px 20px;color:#fff;position:relative;overflow:hidden;box-shadow:0 10px 20px rgba(0,0,0,0.12);width:100%;margin-bottom:0}
 .invest-card::before{content:'';position:absolute;bottom:-50px;left:20%;width:150px;height:150px;background:rgba(255,255,255,0.05);border-radius:30px;transform:rotate(45deg);z-index:1}
 .invest-card-content{position:relative;z-index:2}
 .invest-card-header{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:5px}
@@ -48,8 +48,12 @@ body{background:#F5F6F9;min-height:100vh;display:flex;justify-content:center}
 .invest-features-right .invest-pill{width:fit-content}
 .invest-btn{width:100%;background:#fff;color:#8c1d1f;border:none;border-radius:25px;padding:13px;font-size:15px;font-weight:800;font-family:'Cairo',sans-serif;display:flex;justify-content:center;align-items:center;gap:10px;cursor:pointer}
 
-/* ★ جولاتي (في الأسفل) ★ */
-.my-inv-card{background:#fff;border-radius:16px;padding:16px;box-shadow:0 6px 20px rgba(0,0,0,.04);border:1px solid #f0f0f0;width:100%;margin-bottom:15px}
+/* ★★★ جولاتي (في الأسفل) ★★★ */
+.my-inv-section-title{padding:10px 5px;margin-top:10px}
+.my-inv-section-title h2{font-size:18px;font-weight:800;color:#1a1a1a;text-align:right}
+.my-inv-section-title p{font-size:12px;color:#888;margin-top:2px;text-align:right}
+
+.my-inv-card{background:#fff;border-radius:16px;padding:16px;box-shadow:0 6px 20px rgba(0,0,0,.06);border:1px solid #f0f0f0;width:100%}
 .my-inv-header{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:20px}
 .my-inv-header-right{display:flex;align-items:center;gap:12px}
 .my-inv-icon-box{background:#9f2727;width:48px;height:48px;border-radius:12px;display:flex;justify-content:center;align-items:center;flex-shrink:0}
@@ -71,7 +75,6 @@ body{background:#F5F6F9;min-height:100vh;display:flex;justify-content:center}
 .my-inv-stat .label{color:#888;font-size:12px}
 .my-inv-stat .value{color:#111;font-size:15px;font-weight:800}
 .my-inv-stat .value.green{color:#4cb08b}
-.divider-dashed{border-top:1px dashed #D0D0D0;margin:15px 0}
 
 /* شريط سفلي */
 .bottom-nav{position:fixed;bottom:0;left:0;width:100%;background:#fff;display:flex;justify-content:space-around;padding:8px 0;box-shadow:0 -4px 10px rgba(0,0,0,0.05);border-top:1px solid #eee;z-index:20}
@@ -98,13 +101,16 @@ body{background:#F5F6F9;min-height:100vh;display:flex;justify-content:center}
 <p>اختر جولتك الاستثمارية وابدأ الأرباح</p>
 </div>
 
-<!-- حاوية البطاقات -->
+<!-- ★★★ حاوية البطاقات ★★★ -->
 <div class="invest-cards-container">
 
-<!-- 1) الجولة القياسية أولاً -->
+<!-- بطاقة 1: الجولة القياسية (في الأعلى) -->
 <div class="invest-card">
 <div class="invest-card-content">
-<div class="invest-card-header"><div class="invest-card-title">الجولة القياسية</div><div class="invest-badge">قياسي</div></div>
+<div class="invest-card-header">
+<div class="invest-card-title">الجولة القياسية</div>
+<div class="invest-badge">قياسي</div>
+</div>
 <div class="invest-card-subtitle">للمبتدئين - رأس مال منخفض</div>
 <div class="invest-stats-row">
 <div><span class="invest-percentage">+23%</span><span class="invest-percentage-label">ربح متوقع</span></div>
@@ -118,10 +124,13 @@ body{background:#F5F6F9;min-height:100vh;display:flex;justify-content:center}
 </div>
 </div>
 
-<!-- 2) الجولة الفضية ثانياً -->
+<!-- بطاقة 2: الجولة الفضية (في الأعلى) -->
 <div class="invest-card">
 <div class="invest-card-content">
-<div class="invest-card-header"><div class="invest-card-title">الجولة الفضية</div><div class="invest-badge">مميزة</div></div>
+<div class="invest-card-header">
+<div class="invest-card-title">الجولة الفضية</div>
+<div class="invest-badge">مميزة</div>
+</div>
 <div class="invest-card-subtitle">للمستثمرين الجادين - عوائد أعلى</div>
 <div class="invest-stats-row">
 <div><span class="invest-percentage">+50%</span><span class="invest-percentage-label">ربح متوقع</span></div>
@@ -135,7 +144,13 @@ body{background:#F5F6F9;min-height:100vh;display:flex;justify-content:center}
 </div>
 </div>
 
-<!-- 3) جولاتي في الأسفل -->
+<!-- عنوان جولاتي -->
+<div class="my-inv-section-title">
+<h2>جولاتي</h2>
+<p>استثماراتك النشطة والمكتملة</p>
+</div>
+
+<!-- بطاقة 3: جولاتي - الجولة النشطة (في الأسفل) -->
 <div class="my-inv-card">
 <div class="my-inv-header">
 <div class="my-inv-header-right">
@@ -153,7 +168,10 @@ body{background:#F5F6F9;min-height:100vh;display:flex;justify-content:center}
 <div class="my-inv-stat"><span class="label">المكافأة</span><span class="value green">+1,500</span></div>
 <div class="my-inv-stat"><span class="label">متبقي</span><span class="value">13س 20د</span></div>
 </div>
-<div class="divider-dashed"></div>
+</div>
+
+<!-- بطاقة 4: جولاتي - الجولة المكتملة (في الأسفل) -->
+<div class="my-inv-card">
 <div class="my-inv-header">
 <div class="my-inv-header-right">
 <div class="my-inv-icon-box"><svg viewBox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg></div>
